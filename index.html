@@ -171,6 +171,11 @@
   .witem .st{margin-left:auto; flex:0 0 auto; font-size:12px; font-weight:700; border-radius:999px; padding:4px 11px; border:1px solid;}
   .st.ok{color:#2f6234; border-color:rgba(61,122,68,.5); background:rgba(61,122,68,.10);}
   .st.ng{color:#9c3626; border-color:rgba(176,64,47,.4); background:rgba(176,64,47,.07);}
+  .st.new{color:#5b6b84; border-color:rgba(91,107,132,.45); background:rgba(91,107,132,.09);}
+  .bar.seg{display:flex;}
+  .bar.seg i{animation:none; border-radius:0;}
+  .bar.seg i.sok{background:linear-gradient(90deg,#3d7a44,#5da463);}
+  .bar.seg i.sng{background:#d0603f;}
   .grp{font-size:12px; letter-spacing:.14em; color:var(--faint); font-weight:700; margin:16px 2px 8px;}
   .searchbox{width:100%; border:1.5px solid var(--line); border-radius:14px; background:var(--glass2);
     padding:13px 15px; font-size:16px; color:var(--ink); outline:none; box-shadow:0 4px 12px rgba(50,70,110,.10);}
@@ -219,7 +224,7 @@
   body.dark .btn.good{background:linear-gradient(160deg,#1e3320,#152316); color:#9fd3a8;}
   body.dark .tabbar{background:rgba(14,22,40,.9);}
   body.dark .opt.on, body.dark .fchip.active, body.dark .lang-chip.active, body.dark .set-chip.active{background:#1d3355;}
-  body.dark .st.ok{background:rgba(61,122,68,.25);} body.dark .st.ng{background:rgba(176,64,47,.22);}
+  body.dark .st.ok{background:rgba(61,122,68,.25);} body.dark .st.ng{background:rgba(176,64,47,.22);} body.dark .st.new{background:rgba(120,140,170,.22);}
   /* ---------- test & progress ---------- */
   .qcard{background:linear-gradient(160deg,#ffffff,#e2eaf6); border:1.5px solid rgba(63,88,130,.45); border-radius:22px;
     box-shadow:0 18px 40px rgba(50,70,110,.22); padding:26px 20px; text-align:center; margin-bottom:14px;}
@@ -435,6 +440,7 @@
         <button class="fchip active" data-f="all"></button>
         <button class="fchip" data-f="ok"></button>
         <button class="fchip" data-f="ng"></button>
+        <button class="fchip" data-f="new"></button>
       </div>
       <div id="bookList"></div>
     </section>
@@ -444,6 +450,19 @@
       <p class="sec-sub" id="searchSub"></p>
       <input class="searchbox" id="searchInput" type="search" autocomplete="off">
       <div id="searchList" style="margin-top:14px;"></div>
+    </section>
+
+    <section class="view" id="view-daily">
+      <div class="study-head">
+        <button class="back" id="btnDailyBack"><img class="backic" data-icon="back" alt=""></button>
+        <div class="ttl" id="dailyTitle">今日の単語</div>
+      </div>
+      <p class="sec-sub" id="dailySub"></p>
+      <div class="grp" id="dailyWordsLbl"></div>
+      <div id="dailyList"></div>
+      <p class="sec-sub" id="dailyNote" style="margin-top:12px;"></p>
+      <button class="cta" id="btnDailyReview" style="margin-top:10px;"><img class="btnic" data-icon="flip" alt=""><span id="lblDailyReview"></span></button>
+      <button class="opt" id="btnDailyTest" style="margin-top:10px; width:100%; justify-content:center;"><img class="btnic" data-icon="play" alt=""><span id="lblDailyTest"></span></button>
     </section>
 
     <section class="view" id="view-test">
@@ -617,20 +636,20 @@ ja:{appTitle:"英語で学ぶ理系",totalWords:"収録",totalKnown:"覚えた",
  subjNames:["物理 Physics","化学 Chemistry","微積分 Calculus","半導体 Semiconductor"],
  subjectsTitle:"物理 — 単元を選ぶ",
  subjectsSub:"チャプターをタップすると学習が始まります。設定は選んだチャプターに適用されます。",
- optShuffle:o=>"シャッフル: "+(o?"ON":"OFF"), optUnknown:o=>"まだのカードだけ: "+(o?"ON":"OFF"),
+ optShuffle:o=>"シャッフル: "+(o?"ON":"OFF"), optUnknown:o=>"覚えた以外だけ: "+(o?"ON":"OFF"),
  allCh:"全チャプター通し", allChDesc:"Ch.1–4 ぜんぶ", knownLine:(k,t)=>"覚えた "+k+" / "+t,
  back:"← もどる", studyAll:"全チャプター", tapHint:"タップで意味を見る",
- still:"✗ まだ", got:"✓ 覚えた", prev:"← 前へ", flip:"裏返す", next:"次へ →",
- doneBig:"この条件のカードは全部覚えた ", doneSub:"チャプターを変えるか、「まだのカードだけ」をOFFにして復習しよう。",
- knownBadge:"✓ 覚えた済み", stOk:"✓ 覚えた", stNg:"まだ",
- bookTitle:"マイ単語帳", bookSub:"タップでその単語から学習開始。右のバッジで「覚えた／まだ」を切り替えられます。",
- fAll:"全部", fOk:"覚えた", fNg:"まだ", bookEmpty:"この条件の単語はありません。",
+ still:"✗ 覚えてない", got:"✓ 覚えた", prev:"← 前へ", flip:"裏返す", next:"次へ →",
+ doneBig:"この条件のカードは全部覚えた ", doneSub:"チャプターを変えるか、「覚えた以外だけ」をOFFにして復習しよう。",
+ knownBadge:"✓ 覚えた済み", stOk:"✓ 覚えた", stNg:"覚えてない", stNew:"まだ", badgeNg:"✗ 覚えてない", failedLbl:"覚えてない",
+ bookTitle:"マイ単語帳", bookSub:"タップでその単語から学習開始。右のバッジをタップすると「覚えた→覚えてない→まだ」の順に切り替わります。",
+ fAll:"全部", fOk:"覚えた", fNg:"覚えてない", fNew:"まだ", bookEmpty:"この条件の単語はありません。",
  searchTitle:"単語検索", searchSub:"英語・母国語どちらでも検索できます。",
  searchPh:"例: vector / ベクトル / 落下…", searchEmpty:"キーワードを入れると、58語から探します。",
  searchNone:q=>"「"+q+"」に合う単語は見つかりませんでした。",
  tabs:["ホーム","科目","単語帳","検索"],
  chNames:{1:"Ch.1 測定",2:"Ch.2 ベクトル",3:"Ch.3 直線運動",4:"Ch.4 二次元運動"},
- kbd:"<kbd>←</kbd><kbd>→</kbd> 移動 ／ <kbd>Space</kbd> 裏返す ／ <kbd>1</kbd> まだ ／ <kbd>2</kbd> 覚えた"},
+ kbd:"<kbd>←</kbd><kbd>→</kbd> 移動 ／ <kbd>Space</kbd> 裏返す ／ <kbd>1</kbd> 覚えてない ／ <kbd>2</kbd> 覚えた"},
 ko:{appTitle:"영어로 배우는 이공계",totalWords:"수록",totalKnown:"외운 단어",unit:"개",lang:"언어",
  heroBig:(k,t)=>"외운 단어: "+k+" / "+t,
  hero0:"물리 영어 용어부터 시작해요.<br>조금씩 쌓아 올려요.",
@@ -643,20 +662,20 @@ ko:{appTitle:"영어로 배우는 이공계",totalWords:"수록",totalKnown:"외
  subjNames:["물리 Physics","화학 Chemistry","미적분 Calculus","반도체 Semiconductor"],
  subjectsTitle:"물리 — 단원 선택",
  subjectsSub:"챕터를 누르면 학습이 시작됩니다. 설정은 선택한 챕터에 적용됩니다.",
- optShuffle:o=>"셔플: "+(o?"ON":"OFF"), optUnknown:o=>"아직 모르는 카드만: "+(o?"ON":"OFF"),
+ optShuffle:o=>"셔플: "+(o?"ON":"OFF"), optUnknown:o=>"외운 단어 제외: "+(o?"ON":"OFF"),
  allCh:"전 챕터 통째로", allChDesc:"Ch.1–4 전부", knownLine:(k,t)=>"외움 "+k+" / "+t,
  back:"← 돌아가기", studyAll:"전 챕터", tapHint:"눌러서 뜻 보기",
- still:"✗ 아직", got:"✓ 외웠어요", prev:"← 이전", flip:"뒤집기", next:"다음 →",
- doneBig:"이 조건의 카드는 전부 외웠어요 ", doneSub:"챕터를 바꾸거나 '아직 모르는 카드만'을 끄고 복습해 보세요.",
- knownBadge:"✓ 외움 완료", stOk:"✓ 외움", stNg:"아직",
- bookTitle:"내 단어장", bookSub:"누르면 그 단어부터 학습을 시작합니다. 오른쪽 배지로 '외움/아직'을 바꿀 수 있어요.",
- fAll:"전부", fOk:"외움", fNg:"아직", bookEmpty:"이 조건의 단어가 없습니다.",
+ still:"✗ 못 외움", got:"✓ 외웠어요", prev:"← 이전", flip:"뒤집기", next:"다음 →",
+ doneBig:"이 조건의 카드는 전부 외웠어요 ", doneSub:"챕터를 바꾸거나 '외운 단어 제외'를 끄고 복습해 보세요.",
+ knownBadge:"✓ 외움 완료", stOk:"✓ 외움", stNg:"못 외움", stNew:"아직", badgeNg:"✗ 못 외움", failedLbl:"못 외움",
+ bookTitle:"내 단어장", bookSub:"누르면 그 단어부터 학습을 시작합니다. 오른쪽 배지를 누르면 '외움 → 못 외움 → 아직' 순으로 바뀝니다.",
+ fAll:"전부", fOk:"외움", fNg:"못 외움", fNew:"아직", bookEmpty:"이 조건의 단어가 없습니다.",
  searchTitle:"단어 검색", searchSub:"영어와 모국어 모두로 검색할 수 있어요.",
  searchPh:"예: vector / 벡터 / 낙하…", searchEmpty:"키워드를 입력하면 58개 단어에서 찾습니다.",
  searchNone:q=>"\""+q+"\"와(과) 맞는 단어가 없습니다.",
  tabs:["홈","과목","단어장","검색"],
  chNames:{1:"Ch.1 측정",2:"Ch.2 벡터",3:"Ch.3 직선 운동",4:"Ch.4 2차원 운동"},
- kbd:"<kbd>←</kbd><kbd>→</kbd> 이동 ／ <kbd>Space</kbd> 뒤집기 ／ <kbd>1</kbd> 아직 ／ <kbd>2</kbd> 외움"},
+ kbd:"<kbd>←</kbd><kbd>→</kbd> 이동 ／ <kbd>Space</kbd> 뒤집기 ／ <kbd>1</kbd> 못 외움 ／ <kbd>2</kbd> 외움"},
 zh:{appTitle:"用英语学理工",totalWords:"收录",totalKnown:"已掌握",unit:"个",lang:"语言",
  heroBig:(k,t)=>"已掌握单词: "+k+" / "+t,
  hero0:"从物理英语术语开始。<br>一点点积累起来。",
@@ -669,20 +688,20 @@ zh:{appTitle:"用英语学理工",totalWords:"收录",totalKnown:"已掌握",uni
  subjNames:["物理 Physics","化学 Chemistry","微积分 Calculus","半导体 Semiconductor"],
  subjectsTitle:"物理 — 选择单元",
  subjectsSub:"点按章节即可开始学习。设置会应用到所选章节。",
- optShuffle:o=>"随机顺序: "+(o?"开":"关"), optUnknown:o=>"只看没掌握的: "+(o?"开":"关"),
+ optShuffle:o=>"随机顺序: "+(o?"开":"关"), optUnknown:o=>"只看未掌握的: "+(o?"开":"关"),
  allCh:"全部章节通学", allChDesc:"Ch.1–4 全部", knownLine:(k,t)=>"已掌握 "+k+" / "+t,
  back:"← 返回", studyAll:"全部章节", tapHint:"点按查看意思",
- still:"✗ 还没会", got:"✓ 会了", prev:"← 上一个", flip:"翻面", next:"下一个 →",
- doneBig:"这个条件下的卡片全部掌握了 ", doneSub:"换个章节，或关掉「只看没掌握的」来复习。",
- knownBadge:"✓ 已掌握", stOk:"✓ 会了", stNg:"还没会",
- bookTitle:"我的单词本", bookSub:"点按单词从该词开始学习。点右侧标记可切换「会了／还没会」。",
- fAll:"全部", fOk:"会了", fNg:"还没会", bookEmpty:"没有符合条件的单词。",
+ still:"✗ 还没记住", got:"✓ 会了", prev:"← 上一个", flip:"翻面", next:"下一个 →",
+ doneBig:"这个条件下的卡片全部掌握了 ", doneSub:"换个章节，或关掉「只看未掌握的」来复习。",
+ knownBadge:"✓ 已掌握", stOk:"✓ 会了", stNg:"还没记住", stNew:"未学", badgeNg:"✗ 还没记住", failedLbl:"还没记住",
+ bookTitle:"我的单词本", bookSub:"点按单词从该词开始学习。点右侧标记按「会了→还没记住→未学」的顺序切换。",
+ fAll:"全部", fOk:"会了", fNg:"还没记住", fNew:"未学", bookEmpty:"没有符合条件的单词。",
  searchTitle:"单词搜索", searchSub:"可以用英语或母语搜索。",
  searchPh:"例: vector / 矢量 / 落下…", searchEmpty:"输入关键词，从58个单词中查找。",
  searchNone:q=>"没有找到与「"+q+"」匹配的单词。",
  tabs:["首页","科目","单词本","搜索"],
  chNames:{1:"Ch.1 测量",2:"Ch.2 矢量",3:"Ch.3 直线运动",4:"Ch.4 二维运动"},
- kbd:"<kbd>←</kbd><kbd>→</kbd> 移动 ／ <kbd>Space</kbd> 翻面 ／ <kbd>1</kbd> 还没会 ／ <kbd>2</kbd> 会了"},
+ kbd:"<kbd>←</kbd><kbd>→</kbd> 移动 ／ <kbd>Space</kbd> 翻面 ／ <kbd>1</kbd> 还没记住 ／ <kbd>2</kbd> 会了"},
 tw:{appTitle:"用英語學理工",totalWords:"收錄",totalKnown:"已掌握",unit:"個",lang:"語言",
  heroBig:(k,t)=>"已掌握單字: "+k+" / "+t,
  hero0:"從物理英語術語開始。<br>一點點累積起來。",
@@ -695,20 +714,20 @@ tw:{appTitle:"用英語學理工",totalWords:"收錄",totalKnown:"已掌握",uni
  subjNames:["物理 Physics","化學 Chemistry","微積分 Calculus","半導體 Semiconductor"],
  subjectsTitle:"物理 — 選擇單元",
  subjectsSub:"點按章節即可開始學習。設定會套用到所選章節。",
- optShuffle:o=>"隨機順序: "+(o?"開":"關"), optUnknown:o=>"只看沒掌握的: "+(o?"開":"關"),
+ optShuffle:o=>"隨機順序: "+(o?"開":"關"), optUnknown:o=>"只看未掌握的: "+(o?"開":"關"),
  allCh:"全部章節通學", allChDesc:"Ch.1–4 全部", knownLine:(k,t)=>"已掌握 "+k+" / "+t,
  back:"← 返回", studyAll:"全部章節", tapHint:"點按查看意思",
- still:"✗ 還沒會", got:"✓ 會了", prev:"← 上一個", flip:"翻面", next:"下一個 →",
- doneBig:"這個條件下的卡片全部掌握了 ", doneSub:"換個章節，或關掉「只看沒掌握的」來複習。",
- knownBadge:"✓ 已掌握", stOk:"✓ 會了", stNg:"還沒會",
- bookTitle:"我的單字本", bookSub:"點按單字從該詞開始學習。點右側標記可切換「會了／還沒會」。",
- fAll:"全部", fOk:"會了", fNg:"還沒會", bookEmpty:"沒有符合條件的單字。",
+ still:"✗ 還沒記住", got:"✓ 會了", prev:"← 上一個", flip:"翻面", next:"下一個 →",
+ doneBig:"這個條件下的卡片全部掌握了 ", doneSub:"換個章節，或關掉「只看未掌握的」來複習。",
+ knownBadge:"✓ 已掌握", stOk:"✓ 會了", stNg:"還沒記住", stNew:"未學", badgeNg:"✗ 還沒記住", failedLbl:"還沒記住",
+ bookTitle:"我的單字本", bookSub:"點按單字從該詞開始學習。點右側標記按「會了→還沒記住→未學」的順序切換。",
+ fAll:"全部", fOk:"會了", fNg:"還沒記住", fNew:"未學", bookEmpty:"沒有符合條件的單字。",
  searchTitle:"單字搜尋", searchSub:"可以用英語或母語搜尋。",
  searchPh:"例: vector / 向量 / 落下…", searchEmpty:"輸入關鍵字，從58個單字中查找。",
  searchNone:q=>"沒有找到與「"+q+"」相符的單字。",
  tabs:["首頁","科目","單字本","搜尋"],
  chNames:{1:"Ch.1 測量",2:"Ch.2 向量",3:"Ch.3 直線運動",4:"Ch.4 二維運動"},
- kbd:"<kbd>←</kbd><kbd>→</kbd> 移動 ／ <kbd>Space</kbd> 翻面 ／ <kbd>1</kbd> 還沒會 ／ <kbd>2</kbd> 會了"},
+ kbd:"<kbd>←</kbd><kbd>→</kbd> 移動 ／ <kbd>Space</kbd> 翻面 ／ <kbd>1</kbd> 還沒記住 ／ <kbd>2</kbd> 會了"},
 en:{appTitle:"Science in English",totalWords:"Words",totalKnown:"Learned",unit:"words",lang:"Language",
  heroBig:(k,t)=>"Learned: "+k+" / "+t,
  hero0:"Start with physics terms in English.<br>Build up little by little.",
@@ -721,20 +740,20 @@ en:{appTitle:"Science in English",totalWords:"Words",totalKnown:"Learned",unit:"
  subjNames:["Physics","Chemistry","Calculus","Semiconductors"],
  subjectsTitle:"Physics — Choose a unit",
  subjectsSub:"Tap a chapter to start. Settings apply to the chapter you choose.",
- optShuffle:o=>"Shuffle: "+(o?"ON":"OFF"), optUnknown:o=>"Only unlearned cards: "+(o?"ON":"OFF"),
+ optShuffle:o=>"Shuffle: "+(o?"ON":"OFF"), optUnknown:o=>"Hide learned cards: "+(o?"ON":"OFF"),
  allCh:"All chapters", allChDesc:"Ch.1–4, everything", knownLine:(k,t)=>"Learned "+k+" / "+t,
  back:"← Back", studyAll:"All chapters", tapHint:"Tap to see the definition",
- still:"✗ Not yet", got:"✓ Got it", prev:"← Prev", flip:"Flip", next:"Next →",
- doneBig:"You've learned all cards in this set ", doneSub:"Change the chapter, or turn off 'only unlearned cards' to review.",
- knownBadge:"✓ Learned", stOk:"✓ Got it", stNg:"Not yet",
- bookTitle:"My Wordbook", bookSub:"Tap a word to study from it. Tap the badge to switch learned / not yet.",
- fAll:"All", fOk:"Learned", fNg:"Not yet", bookEmpty:"No words match this filter.",
+ still:"✗ Didn't know", got:"✓ Got it", prev:"← Prev", flip:"Flip", next:"Next →",
+ doneBig:"You've learned all cards in this set ", doneSub:"Change the chapter, or turn off 'hide learned cards' to review.",
+ knownBadge:"✓ Learned", stOk:"✓ Got it", stNg:"Didn't know", stNew:"New", badgeNg:"✗ Didn't know", failedLbl:"Didn't know",
+ bookTitle:"My Wordbook", bookSub:"Tap a word to study from it. Tap the badge to cycle: learned → didn't know → new.",
+ fAll:"All", fOk:"Learned", fNg:"Didn't know", fNew:"New", bookEmpty:"No words match this filter.",
  searchTitle:"Search words", searchSub:"Search in English or your own language.",
  searchPh:"e.g. vector / fall / slope…", searchEmpty:"Type a keyword to search the 58 words.",
  searchNone:q=>"No words match \""+q+"\".",
  tabs:["Home","Subjects","Wordbook","Search"],
  chNames:{1:"Ch.1 Measurement",2:"Ch.2 Vectors",3:"Ch.3 1-D Motion",4:"Ch.4 2-D Motion"},
- kbd:"<kbd>←</kbd><kbd>→</kbd> Move ／ <kbd>Space</kbd> Flip ／ <kbd>1</kbd> Not yet ／ <kbd>2</kbd> Got it"}
+ kbd:"<kbd>←</kbd><kbd>→</kbd> Move ／ <kbd>Space</kbd> Flip ／ <kbd>1</kbd> Didn't know ／ <kbd>2</kbd> Got it"}
 };
 const SUBJECT_READY = [true,false,false,false];
 
@@ -1215,11 +1234,26 @@ const L = () => LANGS[lang];
 const tr = t => t[lang];
 const nt = t => lang==="en" ? EN_NOTES[TERMS.indexOf(t)] : t["n"+lang];
 let known = new Set(JSON.parse(store.get(LS_KEY) || "[]"));
+const LS_FAIL = "stem-english-failed-v1";
+let failed = new Set(JSON.parse(store.get(LS_FAIL) || "[]"));
 let optShuffle = false, optUnknown = false;
 let session = [], sPos = 0, sCh = "all", flipped = false;
 let bookFilter = "all";
 
 function save(){ store.set(LS_KEY, JSON.stringify([...known])); }
+function saveFailed(){ store.set(LS_FAIL, JSON.stringify([...failed])); }
+function stateOf(i){ return known.has(i) ? "ok" : (failed.has(i) ? "ng" : "new"); }
+function setState(i, st){
+  if(st==="ok"){ known.add(i); failed.delete(i); }
+  else if(st==="ng"){ known.delete(i); failed.add(i); }
+  else { known.delete(i); failed.delete(i); }
+  save(); saveFailed();
+}
+function chFailed(ch){ return TERMS.filter((t,i)=>t.ch===ch && failed.has(i)).length; }
+function segBar(tot, kn, fl){
+  if(!tot) return '<div class="bar seg"></div>';
+  return '<div class="bar seg"><i class="sok" style="width:'+(kn/tot*100)+'%"></i><i class="sng" style="width:'+(fl/tot*100)+'%"></i></div>';
+}
 function chCount(ch){ return TERMS.filter(t=>t.ch===ch).length; }
 function chKnown(ch){ return TERMS.filter((t,i)=>t.ch===ch && known.has(i)).length; }
 
@@ -1242,7 +1276,7 @@ function applyStatic(){
   $("doneBig").textContent = l.doneBig; $("doneSub").textContent = l.doneSub;
   $("bookTitle").textContent = l.bookTitle; $("bookSub").textContent = l.bookSub;
   const fc = document.querySelectorAll("#bookFilters .fchip");
-  fc[0].textContent = l.fAll; fc[1].textContent = l.fOk; fc[2].textContent = l.fNg;
+  fc[0].textContent = l.fAll; fc[1].textContent = l.fOk; fc[2].textContent = l.fNg; if(fc[3]) fc[3].textContent = l.fNew;
   $("searchTitle").textContent = l.searchTitle; $("searchSub").textContent = l.searchSub;
   $("searchInput").placeholder = l.searchPh;
   document.querySelectorAll(".tab [data-tab]").forEach((el,i)=>{ el.textContent = l.tabs[i]; });
@@ -1269,10 +1303,11 @@ function show(view){
   if(view==="settings") renderSettings();
   if(view==="test") renderTestSetup();
   if(view==="progress") renderProgress();
+  if(view==="daily") renderDaily();
 }
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click", ()=>{ se("tap"); show(t.dataset.view); }));
 $("btnStart").addEventListener("click", ()=>{ se("start"); show("subjects"); });
-$("btnBack").addEventListener("click", ()=>show("subjects"));
+$("btnBack").addEventListener("click", ()=>show(sCh==="daily" ? "daily" : "subjects"));
 
 /* ---------- home ---------- */
 function renderHome(){
@@ -1287,7 +1322,7 @@ function renderHome(){
     if(!SUBJECT_READY[ix]) return '<div class="subj off"><img class="subjic" src="'+ICONIMG[sic]+'" alt=""><span class="nm">'+nm+'</span><span class="badge soon">'+l.badgeSoon+'</span><div class="ds">'+l.subjDescSoon+'</div></div>';
     const p = Math.round(k/total*100);
     return '<button class="subj" id="subjPhysics"><img class="subjic" src="'+ICONIMG[sic]+'" alt=""><span class="nm">'+nm+'</span><span class="badge">'+l.badgeStudy+'</span><div class="ds">'+l.subjDescReady+'</div>'
-      + '<div class="bar"><i style="width:'+p+'%"></i></div><div class="pt">'+l.knownOf(k,total)+'</div></button>';
+      + segBar(total, k, failed.size) + '<div class="pt">'+l.knownOf(k,total)+(failed.size?' ・ '+l.failedLbl+' '+failed.size:'')+'</div></button>';
   }).join("");
   const sp = $("subjPhysics"); if(sp) sp.addEventListener("click", ()=>show("subjects"));
 }
@@ -1305,8 +1340,9 @@ function renderSubjects(){
     const tot = r.ch==="all" ? TERMS.length : chCount(r.ch);
     const kn  = r.ch==="all" ? known.size : chKnown(r.ch);
     const p = tot? Math.round(kn/tot*100):0;
-    return '<button class="chap-row" data-ch="'+r.ch+'"><span><span class="nm">'+r.nm+'</span><div class="ds">'+r.ds+' ・ '+l.knownLine(kn,tot)+'</div>'
-      + '<div class="bar"><i style="width:'+p+'%"></i></div></span><span class="go">›</span></button>';
+    const fl  = r.ch==="all" ? failed.size : chFailed(r.ch);
+    return '<button class="chap-row" data-ch="'+r.ch+'"><span><span class="nm">'+r.nm+'</span><div class="ds">'+r.ds+' ・ '+l.knownLine(kn,tot)+(fl?' ・ '+l.failedLbl+' '+fl:'')+'</div>'
+      + segBar(tot, kn, fl) + '</span><span class="go">›</span></button>';
   }).join("");
   document.querySelectorAll(".chap-row").forEach(b=>b.addEventListener("click", ()=>startStudy(b.dataset.ch)));
 }
@@ -1340,11 +1376,12 @@ function renderCard(){
   $("doneMsg").style.display = has? "none":"block";
   document.querySelector(".actions").style.visibility = has? "visible":"hidden";
   document.querySelector(".navrow").style.visibility = has? "visible":"hidden";
-  $("studyTitle").textContent = sCh==="all" ? l.studyAll : l.chNames[Number(sCh)];
+  $("studyTitle").textContent = sCh==="daily" ? T().dailyBtn : (sCh==="all" ? l.studyAll : l.chNames[Number(sCh)]);
   if(!has){ $("studyCnt").textContent = "0 / 0"; if(!celebrated){ celebrated = true; se("finish"); spawnConfetti(); } return; }
   const cardEl = $("card"); cardEl.classList.remove("pop"); void cardEl.offsetWidth; cardEl.classList.add("pop");
   if(sPos >= session.length) sPos = 0;
   const gi = session[sPos], t = TERMS[gi];
+  if(sCh==="daily") dailySeenAdd(gi);
   $("chTag").textContent = l.chNames[t.ch];
   $("termEn").textContent = t.en;
   $("termIpa").textContent = IPAS[gi] || "";
@@ -1356,7 +1393,9 @@ function renderCard(){
   $("termTr").textContent = tr(t);
   $("termNote").textContent = nt(t);
   $("termEn2").textContent = t.en;
-  $("knownBadge").textContent = known.has(gi) ? l.knownBadge : "";
+  const stNow = stateOf(gi);
+  $("knownBadge").textContent = stNow==="ok" ? l.knownBadge : (stNow==="ng" ? l.badgeNg : "");
+  $("knownBadge").style.color = stNow==="ng" ? "#b0402f" : "";
   $("card").classList.toggle("flipped", flipped);
   $("studyCnt").textContent = (sPos+1) + " / " + session.length;
 }
@@ -1366,8 +1405,8 @@ function mark(val){
   if(!session.length) return;
   se(val ? "good" : "bad");
   const gi = session[sPos];
-  if(val) known.add(gi); else known.delete(gi);
-  save(); flipped = false;
+  setState(gi, val ? "ok" : "ng");
+  flipped = false;
   if(!settings.autoNext && !(optUnknown && val)){ renderCard(); return; }
   if(optUnknown && val){
     session = session.filter(i=>i!==gi);
@@ -1398,9 +1437,10 @@ document.addEventListener("keydown", e=>{
 
 /* ---------- wordbook ---------- */
 function itemHTML(i){
-  const l = L(), t = TERMS[i], ok = known.has(i);
+  const l = L(), t = TERMS[i], st = stateOf(i);
+  const lbl = st==="ok" ? l.stOk : (st==="ng" ? l.stNg : l.stNew);
   return '<button class="witem" data-i="'+i+'"><span><span class="en">'+t.en+'</span><span class="wipa">'+(IPAS[i]||"")+'</span><div class="jp2">'+tr(t)+' ・ '+l.chNames[t.ch]+'</div></span>'
-    + '<span class="st '+(ok?"ok":"ng")+'" data-toggle="'+i+'">'+(ok?l.stOk:l.stNg)+'</span></button>';
+    + '<span class="st '+st+'" data-toggle="'+i+'">'+lbl+'</span></button>';
 }
 function bindItems(root){
   root.querySelectorAll(".witem").forEach(b=>{
@@ -1408,8 +1448,9 @@ function bindItems(root){
       const tg = e.target.closest("[data-toggle]");
       const i = Number(b.dataset.i);
       if(tg){ e.stopPropagation();
-        if(known.has(i)) known.delete(i); else known.add(i);
-        save(); renderBook(); renderSearch(); return;
+        const cur = stateOf(i);
+        setState(i, cur==="ok" ? "ng" : (cur==="ng" ? "new" : "ok"));
+        renderBook(); renderSearch(); renderDaily(); return;
       }
       startStudy(String(TERMS[i].ch), i);
     });
@@ -1420,8 +1461,7 @@ function renderBook(){
   document.querySelectorAll("#bookFilters .fchip").forEach(c=>c.classList.toggle("active", c.dataset.f===bookFilter));
   let html = "", lastCh = 0;
   TERMS.forEach((t,i)=>{
-    if(bookFilter==="ok" && !known.has(i)) return;
-    if(bookFilter==="ng" && known.has(i)) return;
+    if(bookFilter!=="all" && stateOf(i)!==bookFilter) return;
     if(t.ch!==lastCh){ html += '<div class="grp">'+l.chNames[t.ch]+'</div>'; lastCh = t.ch; }
     html += itemHTML(i);
   });
@@ -1451,7 +1491,7 @@ $("searchInput").addEventListener("input", renderSearch);
 /* ================= test & progress ================= */
 const TEST_I18N = {
 ja:{testBtn:"テスト",testBtnLong:"テストを受ける",progBtn:"進行度",testTitle:"テスト",
- testSub:"形式と向きを選んでスタート。正解した単語は「覚えた」に追加されます。",
+ testSub:"チャプター（複数OK）と形式・向きを選んでスタート。正解は「覚えた」、不正解は「覚えてない」に記録されます。",
  chLbl:"範囲",fmtLbl:"形式",fmtChoice:"四択",fmtType:"入力",dirLbl:"向き",
  dirA:"英語 → 母国語",dirB:"母国語 → 英語",
  cntInfo:(pool,n)=>"対象 "+pool+" 語 ／ 出題 "+n+" 問（出題数は設定で変更できます）",
@@ -1463,9 +1503,9 @@ ja:{testBtn:"テスト",testBtnLong:"テストを受ける",progBtn:"進行度",
  overallLbl:"全体・単元別",testLbl:"テスト成績",attempts:"受験回数",avg:"平均",best:"最高",
  recentLbl:"最近の結果",noTest:"まだテストを受けていません。",
  quitTitle:"テストをやめますか？",quitMsg:"今やめると、今回の成績は記録されません。それでもいいですか？",
- quitStay:"テストを続ける",quitLeave:"やめる（記録しない）"},
+ quitStay:"テストを続ける",quitLeave:"やめる（記録しない）",dailyBtn:"今日の単語",dailySub:"今日の10語を、まずカードで確認してからテストします。",dailyReview:"カードで確認する",dailyTestNow:"このままテストする",dailyAfter:"確認おつかれさま。この10語でテストしましょう。",dailyDone:"今日の分は完了しています ",dailyWordsLbl:"今日の10語"},
 ko:{testBtn:"테스트",testBtnLong:"테스트 받기",progBtn:"진행도",testTitle:"테스트",
- testSub:"형식과 방향을 고르고 시작하세요. 맞힌 단어는 '외움'에 추가됩니다.",
+ testSub:"챕터(복수 선택 가능)와 형식·방향을 고르고 시작하세요. 맞히면 '외움', 틀리면 '못 외움'으로 기록됩니다.",
  chLbl:"범위",fmtLbl:"형식",fmtChoice:"4지선다",fmtType:"입력",dirLbl:"방향",
  dirA:"영어 → 모국어",dirB:"모국어 → 영어",
  cntInfo:(pool,n)=>"대상 "+pool+"개 ／ 출제 "+n+"문제 (출제 수는 설정에서 변경)",
@@ -1477,9 +1517,9 @@ ko:{testBtn:"테스트",testBtnLong:"테스트 받기",progBtn:"진행도",testT
  overallLbl:"전체·단원별",testLbl:"테스트 성적",attempts:"응시 횟수",avg:"평균",best:"최고",
  recentLbl:"최근 결과",noTest:"아직 테스트를 받지 않았습니다.",
  quitTitle:"테스트를 그만둘까요?",quitMsg:"지금 그만두면 이번 성적은 기록되지 않습니다. 그래도 괜찮습니까?",
- quitStay:"계속하기",quitLeave:"그만두기 (기록 안 함)"},
+ quitStay:"계속하기",quitLeave:"그만두기 (기록 안 함)",dailyBtn:"오늘의 단어",dailySub:"오늘의 10단어를 먼저 카드로 확인한 뒤 테스트합니다.",dailyReview:"카드로 확인",dailyTestNow:"바로 테스트",dailyAfter:"확인 끝! 이 10단어로 테스트해요.",dailyDone:"오늘 분량은 완료했어요 ",dailyWordsLbl:"오늘의 10단어"},
 zh:{testBtn:"测试",testBtnLong:"参加测试",progBtn:"进度",testTitle:"测试",
- testSub:"选择形式和方向后开始。答对的单词会加入「会了」。",
+ testSub:"选择章节（可多选）、形式和方向后开始。答对记为「会了」，答错记为「还没记住」。",
  chLbl:"范围",fmtLbl:"形式",fmtChoice:"四选一",fmtType:"输入",dirLbl:"方向",
  dirA:"英语 → 母语",dirB:"母语 → 英语",
  cntInfo:(pool,n)=>"对象 "+pool+" 个 ／ 出题 "+n+" 题（题数可在设置中更改）",
@@ -1491,9 +1531,9 @@ zh:{testBtn:"测试",testBtnLong:"参加测试",progBtn:"进度",testTitle:"测�
  overallLbl:"整体・各单元",testLbl:"测试成绩",attempts:"测试次数",avg:"平均",best:"最高",
  recentLbl:"最近结果",noTest:"还没有参加过测试。",
  quitTitle:"要退出测试吗？",quitMsg:"现在退出，本次成绩将不会被记录。确定要退出吗？",
- quitStay:"继续测试",quitLeave:"退出（不记录）"},
+ quitStay:"继续测试",quitLeave:"退出（不记录）",dailyBtn:"今日单词",dailySub:"先用卡片复习今日10个单词，然后测试。",dailyReview:"用卡片复习",dailyTestNow:"直接测试",dailyAfter:"复习完成！用这10个单词测试。",dailyDone:"今日的已完成 ",dailyWordsLbl:"今日10词"},
 tw:{testBtn:"測驗",testBtnLong:"參加測驗",progBtn:"進度",testTitle:"測驗",
- testSub:"選擇形式和方向後開始。答對的單字會加入「會了」。",
+ testSub:"選擇章節（可多選）、形式和方向後開始。答對記為「會了」，答錯記為「還沒記住」。",
  chLbl:"範圍",fmtLbl:"形式",fmtChoice:"四選一",fmtType:"輸入",dirLbl:"方向",
  dirA:"英語 → 母語",dirB:"母語 → 英語",
  cntInfo:(pool,n)=>"對象 "+pool+" 個 ／ 出題 "+n+" 題（題數可在設定中更改）",
@@ -1505,9 +1545,9 @@ tw:{testBtn:"測驗",testBtnLong:"參加測驗",progBtn:"進度",testTitle:"測�
  overallLbl:"整體・各單元",testLbl:"測驗成績",attempts:"測驗次數",avg:"平均",best:"最高",
  recentLbl:"最近結果",noTest:"還沒有參加過測驗。",
  quitTitle:"要退出測驗嗎？",quitMsg:"現在退出，本次成績將不會被記錄。確定要退出嗎？",
- quitStay:"繼續測驗",quitLeave:"退出（不記錄）"},
+ quitStay:"繼續測驗",quitLeave:"退出（不記錄）",dailyBtn:"今日單字",dailySub:"先用卡片複習今日10個單字，然後測驗。",dailyReview:"用卡片複習",dailyTestNow:"直接測驗",dailyAfter:"複習完成！用這10個單字測驗。",dailyDone:"今日的已完成 ",dailyWordsLbl:"今日10字"},
 en:{testBtn:"Test",testBtnLong:"Take a test",progBtn:"Progress",testTitle:"Test",
- testSub:"Choose the format and direction, then start. Words you get right are marked as learned.",
+ testSub:"Choose chapters (multiple OK), format and direction, then start. Correct answers are marked learned; wrong ones are marked as not learned yet.",
  chLbl:"Range",fmtLbl:"Format",fmtChoice:"Multiple choice",fmtType:"Typing",dirLbl:"Direction",
  dirA:"Term → Definition",dirB:"Definition → Term",
  cntInfo:(pool,n)=>pool+" words available / "+n+" questions (change the count in Settings)",
@@ -1519,33 +1559,33 @@ en:{testBtn:"Test",testBtnLong:"Take a test",progBtn:"Progress",testTitle:"Test"
  overallLbl:"Overall & by unit",testLbl:"Test results",attempts:"Tests taken",avg:"Average",best:"Best",
  recentLbl:"Recent results",noTest:"No tests taken yet.",
  quitTitle:"Quit the test?",quitMsg:"If you quit now, this attempt will not be recorded. Is that OK?",
- quitStay:"Keep going",quitLeave:"Quit (don't record)"}
+ quitStay:"Keep going",quitLeave:"Quit (don't record)",dailyBtn:"Today's words",dailySub:"Review today's 10 words with cards first, then take the test.",dailyReview:"Review with cards",dailyTestNow:"Test now",dailyAfter:"Review done! Let's test these 10 words.",dailyDone:"Done for today ",dailyWordsLbl:"Today's 10 words"}
 };
 const T = () => TEST_I18N[lang];
 const LS_LOG = "stem-english-testlog";
 let testLog = [];
 try{ testLog = JSON.parse(store.get(LS_LOG) || "[]"); }catch(e){ testLog = []; }
-let tCh = "all", tFmt = "choice", tDir = "en2nat";
+let tChs = new Set([1,2,3,4]), tFmt = "choice", tDir = "en2nat";
 let quiz = null;
 
 function applyTestText(){
   const t = T();
-  $("lblTestHome").textContent = t.testBtn;
+  $("lblTestHome").textContent = t.dailyBtn;
   $("lblProgHome").textContent = t.progBtn;
   $("lblTestSubj").textContent = t.testBtnLong;
   $("lblResultProg").textContent = t.progBtn;
   $("lblResultSubj").textContent = t.toSubjects;
 }
-$("btnTestHome").addEventListener("click", ()=>show("test"));
+$("btnTestHome").addEventListener("click", ()=>show("daily"));
 $("btnTestSubj").addEventListener("click", ()=>show("test"));
 $("btnProgHome").addEventListener("click", ()=>show("progress"));
 $("btnTestBack").addEventListener("click", ()=>show("subjects"));
 $("btnProgBack").addEventListener("click", ()=>show("home"));
 $("btnResultProg").addEventListener("click", ()=>show("progress"));
 $("btnResultSubj").addEventListener("click", ()=>show("subjects"));
-$("btnAgain").addEventListener("click", ()=>{ renderTestSetup(); });
+$("btnAgain").addEventListener("click", ()=>{ if(quiz && quiz.daily){ quiz = null; show("daily"); } else { quiz = null; renderTestSetup(); } });
 
-function poolIdx(ch){ return TERMS.map((t,i)=>i).filter(i => ch==="all" || TERMS[i].ch===Number(ch)); }
+function poolIdx(){ return TERMS.map((t,i)=>i).filter(i => tChs.has(TERMS[i].ch)); }
 function shuffled(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 function sideText(i, side){
   if(side==="en") return TERMS[i].en;
@@ -1565,12 +1605,16 @@ function renderTestSetup(){
   $("tFmtType").textContent = t.fmtType;
   $("tDirA").textContent = t.dirA;
   $("tDirB").textContent = t.dirB;
-  const rows = [{ch:"all", nm:l.fAll}].concat([1,2,3,4].map(c=>({ch:String(c), nm:l.chNames[c]})));
-  $("tChRow").innerHTML = rows.map(r=>'<button class="fchip'+(tCh===r.ch?" active":"")+'" data-tch="'+r.ch+'">'+r.nm+'</button>').join("");
-  document.querySelectorAll("[data-tch]").forEach(b=>b.addEventListener("click", ()=>{ tCh = b.dataset.tch; renderTestSetup(); }));
+  const rows = [{ch:"all", nm:l.fAll, on:tChs.size===4}].concat([1,2,3,4].map(c=>({ch:String(c), nm:l.chNames[c], on:tChs.has(c)})));
+  $("tChRow").innerHTML = rows.map(r=>'<button class="fchip'+(r.on?" active":"")+'" data-tch="'+r.ch+'">'+r.nm+'</button>').join("");
+  document.querySelectorAll("[data-tch]").forEach(b=>b.addEventListener("click", ()=>{
+    if(b.dataset.tch==="all"){ tChs = new Set([1,2,3,4]); }
+    else { const c = Number(b.dataset.tch); if(tChs.has(c)){ if(tChs.size>1) tChs.delete(c); } else tChs.add(c); }
+    renderTestSetup();
+  }));
   document.querySelectorAll("[data-tfmt]").forEach(b=>b.classList.toggle("active", b.dataset.tfmt===tFmt));
   document.querySelectorAll("[data-tdir]").forEach(b=>b.classList.toggle("active", b.dataset.tdir===tDir));
-  const pool = poolIdx(tCh).length;
+  const pool = poolIdx().length;
   const n = settings.qcount>0 ? Math.min(settings.qcount, pool) : pool;
   $("tCntInfo").textContent = t.cntInfo(pool, n);
   $("lblStartTest").textContent = t.start;
@@ -1579,10 +1623,10 @@ function renderTestSetup(){
 document.querySelectorAll("[data-tfmt]").forEach(b=>b.addEventListener("click", ()=>{ tFmt = b.dataset.tfmt; renderTestSetup(); }));
 document.querySelectorAll("[data-tdir]").forEach(b=>b.addEventListener("click", ()=>{ tDir = b.dataset.tdir; renderTestSetup(); }));
 
-function buildQuiz(){
-  const idxs = shuffled(poolIdx(tCh));
-  const n = settings.qcount>0 ? Math.min(settings.qcount, idxs.length) : idxs.length;
-  const picked = idxs.slice(0, n);
+function buildQuiz(){ return buildQuizFrom(shuffled(poolIdx())); }
+function buildQuizFrom(pickedAll){
+  const n = settings.qcount>0 ? Math.min(settings.qcount, pickedAll.length) : pickedAll.length;
+  const picked = pickedAll.slice(0, n);
   return picked.map(gi=>{
     let pSide = tDir==="en2nat" ? "en" : "nat";
     let aSide = tDir==="en2nat" ? "nat" : "en";
@@ -1600,7 +1644,7 @@ function startTest(){
   se("start");
   const list = buildQuiz();
   if(!list.length) return;
-  quiz = {list, pos:0, score:0, locked:false, knownSnap:new Set(known)};
+  quiz = {list, pos:0, score:0, locked:false, knownSnap:new Set(known), failedSnap:new Set(failed)};
   $("testSetup").style.display = "none";
   $("testResult").style.display = "none";
   $("testRun").style.display = "block";
@@ -1649,7 +1693,7 @@ function finishAnswer(ok, correctText){
   se(ok ? "good" : "bad");
   quiz.locked = true;
   const q = quiz.list[quiz.pos];
-  if(ok){ quiz.score++; if(!known.has(q.gi)){ known.add(q.gi); save(); } }
+  if(ok){ quiz.score++; setState(q.gi, "ok"); } else { setState(q.gi, "ng"); }
   $("qFeedback").textContent = ok ? t.correct : (t.wrong + " — " + t.ansIs(correctText));
   $("qFeedback").className = "qfeedback " + (ok ? "ok" : "ng");
   const qim = $("qVisImg");
@@ -1718,6 +1762,7 @@ function askQuitQuiz(next){
 function closeQuitModal(){ $("quitModal").style.display = "none"; pendingNav = null; }
 function discardQuiz(){
   if(quiz && quiz.knownSnap){ known.clear(); quiz.knownSnap.forEach(i=>known.add(i)); save(); }
+  if(quiz && quiz.failedSnap){ failed.clear(); quiz.failedSnap.forEach(i=>failed.add(i)); saveFailed(); }
   quiz = null;
 }
 $("qmStay").addEventListener("click", closeQuitModal);
@@ -1733,7 +1778,7 @@ function showResult(){
   const t = T();
   const total = quiz.list.length, c = quiz.score;
   const pct = total? Math.round(c/total*100) : 0;
-  testLog.push({ts:Date.now(), ch:tCh, fmt:tFmt, dir:tDir, total, correct:c});
+  testLog.push({ts:Date.now(), ch:(quiz && quiz.daily) ? "daily" : (tChs.size===4 ? "all" : [...tChs].sort((a,b)=>a-b).join("+")), fmt:tFmt, dir:tDir, total, correct:c});
   store.set(LS_LOG, JSON.stringify(testLog));
   $("testRun").style.display = "none";
   $("testResult").style.display = "block";
@@ -1746,6 +1791,75 @@ function showResult(){
   se(pct>=50 ? "finish" : "tap");
   if(pct>=80) spawnConfetti();
 }
+
+/* ---------- daily: today's 10 words ---------- */
+let dailySeenDate = "", dailySeen = new Set();
+function todayKey(){ const d = new Date(); return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); }
+function dailySeenAdd(gi){
+  if(dailySeenDate !== todayKey()){ dailySeenDate = todayKey(); dailySeen = new Set(); }
+  dailySeen.add(gi);
+}
+const LS_DAILY = "stem-english-daily";
+function dailyWords(){
+  const dk = todayKey();
+  try{ const saved = JSON.parse(store.get(LS_DAILY) || "null");
+    if(saved && saved.date === dk && Array.isArray(saved.list) && saved.list.length) return saved.list.slice();
+  }catch(e){}
+  const d = new Date();
+  let s = (d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate()) >>> 0;
+  const rnd = ()=>{ s = (s*1103515245 + 12345) % 2147483648; return s/2147483648; };
+  const shuf = a => { a = a.slice(); for(let i=a.length-1;i>0;i--){ const j = Math.floor(rnd()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+  const all = TERMS.map((t,i)=>i);
+  const fl = shuf(all.filter(i=>failed.has(i)));
+  const nw = shuf(all.filter(i=>!known.has(i) && !failed.has(i)));
+  const kn = shuf(all.filter(i=>known.has(i)));
+  const list = fl.concat(nw).concat(kn).slice(0, 10);
+  store.set(LS_DAILY, JSON.stringify({date: dk, list}));
+  return list.slice();
+}
+function dailyTestDoneToday(){
+  const k = todayKey();
+  return testLog.some(x=>{ if(x.ch!=="daily") return false; const d = new Date(x.ts); return (d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate())===k; });
+}
+function renderDaily(){
+  const t = T();
+  if(!$("dailyList")) return;
+  $("dailyTitle").textContent = t.dailyBtn;
+  $("dailySub").textContent = t.dailySub;
+  $("dailyWordsLbl").textContent = t.dailyWordsLbl;
+  $("lblDailyReview").textContent = t.dailyReview;
+  $("lblDailyTest").textContent = t.dailyTestNow;
+  const list = dailyWords();
+  $("dailyList").innerHTML = list.map(itemHTML).join("");
+  bindItems($("dailyList"));
+  const seenAll = list.length>0 && list.every(i=>dailySeenDate===todayKey() && dailySeen.has(i));
+  $("dailyNote").textContent = dailyTestDoneToday() ? t.dailyDone : (seenAll ? t.dailyAfter : "");
+}
+function startDailyReview(){
+  se("start");
+  session = dailyWords(); sCh = "daily"; sPos = 0; flipped = false; celebrated = false;
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  $("view-study").classList.add("active");
+  document.querySelectorAll(".tab").forEach(tb=>tb.classList.remove("active"));
+  renderCard();
+}
+function startDailyTest(){
+  se("start");
+  const list = buildQuizFrom(shuffled(dailyWords()));
+  if(!list.length) return;
+  quiz = {list, pos:0, score:0, locked:false, daily:true, knownSnap:new Set(known), failedSnap:new Set(failed)};
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  $("view-test").classList.add("active");
+  document.querySelectorAll(".tab").forEach(tb=>tb.classList.remove("active"));
+  $("testTitle").textContent = T().dailyBtn;
+  $("testSetup").style.display = "none";
+  $("testResult").style.display = "none";
+  $("testRun").style.display = "block";
+  renderQ();
+}
+$("btnDailyBack").addEventListener("click", ()=>show("home"));
+$("btnDailyReview").addEventListener("click", startDailyReview);
+$("btnDailyTest").addEventListener("click", startDailyTest);
 
 /* ---------- progress ---------- */
 function renderProgress(){
@@ -1760,8 +1874,9 @@ function renderProgress(){
     const tot = r.ch==="all" ? TERMS.length : chCount(r.ch);
     const kn  = r.ch==="all" ? known.size : chKnown(r.ch);
     const p = tot? Math.round(kn/tot*100):0;
-    return '<div class="chap-row" style="cursor:default"><span><span class="nm">'+r.nm+'</span><div class="ds">'+l.knownLine(kn,tot)+' ・ '+p+'%</div>'
-      + '<div class="bar"><i style="width:'+p+'%"></i></div></span></div>';
+    const fl  = r.ch==="all" ? failed.size : chFailed(r.ch);
+    return '<div class="chap-row" style="cursor:default"><span><span class="nm">'+r.nm+'</span><div class="ds">'+l.knownLine(kn,tot)+(fl?' ・ '+l.failedLbl+' '+fl:'')+' ・ '+p+'%</div>'
+      + segBar(tot, kn, fl) + '</span></div>';
   }).join("");
   $("stAttemptsK").textContent = t.attempts;
   $("stAvgK").textContent = t.avg;
@@ -1774,7 +1889,11 @@ function renderProgress(){
     const locale = ({ja:"ja-JP",ko:"ko-KR",zh:"zh-CN",tw:"zh-TW",en:"en-US"})[lang];
     $("progRecent").innerHTML = testLog.slice(-5).reverse().map(x=>{
       const d = new Date(x.ts).toLocaleDateString(locale);
-      const chName = x.ch==="all" ? l.studyAll : l.chNames[Number(x.ch)];
+      let chName;
+      if(x.ch==="all") chName = l.studyAll;
+      else if(x.ch==="daily") chName = T().dailyBtn;
+      else if(typeof x.ch==="string" && x.ch.indexOf("+")>=0) chName = "Ch." + x.ch.split("+").join(", Ch.");
+      else chName = l.chNames[Number(x.ch)] || l.studyAll;
       const fmt = x.fmt==="choice" ? t.fmtChoice : t.fmtType;
       const p = x.total? Math.round(x.correct/x.total*100):0;
       return '<div class="log-row"><span>'+chName+' ・ '+fmt+'</span><span class="dt">'+d+'</span><span class="sc">'+x.correct+' / '+x.total+' ('+p+'%)</span></div>';
@@ -1837,34 +1956,34 @@ function spawnConfetti(){
 const SET = {
 ja:{tab:"設定",title:"設定",langGt:"言語",langLb:"表示言語",themeLb:"テーマ",light:"ライト",dark:"ダーク",
  fontLb:"文字サイズ",fsS:"小",fsM:"中",fsL:"大",studyGt:"学習",qcountLb:"テストの出題数（1回）",speakLb:"発音を自動再生",seLb:"効果音",shufLb:"シャッフル（初期値）",
- unkLb:"まだのカードだけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",
+ unkLb:"覚えた以外だけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",
  dataGt:"データ",progLb:"学習の進捗",progVal:(k,t)=>"覚えた "+k+" / "+t+" 語",resetLb:"進捗リセット",reset:"リセット",
  resetConfirm:"覚えた記録を全部リセットしますか？",aboutGt:"このアプリについて",
- about:"STEM English（仮） v21<br>英語で理系を学ぶ学生のための用語カード。現在は物理58語を収録し、日本語・韓国語・簡体中文・繁體中文・英語に対応。進捗はこの端末の中だけに保存されます。"},
+ about:"STEM English（仮） v22<br>英語で理系を学ぶ学生のための用語カード。現在は物理58語を収録し、日本語・韓国語・簡体中文・繁體中文・英語に対応。進捗はこの端末の中だけに保存されます。"},
 ko:{tab:"설정",title:"설정",langGt:"언어",langLb:"표시 언어",themeLb:"테마",light:"라이트",dark:"다크",
  fontLb:"글자 크기",fsS:"작게",fsM:"보통",fsL:"크게",studyGt:"학습",qcountLb:"테스트 출제 수 (1회)",speakLb:"발음 자동 재생",seLb:"효과음",shufLb:"셔플 (기본값)",
- unkLb:"아직 모르는 카드만 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",
+ unkLb:"외운 단어 제외 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",
  dataGt:"데이터",progLb:"학습 진도",progVal:(k,t)=>"외움 "+k+" / "+t+"개",resetLb:"진도 초기화",reset:"초기화",
  resetConfirm:"외운 기록을 전부 초기화할까요?",aboutGt:"이 앱에 대하여",
- about:"STEM English(가칭) v21<br>영어로 이공계를 배우는 학생을 위한 용어 카드. 현재 물리 58개를 수록하고 일본어·한국어·简体中文·繁體中文·영어를 지원합니다. 진도는 이 기기에만 저장됩니다."},
+ about:"STEM English(가칭) v22<br>영어로 이공계를 배우는 학생을 위한 용어 카드. 현재 물리 58개를 수록하고 일본어·한국어·简体中文·繁體中文·영어를 지원합니다. 진도는 이 기기에만 저장됩니다."},
 zh:{tab:"设置",title:"设置",langGt:"语言",langLb:"显示语言",themeLb:"主题",light:"浅色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"学习",qcountLb:"测试题数（每次）",speakLb:"自动播放发音",seLb:"音效",shufLb:"随机顺序（默认）",
- unkLb:"只看没掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",
+ unkLb:"只看未掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",
  dataGt:"数据",progLb:"学习进度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 个",resetLb:"重置进度",reset:"重置",
  resetConfirm:"要重置全部掌握记录吗？",aboutGt:"关于本应用",
- about:"STEM English（暂定名） v21<br>为用英语学习理工科的学生制作的术语卡。目前收录物理58个词，支持日语、韩语、简体中文、繁體中文和英语。进度只保存在本设备中。"},
+ about:"STEM English（暂定名） v22<br>为用英语学习理工科的学生制作的术语卡。目前收录物理58个词，支持日语、韩语、简体中文、繁體中文和英语。进度只保存在本设备中。"},
 tw:{tab:"設定",title:"設定",langGt:"語言",langLb:"顯示語言",themeLb:"主題",light:"淺色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"學習",qcountLb:"測試題數（每次）",speakLb:"自動播放發音",seLb:"音效",shufLb:"隨機順序（預設）",
- unkLb:"只看沒掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",
+ unkLb:"只看未掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",
  dataGt:"資料",progLb:"學習進度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 個",resetLb:"重置進度",reset:"重置",
  resetConfirm:"要重置全部掌握記錄嗎？",aboutGt:"關於本應用",
- about:"STEM English（暫定名） v21<br>為用英語學習理工科的學生製作的術語卡。目前收錄物理58個詞，支援日語、韓語、简体中文、繁體中文和英語。進度只保存在本裝置中。"},
+ about:"STEM English（暫定名） v22<br>為用英語學習理工科的學生製作的術語卡。目前收錄物理58個詞，支援日語、韓語、简体中文、繁體中文和英語。進度只保存在本裝置中。"},
 en:{tab:"Settings",title:"Settings",langGt:"Language",langLb:"Display language",themeLb:"Theme",light:"Light",dark:"Dark",
  fontLb:"Font size",fsS:"S",fsM:"M",fsL:"L",studyGt:"Study",qcountLb:"Questions per test",speakLb:"Auto-play pronunciation",seLb:"Sound effects",shufLb:"Shuffle (default)",
- unkLb:"Only unlearned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",
+ unkLb:"Hide learned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",
  dataGt:"Data",progLb:"Progress",progVal:(k,t)=>"Learned "+k+" / "+t,resetLb:"Reset progress",reset:"Reset",
  resetConfirm:"Reset all learned records?",aboutGt:"About",
- about:"STEM English (working title) v21<br>Word cards for students who study science in English. Currently 58 physics terms, in Japanese, Korean, Simplified Chinese, Traditional Chinese, and English. Progress is stored only on this device."}
+ about:"STEM English (working title) v22<br>Word cards for students who study science in English. Currently 58 physics terms, in Japanese, Korean, Simplified Chinese, Traditional Chinese, and English. Progress is stored only on this device."}
 };
 const LS_SET = "stem-english-settings";
 let settings = {theme:"light", font:"m", autoNext:true, anim:true, qcount:10, autoSpeak:true, se:true};
@@ -1932,7 +2051,7 @@ document.querySelectorAll("[data-qcount]").forEach(b=>b.addEventListener("click"
 $("setSpeakTgl").addEventListener("click", ()=>{ settings.autoSpeak=!settings.autoSpeak; saveSettings(); renderSettings(); });
 $("setSeTgl").addEventListener("click", ()=>{ settings.se=!settings.se; saveSettings(); renderSettings(); if(settings.se) se("good"); });
 $("btnResetProg").addEventListener("click", ()=>{
-  if(confirm(SET[lang].resetConfirm)){ known.clear(); save(); renderSettings(); renderHome(); }
+  if(confirm(SET[lang].resetConfirm)){ known.clear(); failed.clear(); save(); saveFailed(); renderSettings(); renderHome(); }
 });
 
 applySettings();
