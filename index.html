@@ -201,7 +201,8 @@
   .line-chart{width:100%; margin-top:6px;}
   .lc-scroll{width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;}
   .lc-scroll .line-chart{width:200%;}
-  .lc-plot{position:relative; height:92px;}
+  .lc-plot{position:relative; height:104px;}
+  .lc-grid{position:absolute; left:3px; transform:translateY(-50%); font-size:9.5px; color:var(--sub);}
   .lc-plot svg{position:absolute; inset:0; width:100%; height:100%;}
   .lc-dot{position:absolute; width:7px; height:7px; border-radius:50%; background:#2563eb; transform:translate(-50%,-50%);}
   .lc-dot.today{background:#d97706; width:9px; height:9px;}
@@ -400,7 +401,7 @@
           </div>
           <div class="motiv-side" id="homeActLine"></div>
         </div>
-        <div class="chart-switch"><button class="fchip cs-btn" data-period="week"></button><button class="fchip cs-btn" data-period="month"></button><button class="fchip cs-btn" data-period="year"></button></div>
+        <div class="chart-switch"><button class="fchip cs-btn" data-period="month"></button><button class="fchip cs-btn" data-period="year"></button></div>
         <div id="homeActChart" class="act-chart"></div>
       </div>
       <h2 class="sec" id="secSubjects">科目</h2>
@@ -569,7 +570,7 @@
         <div class="stat-cell"><div class="v" id="stActWeek">0</div><div class="k" id="stActWeekK"></div></div>
         <div class="stat-cell"><div class="v" id="stActWeekKnown">0</div><div class="k" id="stActWeekKnownK"></div></div>
       </div>
-      <div class="chart-switch"><button class="fchip cs-btn" data-period="week"></button><button class="fchip cs-btn" data-period="month"></button><button class="fchip cs-btn" data-period="year"></button></div>
+      <div class="chart-switch"><button class="fchip cs-btn" data-period="month"></button><button class="fchip cs-btn" data-period="year"></button></div>
       <div id="actChart" class="act-chart"></div>
       <div class="empty" id="actNone" style="display:none"></div>
       <div class="grp" id="progTestLbl"></div>
@@ -1895,8 +1896,8 @@ function actStreak(){
   }
   return streak;
 }
-let chartPeriod = store.get("stem-english-chartperiod") || "week";
-if(!["week","month","year"].includes(chartPeriod)) chartPeriod = "week";
+let chartPeriod = store.get("stem-english-chartperiod") || "month";
+if(!["month","year"].includes(chartPeriod)) chartPeriod = "month";
 function monthLabel(d){
   const m = d.getMonth();
   if(lang === "en") return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][m];
@@ -1916,26 +1917,18 @@ function actBuckets(){
     }
     return out;
   }
-  if(chartPeriod === "month"){
-    const now = new Date();
-    const daysIn = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-    for(let dd = 1; dd <= daysIn; dd++){
-      const a = activity[actKey(new Date(now.getFullYear(), now.getMonth(), dd))];
-      out.push({label: (dd - 1) % 5 === 0 ? (now.getMonth()+1)+"/"+dd : "", c: a ? a.w.length : 0, today: dd === now.getDate()});
-    }
-    return out;
-  }
-  for(let off = 6; off >= 0; off--){
+  for(let off = 29; off >= 0; off--){
     const d = new Date(); d.setDate(d.getDate() - off);
     const a = activity[actKey(d)];
-    out.push({label: (d.getMonth()+1)+"/"+d.getDate(), c: a ? a.w.length : 0, today: off === 0});
+    const idx = 29 - off;
+    out.push({label: (idx % 5 === 0 || off === 0) ? (d.getMonth()+1)+"/"+d.getDate() : "", c: a ? a.w.length : 0, today: off === 0});
   }
   return out;
 }
 function renderChartSwitches(){
   const t = T();
   document.querySelectorAll(".cs-btn").forEach(b=>{
-    b.textContent = b.dataset.period === "week" ? t.chartW : b.dataset.period === "month" ? t.chartM : t.chartY;
+    b.textContent = b.dataset.period === "month" ? t.chartM : t.chartY;
     b.classList.toggle("active", b.dataset.period === chartPeriod);
   });
 }
@@ -1958,7 +1951,12 @@ function actLineChartHTML(buckets){
     if(x.c > 0 && (x.today || x.c === max)) vals += '<span class="lc-val" style="left:'+((i+0.5)/n*100)+'%; top:'+Y(x.c)+'%;">'+x.c+'</span>';
   });
   const labels = buckets.map(x=>'<span>'+x.label+'</span>').join("");
-  return '<div class="line-chart"><div class="lc-plot"><svg viewBox="0 0 1000 100" preserveAspectRatio="none"><polygon points="'+X(0)+',96 '+pts+' '+X(upto)+',96" fill="rgba(37,99,235,.12)"></polygon><polyline points="'+pts+'" fill="none" stroke="#2563eb" stroke-width="2.5" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"></polyline></svg>'+dots+vals+'</div><div class="lc-labels">'+labels+'</div></div>';
+  let grid = '<line x1="0" y1="96" x2="1000" y2="96" stroke="rgba(100,116,139,.35)" stroke-width="1" vector-effect="non-scaling-stroke"></line>', gridLbl = "";
+  const gridLine = c => '<line x1="0" y1="'+Y(c)+'" x2="1000" y2="'+Y(c)+'" stroke="rgba(100,116,139,.22)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"></line>';
+  if(max >= 1){ grid += gridLine(max); gridLbl += '<span class="lc-grid" style="top:'+Y(max)+'%;">'+max+'</span>'; }
+  const midC = Math.floor(max / 2);
+  if(midC >= 1 && midC < max){ grid += gridLine(midC); gridLbl += '<span class="lc-grid" style="top:'+Y(midC)+'%;">'+midC+'</span>'; }
+  return '<div class="line-chart"><div class="lc-plot"><svg viewBox="0 0 1000 100" preserveAspectRatio="none">'+grid+'<polygon points="'+X(0)+',96 '+pts+' '+X(upto)+',96" fill="rgba(37,99,235,.12)"></polygon><polyline points="'+pts+'" fill="none" stroke="#2563eb" stroke-width="3" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"></polyline></svg>'+gridLbl+dots+vals+'</div><div class="lc-labels">'+labels+'</div></div>';
 }
 function chartHTML(){
   const h = actLineChartHTML(actBuckets());
@@ -2168,31 +2166,31 @@ ja:{tab:"設定",title:"設定",langGt:"言語",langLb:"表示言語",themeLb:"�
  unkLb:"覚えた以外だけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",
  dataGt:"データ",progLb:"学習の進捗",progVal:(k,t)=>"覚えた "+k+" / "+t+" 語",resetLb:"進捗リセット",reset:"リセット",
  resetConfirm:"覚えた記録を全部リセットしますか？",aboutGt:"このアプリについて",
- about:"STEM English（仮） v34<br>英語で理系を学ぶ学生のための用語カード。現在は物理58語を収録し、日本語・韓国語・簡体中文・繁體中文・英語に対応。進捗はこの端末の中だけに保存されます。"},
+ about:"STEM English（仮） v35<br>英語で理系を学ぶ学生のための用語カード。現在は物理58語を収録し、日本語・韓国語・簡体中文・繁體中文・英語に対応。進捗はこの端末の中だけに保存されます。"},
 ko:{tab:"설정",title:"설정",langGt:"언어",langLb:"표시 언어",themeLb:"테마",light:"라이트",dark:"다크",
  fontLb:"글자 크기",fsS:"작게",fsM:"보통",fsL:"크게",studyGt:"학습",qcountLb:"테스트 출제 수 (1회)",speakLb:"발음 자동 재생",seLb:"효과음",shufLb:"셔플 (기본값)",
  unkLb:"외운 단어 제외 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",
  dataGt:"데이터",progLb:"학습 진도",progVal:(k,t)=>"외움 "+k+" / "+t+"개",resetLb:"진도 초기화",reset:"초기화",
  resetConfirm:"외운 기록을 전부 초기화할까요?",aboutGt:"이 앱에 대하여",
- about:"STEM English(가칭) v34<br>영어로 이공계를 배우는 학생을 위한 용어 카드. 현재 물리 58개를 수록하고 일본어·한국어·简体中文·繁體中文·영어를 지원합니다. 진도는 이 기기에만 저장됩니다."},
+ about:"STEM English(가칭) v35<br>영어로 이공계를 배우는 학생을 위한 용어 카드. 현재 물리 58개를 수록하고 일본어·한국어·简体中文·繁體中文·영어를 지원합니다. 진도는 이 기기에만 저장됩니다."},
 zh:{tab:"设置",title:"设置",langGt:"语言",langLb:"显示语言",themeLb:"主题",light:"浅色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"学习",qcountLb:"测试题数（每次）",speakLb:"自动播放发音",seLb:"音效",shufLb:"随机顺序（默认）",
  unkLb:"只看未掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",
  dataGt:"数据",progLb:"学习进度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 个",resetLb:"重置进度",reset:"重置",
  resetConfirm:"要重置全部掌握记录吗？",aboutGt:"关于本应用",
- about:"STEM English（暂定名） v34<br>为用英语学习理工科的学生制作的术语卡。目前收录物理58个词，支持日语、韩语、简体中文、繁體中文和英语。进度只保存在本设备中。"},
+ about:"STEM English（暂定名） v35<br>为用英语学习理工科的学生制作的术语卡。目前收录物理58个词，支持日语、韩语、简体中文、繁體中文和英语。进度只保存在本设备中。"},
 tw:{tab:"設定",title:"設定",langGt:"語言",langLb:"顯示語言",themeLb:"主題",light:"淺色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"學習",qcountLb:"測試題數（每次）",speakLb:"自動播放發音",seLb:"音效",shufLb:"隨機順序（預設）",
  unkLb:"只看未掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",
  dataGt:"資料",progLb:"學習進度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 個",resetLb:"重置進度",reset:"重置",
  resetConfirm:"要重置全部掌握記錄嗎？",aboutGt:"關於本應用",
- about:"STEM English（暫定名） v34<br>為用英語學習理工科的學生製作的術語卡。目前收錄物理58個詞，支援日語、韓語、简体中文、繁體中文和英語。進度只保存在本裝置中。"},
+ about:"STEM English（暫定名） v35<br>為用英語學習理工科的學生製作的術語卡。目前收錄物理58個詞，支援日語、韓語、简体中文、繁體中文和英語。進度只保存在本裝置中。"},
 en:{tab:"Settings",title:"Settings",langGt:"Language",langLb:"Display language",themeLb:"Theme",light:"Light",dark:"Dark",
  fontLb:"Font size",fsS:"S",fsM:"M",fsL:"L",studyGt:"Study",qcountLb:"Questions per test",speakLb:"Auto-play pronunciation",seLb:"Sound effects",shufLb:"Shuffle (default)",
  unkLb:"Hide learned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",
  dataGt:"Data",progLb:"Progress",progVal:(k,t)=>"Learned "+k+" / "+t,resetLb:"Reset progress",reset:"Reset",
  resetConfirm:"Reset all learned records?",aboutGt:"About",
- about:"STEM English (working title) v34<br>Word cards for students who study science in English. Currently 58 physics terms, in Japanese, Korean, Simplified Chinese, Traditional Chinese, and English. Progress is stored only on this device."}
+ about:"STEM English (working title) v35<br>Word cards for students who study science in English. Currently 58 physics terms, in Japanese, Korean, Simplified Chinese, Traditional Chinese, and English. Progress is stored only on this device."}
 };
 const LS_SET = "stem-english-settings";
 let settings = {theme:"light", font:"m", autoNext:true, anim:true, qcount:10, autoSpeak:true, se:true};
