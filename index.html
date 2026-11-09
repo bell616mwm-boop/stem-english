@@ -260,6 +260,7 @@
   .qfeedback{min-height:26px; text-align:center; font-size:15px; font-weight:700; margin:10px 0 4px;}
   .qfeedback.ok{color:var(--good);} .qfeedback.ng{color:var(--bad);}
   .stat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px;}
+  .stat-grid.four{grid-template-columns:repeat(4,1fr);}
   .stat-cell{background:var(--glass); border:1.5px solid var(--line); border-radius:16px; padding:13px 8px; text-align:center;
     box-shadow:0 5px 14px rgba(50,70,110,.11);}
   .stat-cell .v{font-size:21px; font-weight:800;}
@@ -366,6 +367,7 @@
       <div class="hero">
         <img class="mascot" data-icon="mascot" alt="">
         <div>
+          <div class="big" id="heroBig"></div>
           <div class="small" id="heroSmall"></div>
         </div>
       </div>
@@ -544,10 +546,11 @@
       <div class="grp" id="progOverallLbl"></div>
       <div id="progChapters"></div>
       <div class="grp" id="progActLbl"></div>
-      <div class="stat-grid">
+      <div class="stat-grid four">
         <div class="stat-cell"><div class="v" id="stActToday">0</div><div class="k" id="stActTodayK"></div></div>
         <div class="stat-cell"><div class="v" id="stActStreak">0</div><div class="k" id="stActStreakK"></div></div>
         <div class="stat-cell"><div class="v" id="stActWeek">0</div><div class="k" id="stActWeekK"></div></div>
+        <div class="stat-cell"><div class="v" id="stActWeekKnown">0</div><div class="k" id="stActWeekKnownK"></div></div>
       </div>
       <div id="actChart" class="act-chart"></div>
       <div class="empty" id="actNone" style="display:none"></div>
@@ -642,7 +645,7 @@
 <script>
 /* ================= i18n ================= */
 const LANGS = {
-ja:{appTitle:"英語で学ぶ理系",totalWords:"収録",totalKnown:"覚えた",unit:"語",lang:"言語",bigKnown:"覚えた単語",actLine:(t,s)=>"今日 "+t+" 語<br>"+s+" 日連続",
+ja:{appTitle:"英語で学ぶ理系",totalWords:"収録",totalKnown:"覚えた",unit:"語",lang:"言語",bigKnown:"覚えた単語",bigWeek:"今週覚えた単語",actLine:(t,s)=>"今日 "+t+" 語<br>"+s+" 日連続",
  heroBig:(k,t)=>"覚えた単語: "+k+" / "+t,
  hero0:"物理の英語用語からスタート。<br>少しずつ積み上げよう。",
  heroMid:r=>"いい調子。このまま続けよう。<br>残り "+r+" 語。",
@@ -668,7 +671,7 @@ ja:{appTitle:"英語で学ぶ理系",totalWords:"収録",totalKnown:"覚えた",
  tabs:["ホーム","科目","単語帳","検索"],
  chNames:{1:"Ch.1 測定",2:"Ch.2 ベクトル",3:"Ch.3 直線運動",4:"Ch.4 二次元運動"},
  kbd:"<kbd>←</kbd><kbd>→</kbd> 移動 ／ <kbd>Space</kbd> 裏返す ／ <kbd>1</kbd> 覚えてない ／ <kbd>2</kbd> 覚えた"},
-ko:{appTitle:"영어로 배우는 이공계",totalWords:"수록",totalKnown:"외운 단어",unit:"개",lang:"언어",bigKnown:"외운 단어",actLine:(t,s)=>"오늘 "+t+"개<br>"+s+"일 연속",
+ko:{appTitle:"영어로 배우는 이공계",totalWords:"수록",totalKnown:"외운 단어",unit:"개",lang:"언어",bigKnown:"외운 단어",bigWeek:"이번 주 외운 단어",actLine:(t,s)=>"오늘 "+t+"개<br>"+s+"일 연속",
  heroBig:(k,t)=>"외운 단어: "+k+" / "+t,
  hero0:"물리 영어 용어부터 시작해요.<br>조금씩 쌓아 올려요.",
  heroMid:r=>"좋은 흐름이에요. 계속 가요.<br>"+r+"개 남았어요.",
@@ -694,7 +697,7 @@ ko:{appTitle:"영어로 배우는 이공계",totalWords:"수록",totalKnown:"외
  tabs:["홈","과목","단어장","검색"],
  chNames:{1:"Ch.1 측정",2:"Ch.2 벡터",3:"Ch.3 직선 운동",4:"Ch.4 2차원 운동"},
  kbd:"<kbd>←</kbd><kbd>→</kbd> 이동 ／ <kbd>Space</kbd> 뒤집기 ／ <kbd>1</kbd> 못 외움 ／ <kbd>2</kbd> 외움"},
-zh:{appTitle:"用英语学理工",totalWords:"收录",totalKnown:"已掌握",unit:"个",lang:"语言",bigKnown:"已掌握单词",actLine:(t,s)=>"今日 "+t+" 个<br>连续 "+s+" 天",
+zh:{appTitle:"用英语学理工",totalWords:"收录",totalKnown:"已掌握",unit:"个",lang:"语言",bigKnown:"已掌握单词",bigWeek:"本周已掌握单词",actLine:(t,s)=>"今日 "+t+" 个<br>连续 "+s+" 天",
  heroBig:(k,t)=>"已掌握单词: "+k+" / "+t,
  hero0:"从物理英语术语开始。<br>一点点积累起来。",
  heroMid:r=>"状态不错，继续保持。<br>还剩 "+r+" 个。",
@@ -720,7 +723,7 @@ zh:{appTitle:"用英语学理工",totalWords:"收录",totalKnown:"已掌握",uni
  tabs:["首页","科目","单词本","搜索"],
  chNames:{1:"Ch.1 测量",2:"Ch.2 矢量",3:"Ch.3 直线运动",4:"Ch.4 二维运动"},
  kbd:"<kbd>←</kbd><kbd>→</kbd> 移动 ／ <kbd>Space</kbd> 翻面 ／ <kbd>1</kbd> 还没记住 ／ <kbd>2</kbd> 会了"},
-tw:{appTitle:"用英語學理工",totalWords:"收錄",totalKnown:"已掌握",unit:"個",lang:"語言",bigKnown:"已掌握單字",actLine:(t,s)=>"今日 "+t+" 個<br>連續 "+s+" 天",
+tw:{appTitle:"用英語學理工",totalWords:"收錄",totalKnown:"已掌握",unit:"個",lang:"語言",bigKnown:"已掌握單字",bigWeek:"本週已掌握單字",actLine:(t,s)=>"今日 "+t+" 個<br>連續 "+s+" 天",
  heroBig:(k,t)=>"已掌握單字: "+k+" / "+t,
  hero0:"從物理英語術語開始。<br>一點點累積起來。",
  heroMid:r=>"狀態不錯，繼續保持。<br>還剩 "+r+" 個。",
@@ -746,7 +749,7 @@ tw:{appTitle:"用英語學理工",totalWords:"收錄",totalKnown:"已掌握",uni
  tabs:["首頁","科目","單字本","搜尋"],
  chNames:{1:"Ch.1 測量",2:"Ch.2 向量",3:"Ch.3 直線運動",4:"Ch.4 二維運動"},
  kbd:"<kbd>←</kbd><kbd>→</kbd> 移動 ／ <kbd>Space</kbd> 翻面 ／ <kbd>1</kbd> 還沒記住 ／ <kbd>2</kbd> 會了"},
-en:{appTitle:"Science in English",totalWords:"Words",totalKnown:"Learned",unit:"words",lang:"Language",bigKnown:"Words learned",actLine:(t,s)=>"Today: "+t+" words<br>"+s+"-day streak",
+en:{appTitle:"Science in English",totalWords:"Words",totalKnown:"Learned",unit:"words",lang:"Language",bigKnown:"Words learned",bigWeek:"Learned this week",actLine:(t,s)=>"Today: "+t+" words<br>"+s+"-day streak",
  heroBig:(k,t)=>"Learned: "+k+" / "+t,
  hero0:"Start with physics terms in English.<br>Build up little by little.",
  heroMid:r=>"Good pace. Keep going.<br>"+r+" words to go.",
@@ -1262,11 +1265,13 @@ function save(){ store.set(LS_KEY, JSON.stringify([...known])); }
 function saveFailed(){ store.set(LS_FAIL, JSON.stringify([...failed])); }
 function stateOf(i){ return known.has(i) ? "ok" : (failed.has(i) ? "ng" : "new"); }
 function setState(i, st){
+  const wasK = known.has(i);
   if(st==="ok"){ known.add(i); failed.delete(i); }
   else if(st==="ng"){ known.delete(i); failed.add(i); }
   else { known.delete(i); failed.delete(i); }
   save(); saveFailed();
   const tk = $("totalKnown"); if(tk) tk.textContent = known.size;
+  if(st==="ok" && !wasK) actMarkKnown(i);
 }
 function chFailed(ch){ return TERMS.filter((t,i)=>t.ch===ch && failed.has(i)).length; }
 function segBar(tot, kn, fl){
@@ -1329,6 +1334,7 @@ $("btnBack").addEventListener("click", ()=>show(sCh==="daily" ? "daily" : "subje
 /* ---------- home ---------- */
 function renderHome(){
   const l = L(), total = TERMS.length, k = known.size;
+  $("heroBig").textContent = l.bigKnown + " " + k + " " + l.unit;
   $("heroSmall").innerHTML = k===0 ? l.hero0 : k>=total ? l.heroDone : l.heroMid(total-k);
   $("totalKnown").textContent = k;
   $("subjGrid").innerHTML = l.subjNames.map((nm,ix)=>{
@@ -1339,8 +1345,8 @@ function renderHome(){
       + segBar(total, k, failed.size) + '<div class="pt">'+l.knownOf(k,total)+(failed.size?' ・ '+l.failedLbl+' '+failed.size:'')+((total-k-failed.size)>0?' ・ '+l.stNew+' '+(total-k-failed.size):'')+'</div></button>';
   }).join("");
   const sp = $("subjPhysics"); if(sp) sp.addEventListener("click", ()=>show("subjects"));
-  $("homeKnownBig").textContent = k;
-  $("homeKnownLbl").textContent = l.bigKnown;
+  $("homeKnownBig").textContent = actWeekKnown();
+  $("homeKnownLbl").textContent = l.bigWeek;
   $("homeActLine").innerHTML = l.actLine(actTodayCount(), actStreak());
   $("homeActChart").innerHTML = actChartHTML(actDays());
 }
@@ -1523,7 +1529,7 @@ ja:{testBtn:"テスト",testBtnLong:"テストを受ける",progBtn:"進行度",
  overallLbl:"全体・単元別",testLbl:"テスト成績",attempts:"受験回数",avg:"平均",best:"最高",
  recentLbl:"最近の結果",noTest:"まだテストを受けていません。",
  quitTitle:"テストをやめますか？",quitMsg:"今やめると、今回の成績は記録されません。それでもいいですか？",
- quitStay:"テストを続ける",quitLeave:"やめる（記録しない）",dailyBtn:"今日の単語",dailyCta:"今日の単語10",dailySub:"今日の10語を、まずカードで確認してからテストします。",dailyReview:"カードで確認する",dailyTestNow:"このままテストする",dailyAfter:"確認おつかれさま。この10語でテストしましょう。",dailyDone:"今日の分は完了しています ",dailyWordsLbl:"今日の10語",actLbl:"日別の記録",actToday:"今日やった単語",actStreak:"連続日数",actWeek:"直近7日の合計",actNone:"まだ記録がありません。カードで学習すると、ここに記録が貯まります。"},
+ quitStay:"テストを続ける",quitLeave:"やめる（記録しない）",dailyBtn:"今日の単語",dailyCta:"今日の単語10",dailySub:"今日の10語を、まずカードで確認してからテストします。",dailyReview:"カードで確認する",dailyTestNow:"このままテストする",dailyAfter:"確認おつかれさま。この10語でテストしましょう。",dailyDone:"今日の分は完了しています ",dailyWordsLbl:"今日の10語",actLbl:"日別の記録",actToday:"今日やった単語",actStreak:"連続日数",actWeek:"直近7日の合計",actWeekKnown:"今週覚えた単語",actNone:"まだ記録がありません。カードで学習すると、ここに記録が貯まります。"},
 ko:{testBtn:"테스트",testBtnLong:"테스트 받기",progBtn:"진행도",testTitle:"테스트",
  testSub:"챕터(복수 선택 가능)와 형식·방향을 고르고 시작하세요. 맞히면 '외움', 틀리면 '못 외움'으로 기록됩니다.",
  chLbl:"범위",fmtLbl:"형식",fmtChoice:"4지선다",fmtType:"입력",dirLbl:"방향",
@@ -1537,7 +1543,7 @@ ko:{testBtn:"테스트",testBtnLong:"테스트 받기",progBtn:"진행도",testT
  overallLbl:"전체·단원별",testLbl:"테스트 성적",attempts:"응시 횟수",avg:"평균",best:"최고",
  recentLbl:"최근 결과",noTest:"아직 테스트를 받지 않았습니다.",
  quitTitle:"테스트를 그만둘까요?",quitMsg:"지금 그만두면 이번 성적은 기록되지 않습니다. 그래도 괜찮습니까?",
- quitStay:"계속하기",quitLeave:"그만두기 (기록 안 함)",dailyBtn:"오늘의 단어",dailyCta:"오늘의 단어 10",dailySub:"오늘의 10단어를 먼저 카드로 확인한 뒤 테스트합니다.",dailyReview:"카드로 확인",dailyTestNow:"바로 테스트",dailyAfter:"확인 끝! 이 10단어로 테스트해요.",dailyDone:"오늘 분량은 완료했어요 ",dailyWordsLbl:"오늘의 10단어",actLbl:"날짜별 기록",actToday:"오늘 한 단어",actStreak:"연속 일수",actWeek:"최근 7일 합계",actNone:"아직 기록이 없습니다. 카드로 학습하면 여기에 기록이 쌓입니다."},
+ quitStay:"계속하기",quitLeave:"그만두기 (기록 안 함)",dailyBtn:"오늘의 단어",dailyCta:"오늘의 단어 10",dailySub:"오늘의 10단어를 먼저 카드로 확인한 뒤 테스트합니다.",dailyReview:"카드로 확인",dailyTestNow:"바로 테스트",dailyAfter:"확인 끝! 이 10단어로 테스트해요.",dailyDone:"오늘 분량은 완료했어요 ",dailyWordsLbl:"오늘의 10단어",actLbl:"날짜별 기록",actToday:"오늘 한 단어",actStreak:"연속 일수",actWeek:"최근 7일 합계",actWeekKnown:"이번 주 외운 단어",actNone:"아직 기록이 없습니다. 카드로 학습하면 여기에 기록이 쌓입니다."},
 zh:{testBtn:"测试",testBtnLong:"参加测试",progBtn:"进度",testTitle:"测试",
  testSub:"选择章节（可多选）、形式和方向后开始。答对记为「会了」，答错记为「还没记住」。",
  chLbl:"范围",fmtLbl:"形式",fmtChoice:"四选一",fmtType:"输入",dirLbl:"方向",
@@ -1551,7 +1557,7 @@ zh:{testBtn:"测试",testBtnLong:"参加测试",progBtn:"进度",testTitle:"测�
  overallLbl:"整体・各单元",testLbl:"测试成绩",attempts:"测试次数",avg:"平均",best:"最高",
  recentLbl:"最近结果",noTest:"还没有参加过测试。",
  quitTitle:"要退出测试吗？",quitMsg:"现在退出，本次成绩将不会被记录。确定要退出吗？",
- quitStay:"继续测试",quitLeave:"退出（不记录）",dailyBtn:"今日单词",dailyCta:"今日单词10",dailySub:"先用卡片复习今日10个单词，然后测试。",dailyReview:"用卡片复习",dailyTestNow:"直接测试",dailyAfter:"复习完成！用这10个单词测试。",dailyDone:"今日的已完成 ",dailyWordsLbl:"今日10词",actLbl:"每日记录",actToday:"今日学的单词",actStreak:"连续天数",actWeek:"近7天合计",actNone:"暂无记录。用卡片学习后，记录会积累在这里。"},
+ quitStay:"继续测试",quitLeave:"退出（不记录）",dailyBtn:"今日单词",dailyCta:"今日单词10",dailySub:"先用卡片复习今日10个单词，然后测试。",dailyReview:"用卡片复习",dailyTestNow:"直接测试",dailyAfter:"复习完成！用这10个单词测试。",dailyDone:"今日的已完成 ",dailyWordsLbl:"今日10词",actLbl:"每日记录",actToday:"今日学的单词",actStreak:"连续天数",actWeek:"近7天合计",actWeekKnown:"本周已掌握单词",actNone:"暂无记录。用卡片学习后，记录会积累在这里。"},
 tw:{testBtn:"測驗",testBtnLong:"參加測驗",progBtn:"進度",testTitle:"測驗",
  testSub:"選擇章節（可多選）、形式和方向後開始。答對記為「會了」，答錯記為「還沒記住」。",
  chLbl:"範圍",fmtLbl:"形式",fmtChoice:"四選一",fmtType:"輸入",dirLbl:"方向",
@@ -1565,7 +1571,7 @@ tw:{testBtn:"測驗",testBtnLong:"參加測驗",progBtn:"進度",testTitle:"測�
  overallLbl:"整體・各單元",testLbl:"測驗成績",attempts:"測驗次數",avg:"平均",best:"最高",
  recentLbl:"最近結果",noTest:"還沒有參加過測驗。",
  quitTitle:"要退出測驗嗎？",quitMsg:"現在退出，本次成績將不會被記錄。確定要退出嗎？",
- quitStay:"繼續測驗",quitLeave:"退出（不記錄）",dailyBtn:"今日單字",dailyCta:"今日單字10",dailySub:"先用卡片複習今日10個單字，然後測驗。",dailyReview:"用卡片複習",dailyTestNow:"直接測驗",dailyAfter:"複習完成！用這10個單字測驗。",dailyDone:"今日的已完成 ",dailyWordsLbl:"今日10字",actLbl:"每日記錄",actToday:"今日學的單字",actStreak:"連續天數",actWeek:"近7天合計",actNone:"尚無記錄。用卡片學習後，記錄會累積在這裡。"},
+ quitStay:"繼續測驗",quitLeave:"退出（不記錄）",dailyBtn:"今日單字",dailyCta:"今日單字10",dailySub:"先用卡片複習今日10個單字，然後測驗。",dailyReview:"用卡片複習",dailyTestNow:"直接測驗",dailyAfter:"複習完成！用這10個單字測驗。",dailyDone:"今日的已完成 ",dailyWordsLbl:"今日10字",actLbl:"每日記錄",actToday:"今日學的單字",actStreak:"連續天數",actWeek:"近7天合計",actWeekKnown:"本週已掌握單字",actNone:"尚無記錄。用卡片學習後，記錄會累積在這裡。"},
 en:{testBtn:"Test",testBtnLong:"Take a test",progBtn:"Progress",testTitle:"Test",
  testSub:"Choose chapters (multiple OK), format and direction, then start. Correct answers are marked learned; wrong ones are marked as not learned yet.",
  chLbl:"Range",fmtLbl:"Format",fmtChoice:"Multiple choice",fmtType:"Typing",dirLbl:"Direction",
@@ -1579,7 +1585,7 @@ en:{testBtn:"Test",testBtnLong:"Take a test",progBtn:"Progress",testTitle:"Test"
  overallLbl:"Overall & by unit",testLbl:"Test results",attempts:"Tests taken",avg:"Average",best:"Best",
  recentLbl:"Recent results",noTest:"No tests taken yet.",
  quitTitle:"Quit the test?",quitMsg:"If you quit now, this attempt will not be recorded. Is that OK?",
- quitStay:"Keep going",quitLeave:"Quit (don't record)",dailyBtn:"Today's words",dailyCta:"Today's 10 words",dailySub:"Review today's 10 words with cards first, then take the test.",dailyReview:"Review with cards",dailyTestNow:"Test now",dailyAfter:"Review done! Let's test these 10 words.",dailyDone:"Done for today ",dailyWordsLbl:"Today's 10 words",actLbl:"Daily activity",actToday:"Words today",actStreak:"Day streak",actWeek:"Last 7 days total",actNone:"No records yet. Study with cards and your activity will appear here."}
+ quitStay:"Keep going",quitLeave:"Quit (don't record)",dailyBtn:"Today's words",dailyCta:"Today's 10 words",dailySub:"Review today's 10 words with cards first, then take the test.",dailyReview:"Review with cards",dailyTestNow:"Test now",dailyAfter:"Review done! Let's test these 10 words.",dailyDone:"Done for today ",dailyWordsLbl:"Today's 10 words",actLbl:"Daily activity",actToday:"Words today",actStreak:"Day streak",actWeek:"Last 7 days total",actWeekKnown:"Learned this week",actNone:"No records yet. Study with cards and your activity will appear here."}
 };
 const T = () => TEST_I18N[lang];
 const LS_LOG = "stem-english-testlog";
@@ -1847,6 +1853,17 @@ function actDays(){
   return days;
 }
 function actTodayCount(){ const a = actToday(false); return a ? a.w.length : 0; }
+function actMarkKnown(gi){
+  const a = actToday(true);
+  if(!Array.isArray(a.k)) a.k = [];
+  if(!a.k.includes(gi)){ a.k.push(gi); saveActivity(); }
+}
+function actWeekKnown(){
+  const now = new Date(), dow = (now.getDay() + 6) % 7;
+  let sum = 0;
+  for(let i = 0; i <= dow; i++){ const d = new Date(now); d.setDate(now.getDate() - i); const a = activity[actKey(d)]; if(a && Array.isArray(a.k)) sum += a.k.length; }
+  return sum;
+}
 function actStreak(){
   let streak = 0;
   const dd = new Date();
@@ -1868,10 +1885,12 @@ function renderActivity(){
   $("stActTodayK").textContent = t.actToday;
   $("stActStreakK").textContent = t.actStreak;
   $("stActWeekK").textContent = t.actWeek;
+  $("stActWeekKnownK").textContent = t.actWeekKnown;
   const days = actDays();
   $("stActToday").textContent = days[days.length-1].c;
   $("stActStreak").textContent = actStreak();
   $("stActWeek").textContent = days.slice(-7).reduce((s,x)=>s+x.c, 0);
+  $("stActWeekKnown").textContent = actWeekKnown();
   const any = days.some(x=>x.c>0);
   $("actNone").style.display = any ? "none" : "block";
   $("actNone").textContent = t.actNone;
@@ -2047,31 +2066,31 @@ ja:{tab:"設定",title:"設定",langGt:"言語",langLb:"表示言語",themeLb:"�
  unkLb:"覚えた以外だけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",
  dataGt:"データ",progLb:"学習の進捗",progVal:(k,t)=>"覚えた "+k+" / "+t+" 語",resetLb:"進捗リセット",reset:"リセット",
  resetConfirm:"覚えた記録を全部リセットしますか？",aboutGt:"このアプリについて",
- about:"STEM English（仮） v26<br>英語で理系を学ぶ学生のための用語カード。現在は物理58語を収録し、日本語・韓国語・簡体中文・繁體中文・英語に対応。進捗はこの端末の中だけに保存されます。"},
+ about:"STEM English（仮） v27<br>英語で理系を学ぶ学生のための用語カード。現在は物理58語を収録し、日本語・韓国語・簡体中文・繁體中文・英語に対応。進捗はこの端末の中だけに保存されます。"},
 ko:{tab:"설정",title:"설정",langGt:"언어",langLb:"표시 언어",themeLb:"테마",light:"라이트",dark:"다크",
  fontLb:"글자 크기",fsS:"작게",fsM:"보통",fsL:"크게",studyGt:"학습",qcountLb:"테스트 출제 수 (1회)",speakLb:"발음 자동 재생",seLb:"효과음",shufLb:"셔플 (기본값)",
  unkLb:"외운 단어 제외 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",
  dataGt:"데이터",progLb:"학습 진도",progVal:(k,t)=>"외움 "+k+" / "+t+"개",resetLb:"진도 초기화",reset:"초기화",
  resetConfirm:"외운 기록을 전부 초기화할까요?",aboutGt:"이 앱에 대하여",
- about:"STEM English(가칭) v26<br>영어로 이공계를 배우는 학생을 위한 용어 카드. 현재 물리 58개를 수록하고 일본어·한국어·简体中文·繁體中文·영어를 지원합니다. 진도는 이 기기에만 저장됩니다."},
+ about:"STEM English(가칭) v27<br>영어로 이공계를 배우는 학생을 위한 용어 카드. 현재 물리 58개를 수록하고 일본어·한국어·简体中文·繁體中文·영어를 지원합니다. 진도는 이 기기에만 저장됩니다."},
 zh:{tab:"设置",title:"设置",langGt:"语言",langLb:"显示语言",themeLb:"主题",light:"浅色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"学习",qcountLb:"测试题数（每次）",speakLb:"自动播放发音",seLb:"音效",shufLb:"随机顺序（默认）",
  unkLb:"只看未掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",
  dataGt:"数据",progLb:"学习进度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 个",resetLb:"重置进度",reset:"重置",
  resetConfirm:"要重置全部掌握记录吗？",aboutGt:"关于本应用",
- about:"STEM English（暂定名） v26<br>为用英语学习理工科的学生制作的术语卡。目前收录物理58个词，支持日语、韩语、简体中文、繁體中文和英语。进度只保存在本设备中。"},
+ about:"STEM English（暂定名） v27<br>为用英语学习理工科的学生制作的术语卡。目前收录物理58个词，支持日语、韩语、简体中文、繁體中文和英语。进度只保存在本设备中。"},
 tw:{tab:"設定",title:"設定",langGt:"語言",langLb:"顯示語言",themeLb:"主題",light:"淺色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"學習",qcountLb:"測試題數（每次）",speakLb:"自動播放發音",seLb:"音效",shufLb:"隨機順序（預設）",
  unkLb:"只看未掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",
  dataGt:"資料",progLb:"學習進度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 個",resetLb:"重置進度",reset:"重置",
  resetConfirm:"要重置全部掌握記錄嗎？",aboutGt:"關於本應用",
- about:"STEM English（暫定名） v26<br>為用英語學習理工科的學生製作的術語卡。目前收錄物理58個詞，支援日語、韓語、简体中文、繁體中文和英語。進度只保存在本裝置中。"},
+ about:"STEM English（暫定名） v27<br>為用英語學習理工科的學生製作的術語卡。目前收錄物理58個詞，支援日語、韓語、简体中文、繁體中文和英語。進度只保存在本裝置中。"},
 en:{tab:"Settings",title:"Settings",langGt:"Language",langLb:"Display language",themeLb:"Theme",light:"Light",dark:"Dark",
  fontLb:"Font size",fsS:"S",fsM:"M",fsL:"L",studyGt:"Study",qcountLb:"Questions per test",speakLb:"Auto-play pronunciation",seLb:"Sound effects",shufLb:"Shuffle (default)",
  unkLb:"Hide learned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",
  dataGt:"Data",progLb:"Progress",progVal:(k,t)=>"Learned "+k+" / "+t,resetLb:"Reset progress",reset:"Reset",
  resetConfirm:"Reset all learned records?",aboutGt:"About",
- about:"STEM English (working title) v26<br>Word cards for students who study science in English. Currently 58 physics terms, in Japanese, Korean, Simplified Chinese, Traditional Chinese, and English. Progress is stored only on this device."}
+ about:"STEM English (working title) v27<br>Word cards for students who study science in English. Currently 58 physics terms, in Japanese, Korean, Simplified Chinese, Traditional Chinese, and English. Progress is stored only on this device."}
 };
 const LS_SET = "stem-english-settings";
 let settings = {theme:"light", font:"m", autoNext:true, anim:true, qcount:10, autoSpeak:true, se:true};
