@@ -96,12 +96,12 @@
     padding:8px 13px; font-size:14px; cursor:pointer; box-shadow:0 4px 12px rgba(50,70,110,.12);}
   .study-head .ttl{font-family:var(--serif); font-weight:700; font-size:16.5px;}
   .study-head .cnt{margin-left:auto; color:var(--sub); font-size:13px; letter-spacing:.1em;}
-  .scene{flex:1 1 auto; min-height:140px; width:100%; max-width:640px; margin:0 auto; perspective:1400px; display:flex;}
-  .card{position:relative; width:100%; height:100%; max-height:540px; margin:auto 0; transform-style:preserve-3d;
+  .scene{position:relative; flex:1 1 auto; min-height:300px; width:100%; max-width:640px; margin:0 auto; perspective:1400px;}
+  .card{position:absolute; inset:0; margin:auto; width:100%; height:100%; max-height:560px; transform-style:preserve-3d;
     transition:transform .5s cubic-bezier(.2,.7,.3,1.05); cursor:pointer;}
   .card.flipped{transform:rotateY(180deg);}
   @media (prefers-reduced-motion:reduce){ .card{transition:none;} }
-  .face{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  .face{position:absolute; inset:0; overflow:hidden; backface-visibility:hidden; -webkit-backface-visibility:hidden;
     border-radius:26px; padding:clamp(18px,4vw,34px);
     display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
     background:linear-gradient(160deg,#ffffff,#e2eaf6); border:1.5px solid rgba(63,88,130,.45);
@@ -124,14 +124,15 @@
   .btn.good{background:linear-gradient(160deg,#e0efe2,#f0f7f0); border-color:rgba(61,122,68,.45); color:#2f6234;}
   .navrow{display:flex; gap:10px; width:100%; max-width:640px; margin:10px auto 2px; flex:0 0 auto;}
   .btn.navb{flex:1; background:var(--glass); font-size:14px; font-weight:600; padding:11px;}
-  .done-msg{display:none; text-align:center; padding:30px 10px; margin:auto;}
+  .done-msg{display:none; position:absolute; inset:0; height:fit-content; margin:auto; text-align:center; padding:30px 10px;}
   .done-msg .big{font-size:22px; font-weight:800; margin-bottom:8px;}
   .done-msg p{color:var(--sub); font-size:14px; line-height:1.7;}
   @media (max-height:640px){
     .btn{padding:12px 8px;} .btn.navb{padding:9px;} .navrow{margin-top:8px;}
     .appbar{padding-top:calc(8px + env(safe-area-inset-top)); padding-bottom:6px;}
+    .scene{min-height:210px;}
   }
-  @media (max-height:540px){ .navrow{display:none;} }
+  @media (max-height:540px){ .navrow{display:none;} .scene{min-height:150px;} }
   /* wordbook & search */
   .filter-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;}
   .fchip{border:1.5px solid var(--line); background:var(--glass); color:var(--sub); border-radius:999px;
