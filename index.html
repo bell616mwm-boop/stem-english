@@ -230,6 +230,21 @@
   .log-row .sc{margin-left:auto; font-weight:800;}
   .log-row .dt{color:var(--sub); font-size:12px;}
   .score-big{font-family:var(--serif); font-size:44px; font-weight:800;}
+  /* ---------- quit-guard modal ---------- */
+  .modal-ov{position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center;
+    background:rgba(18,28,48,.52); backdrop-filter:blur(3px); padding:22px; animation:fadeIn .18s ease;}
+  @keyframes fadeIn{from{opacity:0;}}
+  .modal-card{background:linear-gradient(160deg,#ffffff,#e6edf8); border:1.5px solid rgba(63,88,130,.45); border-radius:22px;
+    box-shadow:0 26px 55px rgba(20,35,65,.4); padding:24px 22px; max-width:400px; width:100%; text-align:center;
+    animation:modalPop .28s cubic-bezier(.2,.9,.3,1.3);}
+  @keyframes modalPop{from{opacity:0; transform:scale(.9) translateY(10px);}}
+  body.dark .modal-card{background:linear-gradient(160deg,#1d2a47,#131e35); border-color:rgba(140,170,220,.45);}
+  .modal-ttl{font-family:var(--serif); font-size:20px; font-weight:800;}
+  .modal-msg{color:var(--sub); font-size:14.5px; line-height:1.75; margin:12px 0 20px;}
+  .modal-leave{margin-top:10px; width:100%; padding:13px; border-radius:14px; cursor:pointer;
+    border:1.5px solid rgba(176,64,47,.5); background:rgba(176,64,47,.08); color:#9c3626; font-size:15px; font-weight:700;}
+  .modal-leave:active{transform:scale(.97);}
+  body.dark .modal-leave{color:#f0a294;}
   /* ---------- term visuals ---------- */
   .visual{display:flex; align-items:center; justify-content:center; gap:12px; margin-top:18px; flex-wrap:wrap;}
   .visual .vic{width:60px; height:60px; flex:0 0 auto; color:#2f6fb4;
@@ -552,6 +567,15 @@
     <button class="tab" data-view="search"><img class="tabic" data-icon="search" alt=""><span data-tab="search">検索</span></button>
     <button class="tab" data-view="settings"><img class="tabic" data-icon="gear" alt=""><span id="tabSettingsLbl">設定</span></button>
   </nav>
+</div>
+
+<div class="modal-ov" id="quitModal" style="display:none">
+  <div class="modal-card">
+    <div class="modal-ttl" id="qmTitle"></div>
+    <p class="modal-msg" id="qmMsg"></p>
+    <button class="cta" id="qmStay" style="margin-top:0"></button>
+    <button class="modal-leave" id="qmLeave"></button>
+  </div>
 </div>
 
 <script>
@@ -1211,6 +1235,7 @@ document.querySelectorAll(".lang-chip").forEach(c=>c.addEventListener("click", (
 
 /* ---------- navigation ---------- */
 function show(view){
+  if(typeof quizRunning === "function" && quizRunning()){ askQuitQuiz(()=>show(view)); return; }
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
   $("view-"+view).classList.add("active");
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.view===view));
@@ -1410,7 +1435,9 @@ ja:{testBtn:"テスト",testBtnLong:"テストを受ける",progBtn:"進行度",
  msgTry:"大丈夫、カードで復習してから再挑戦しよう。",again:"もう一度テスト",toSubjects:"科目にもどる",
  typePh:"答えを入力",check:"答える",progTitle:"進行度",progSub:"単語の定着とテストの記録です。",
  overallLbl:"全体・単元別",testLbl:"テスト成績",attempts:"受験回数",avg:"平均",best:"最高",
- recentLbl:"最近の結果",noTest:"まだテストを受けていません。"},
+ recentLbl:"最近の結果",noTest:"まだテストを受けていません。",
+ quitTitle:"テストをやめますか？",quitMsg:"今やめると、今回の成績は記録されません。それでもいいですか？",
+ quitStay:"テストを続ける",quitLeave:"やめる（記録しない）"},
 ko:{testBtn:"테스트",testBtnLong:"테스트 받기",progBtn:"진행도",testTitle:"테스트",
  testSub:"형식과 방향을 고르고 시작하세요. 맞힌 단어는 '외움'에 추가됩니다.",
  chLbl:"범위",fmtLbl:"형식",fmtChoice:"4지선다",fmtType:"입력",dirLbl:"방향",
@@ -1422,7 +1449,9 @@ ko:{testBtn:"테스트",testBtnLong:"테스트 받기",progBtn:"진행도",testT
  msgTry:"괜찮아요. 카드로 복습하고 다시 도전해요.",again:"다시 테스트",toSubjects:"과목으로 돌아가기",
  typePh:"답을 입력",check:"답하기",progTitle:"진행도",progSub:"단어 정착과 테스트 기록입니다.",
  overallLbl:"전체·단원별",testLbl:"테스트 성적",attempts:"응시 횟수",avg:"평균",best:"최고",
- recentLbl:"최근 결과",noTest:"아직 테스트를 받지 않았습니다."},
+ recentLbl:"최근 결과",noTest:"아직 테스트를 받지 않았습니다.",
+ quitTitle:"테스트를 그만둘까요?",quitMsg:"지금 그만두면 이번 성적은 기록되지 않습니다. 그래도 괜찮습니까?",
+ quitStay:"계속하기",quitLeave:"그만두기 (기록 안 함)"},
 zh:{testBtn:"测试",testBtnLong:"参加测试",progBtn:"进度",testTitle:"测试",
  testSub:"选择形式和方向后开始。答对的单词会加入「会了」。",
  chLbl:"范围",fmtLbl:"形式",fmtChoice:"四选一",fmtType:"输入",dirLbl:"方向",
@@ -1434,7 +1463,9 @@ zh:{testBtn:"测试",testBtnLong:"参加测试",progBtn:"进度",testTitle:"测�
  msgTry:"没关系，先用卡片复习再来挑战。",again:"再测一次",toSubjects:"返回科目",
  typePh:"输入答案",check:"回答",progTitle:"学习进度",progSub:"单词掌握情况和测试记录。",
  overallLbl:"整体・各单元",testLbl:"测试成绩",attempts:"测试次数",avg:"平均",best:"最高",
- recentLbl:"最近结果",noTest:"还没有参加过测试。"},
+ recentLbl:"最近结果",noTest:"还没有参加过测试。",
+ quitTitle:"要退出测试吗？",quitMsg:"现在退出，本次成绩将不会被记录。确定要退出吗？",
+ quitStay:"继续测试",quitLeave:"退出（不记录）"},
 tw:{testBtn:"測驗",testBtnLong:"參加測驗",progBtn:"進度",testTitle:"測驗",
  testSub:"選擇形式和方向後開始。答對的單字會加入「會了」。",
  chLbl:"範圍",fmtLbl:"形式",fmtChoice:"四選一",fmtType:"輸入",dirLbl:"方向",
@@ -1446,7 +1477,9 @@ tw:{testBtn:"測驗",testBtnLong:"參加測驗",progBtn:"進度",testTitle:"測�
  msgTry:"沒關係，先用卡片複習再來挑戰。",again:"再測一次",toSubjects:"返回科目",
  typePh:"輸入答案",check:"回答",progTitle:"學習進度",progSub:"單字掌握情況和測驗記錄。",
  overallLbl:"整體・各單元",testLbl:"測驗成績",attempts:"測驗次數",avg:"平均",best:"最高",
- recentLbl:"最近結果",noTest:"還沒有參加過測驗。"},
+ recentLbl:"最近結果",noTest:"還沒有參加過測驗。",
+ quitTitle:"要退出測驗嗎？",quitMsg:"現在退出，本次成績將不會被記錄。確定要退出嗎？",
+ quitStay:"繼續測驗",quitLeave:"退出（不記錄）"},
 en:{testBtn:"Test",testBtnLong:"Take a test",progBtn:"Progress",testTitle:"Test",
  testSub:"Choose the format and direction, then start. Words you get right are marked as learned.",
  chLbl:"Range",fmtLbl:"Format",fmtChoice:"Multiple choice",fmtType:"Typing",dirLbl:"Direction",
@@ -1458,7 +1491,9 @@ en:{testBtn:"Test",testBtnLong:"Take a test",progBtn:"Progress",testTitle:"Test"
  msgTry:"No worries — review with cards and try again.",again:"Test again",toSubjects:"Back to subjects",
  typePh:"Type your answer",check:"Check",progTitle:"Progress",progSub:"Your word mastery and test history.",
  overallLbl:"Overall & by unit",testLbl:"Test results",attempts:"Tests taken",avg:"Average",best:"Best",
- recentLbl:"Recent results",noTest:"No tests taken yet."}
+ recentLbl:"Recent results",noTest:"No tests taken yet.",
+ quitTitle:"Quit the test?",quitMsg:"If you quit now, this attempt will not be recorded. Is that OK?",
+ quitStay:"Keep going",quitLeave:"Quit (don't record)"}
 };
 const T = () => TEST_I18N[lang];
 const LS_LOG = "stem-english-testlog";
@@ -1539,7 +1574,7 @@ function startTest(){
   se("start");
   const list = buildQuiz();
   if(!list.length) return;
-  quiz = {list, pos:0, score:0, locked:false};
+  quiz = {list, pos:0, score:0, locked:false, knownSnap:new Set(known)};
   $("testSetup").style.display = "none";
   $("testResult").style.display = "none";
   $("testRun").style.display = "block";
@@ -1635,6 +1670,33 @@ function nextQ(){
   if(quiz.pos >= quiz.list.length - 1){ showResult(); return; }
   quiz.pos++; renderQ();
 }
+/* ---------- quit guard: a test in progress cannot be left silently ---------- */
+let pendingNav = null;
+function quizRunning(){ return !!quiz && $("testRun").style.display !== "none"; }
+function askQuitQuiz(next){
+  const t = T();
+  pendingNav = next;
+  $("qmTitle").textContent = t.quitTitle;
+  $("qmMsg").textContent = t.quitMsg;
+  $("qmStay").textContent = t.quitStay;
+  $("qmLeave").textContent = t.quitLeave;
+  $("quitModal").style.display = "flex";
+  se("tap");
+}
+function closeQuitModal(){ $("quitModal").style.display = "none"; pendingNav = null; }
+function discardQuiz(){
+  if(quiz && quiz.knownSnap){ known.clear(); quiz.knownSnap.forEach(i=>known.add(i)); save(); }
+  quiz = null;
+}
+$("qmStay").addEventListener("click", closeQuitModal);
+$("qmLeave").addEventListener("click", ()=>{
+  const next = pendingNav;
+  discardQuiz(); closeQuitModal();
+  if(next) next();
+});
+$("quitModal").addEventListener("click", e=>{ if(e.target === $("quitModal")) closeQuitModal(); });
+window.addEventListener("beforeunload", e=>{ if(quizRunning()){ e.preventDefault(); e.returnValue = ""; } });
+
 function showResult(){
   const t = T();
   const total = quiz.list.length, c = quiz.score;
@@ -1746,31 +1808,31 @@ ja:{tab:"設定",title:"設定",langGt:"言語",langLb:"表示言語",themeLb:"�
  unkLb:"まだのカードだけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",
  dataGt:"データ",progLb:"学習の進捗",progVal:(k,t)=>"覚えた "+k+" / "+t+" 語",resetLb:"進捗リセット",reset:"リセット",
  resetConfirm:"覚えた記録を全部リセットしますか？",aboutGt:"このアプリについて",
- about:"STEM English（仮） v16<br>英語で理系を学ぶ学生のための用語カード。現在は物理58語を収録し、日本語・韓国語・簡体中文・繁體中文・英語に対応。進捗はこの端末の中だけに保存されます。"},
+ about:"STEM English（仮） v19<br>英語で理系を学ぶ学生のための用語カード。現在は物理58語を収録し、日本語・韓国語・簡体中文・繁體中文・英語に対応。進捗はこの端末の中だけに保存されます。"},
 ko:{tab:"설정",title:"설정",langGt:"언어",langLb:"표시 언어",themeLb:"테마",light:"라이트",dark:"다크",
  fontLb:"글자 크기",fsS:"작게",fsM:"보통",fsL:"크게",studyGt:"학습",qcountLb:"테스트 출제 수 (1회)",speakLb:"발음 자동 재생",seLb:"효과음",shufLb:"셔플 (기본값)",
  unkLb:"아직 모르는 카드만 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",
  dataGt:"데이터",progLb:"학습 진도",progVal:(k,t)=>"외움 "+k+" / "+t+"개",resetLb:"진도 초기화",reset:"초기화",
  resetConfirm:"외운 기록을 전부 초기화할까요?",aboutGt:"이 앱에 대하여",
- about:"STEM English(가칭) v16<br>영어로 이공계를 배우는 학생을 위한 용어 카드. 현재 물리 58개를 수록하고 일본어·한국어·简体中文·繁體中文·영어를 지원합니다. 진도는 이 기기에만 저장됩니다."},
+ about:"STEM English(가칭) v19<br>영어로 이공계를 배우는 학생을 위한 용어 카드. 현재 물리 58개를 수록하고 일본어·한국어·简体中文·繁體中文·영어를 지원합니다. 진도는 이 기기에만 저장됩니다."},
 zh:{tab:"设置",title:"设置",langGt:"语言",langLb:"显示语言",themeLb:"主题",light:"浅色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"学习",qcountLb:"测试题数（每次）",speakLb:"自动播放发音",seLb:"音效",shufLb:"随机顺序（默认）",
  unkLb:"只看没掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",
  dataGt:"数据",progLb:"学习进度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 个",resetLb:"重置进度",reset:"重置",
  resetConfirm:"要重置全部掌握记录吗？",aboutGt:"关于本应用",
- about:"STEM English（暂定名） v16<br>为用英语学习理工科的学生制作的术语卡。目前收录物理58个词，支持日语、韩语、简体中文、繁體中文和英语。进度只保存在本设备中。"},
+ about:"STEM English（暂定名） v19<br>为用英语学习理工科的学生制作的术语卡。目前收录物理58个词，支持日语、韩语、简体中文、繁體中文和英语。进度只保存在本设备中。"},
 tw:{tab:"設定",title:"設定",langGt:"語言",langLb:"顯示語言",themeLb:"主題",light:"淺色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"學習",qcountLb:"測試題數（每次）",speakLb:"自動播放發音",seLb:"音效",shufLb:"隨機順序（預設）",
  unkLb:"只看沒掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",
  dataGt:"資料",progLb:"學習進度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 個",resetLb:"重置進度",reset:"重置",
  resetConfirm:"要重置全部掌握記錄嗎？",aboutGt:"關於本應用",
- about:"STEM English（暫定名） v16<br>為用英語學習理工科的學生製作的術語卡。目前收錄物理58個詞，支援日語、韓語、简体中文、繁體中文和英語。進度只保存在本裝置中。"},
+ about:"STEM English（暫定名） v19<br>為用英語學習理工科的學生製作的術語卡。目前收錄物理58個詞，支援日語、韓語、简体中文、繁體中文和英語。進度只保存在本裝置中。"},
 en:{tab:"Settings",title:"Settings",langGt:"Language",langLb:"Display language",themeLb:"Theme",light:"Light",dark:"Dark",
  fontLb:"Font size",fsS:"S",fsM:"M",fsL:"L",studyGt:"Study",qcountLb:"Questions per test",speakLb:"Auto-play pronunciation",seLb:"Sound effects",shufLb:"Shuffle (default)",
  unkLb:"Only unlearned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",
  dataGt:"Data",progLb:"Progress",progVal:(k,t)=>"Learned "+k+" / "+t,resetLb:"Reset progress",reset:"Reset",
  resetConfirm:"Reset all learned records?",aboutGt:"About",
- about:"STEM English (working title) v16<br>Word cards for students who study science in English. Currently 58 physics terms, in Japanese, Korean, Simplified Chinese, Traditional Chinese, and English. Progress is stored only on this device."}
+ about:"STEM English (working title) v19<br>Word cards for students who study science in English. Currently 58 physics terms, in Japanese, Korean, Simplified Chinese, Traditional Chinese, and English. Progress is stored only on this device."}
 };
 const LS_SET = "stem-english-settings";
 let settings = {theme:"light", font:"m", autoNext:true, anim:true, qcount:10, autoSpeak:true, se:true};
