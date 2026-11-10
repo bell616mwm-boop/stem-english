@@ -753,6 +753,7 @@
   .les-img{display:block; width:100%; height:auto; border-radius:var(--r-3);
     border:var(--glass-bd); box-shadow:var(--sh-2); margin:2px 0 8px;}
   .les-cap{font-size:12.5px; color:var(--sub); text-align:center; line-height:1.7; margin:0 4px 16px;}
+  .les-svg{display:block; width:100%; height:auto; margin:10px 0 6px;}
   .fr{display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle;
     margin:0 .18em; line-height:1.3; font-size:.95em; font-weight:700;}
   .fr>span{padding:0 .32em; white-space:nowrap;}
@@ -2710,6 +2711,82 @@ const LESSONS = [
      a:"v₀ cos θ ＝ 10 × 0.87 ≒ 8.7 m/s",
      why:"地面にくっついている方が cos。ついでに空側は v₀ sin θ ＝ 10 × 0.5 ＝ 5 m/s。" }
   ]
+},
+{ id:"sqrt-intro", subject:"math", grp:"微積分", icon:"calc",
+  title:"平方根入門", sub:"微積分の基礎 ・ 正方形の面積から一辺を逆算する",
+  intro:"ルート（√）は、大学の数式の中にしょっちゅう顔を出す。でも正体はシンプルで、「かけ算の巻き戻し」だ。入口は正方形。面積が分かっているとき、一辺の長さを逆から当てる——それが平方根 (square root) の始まりになる。",
+  sections:[
+   { h:"√ は「面積から一辺を当てる」逆算",
+     body:"<p>9㎡の正方形の部屋を思い浮かべてほしい。床にはタイルが3×3で9枚、敷きつめられている。この部屋の一辺は何mだろう？</p><p>答えは3m。3 × 3 ＝ 9 だから。いま頭の中でやったこと——<b>面積から一辺を逆算する</b>——が、そのまま √ の意味になる。</p><p>√9 ＝ 3 と書く。「何を2回かけたら9になる？」と聞いて、出てきた答えが平方根だ。</p><svg class='les-svg' viewBox='0 0 300 205' role='img' aria-label='面積9の正方形と一辺3'><rect x='85' y='12' width='144' height='144' rx='4' style='fill:rgba(29,111,184,.10)' stroke='var(--accent)' stroke-width='2.5'/><path d='M133 12 V156 M181 12 V156 M85 60 H229 M85 108 H229' style='stroke:rgba(29,111,184,.35)' stroke-width='1'/><line x1='85' y1='156' x2='229' y2='156' stroke='var(--orange)' stroke-width='5'/><text x='157' y='92' text-anchor='middle' font-size='17' font-weight='700' style='fill:var(--ink)'>面積 9</text><text x='157' y='186' text-anchor='middle' font-size='16' font-weight='700' style='fill:var(--orange)'>1辺 ＝ 3（マス3つ分）</text></svg>",
+     kw:[["square root","平方根（ルート）"],["side","一辺"],["area","面積"]] },
+   { h:"2乗と √ は「巻き戻し」の関係",
+     body:"<p>動画を見すぎたら巻き戻す。ゲームで進みすぎたら、セーブした場所まで戻る。2乗と √ の関係も、ちょうどこれだ。</p><p>同じ数を2回かけるのが「2乗 (square)」。その結果から元の数を当てるのが √。進むボタンと戻るボタン、1セットの操作だと思えばいい。</p><p>確かめ方はいつも同じ。√4 なら「何を2回かけたら4？」——2 × 2 ＝ 4 だから √4 ＝ 2。同じやり方で √9 ＝ 3、√16 ＝ 4、√25 ＝ 5。この「2回かけて確かめる」が、ルートの答え合わせの全部になる。</p>",
+     kw:[["square","2乗（同じ数を2回かける）"],["undo","巻き戻し（逆の操作）"]] },
+   { h:"整数にならないルートもある",
+     body:"<p>では √2 は？1 × 1 ＝ 1 では足りない。2 × 2 ＝ 4 では多すぎる。答えは1と2の間のどこかにある。</p><p>定規の目盛りを思い浮かべてほしい。1.4 の目盛りと 1.5 の目盛りの間にも、ちゃんと「場所」はある。√2 ≒ 1.414 は、その場所の住所だ。試しに掛けてみると、1.414 × 1.414 ≒ 2 になる。</p><p>√2 は割り切れない小数だけど、居場所は数直線 (number line) の上にぴったり決まっている。「整数じゃない ＝ 分からない」ではない、という感覚が大事だ。</p><svg class='les-svg' viewBox='0 0 300 95' role='img' aria-label='数直線上のルート2'><line x1='25' y1='58' x2='272' y2='58' style='stroke:var(--sub)' stroke-width='2'/><path d='M272 58 l-9 -4.5 v9 z' style='fill:var(--sub)'/><path d='M25 52 V64 M150 52 V64 M275 52 V64' style='stroke:var(--sub)' stroke-width='2'/><text x='25' y='83' text-anchor='middle' font-size='13' style='fill:var(--sub)'>1</text><text x='150' y='83' text-anchor='middle' font-size='13' style='fill:var(--sub)'>1.5</text><text x='275' y='83' text-anchor='middle' font-size='13' style='fill:var(--sub)'>2</text><line x1='129' y1='40' x2='129' y2='50' stroke='var(--orange)' stroke-width='2'/><circle cx='129' cy='58' r='6' fill='var(--orange)' stroke='rgba(255,255,255,.9)' stroke-width='2'/><text x='129' y='28' text-anchor='middle' font-size='15' font-weight='700' style='fill:var(--orange)'>√2 ≒ 1.414</text></svg>",
+     kw:[["approximately","約（≒）"],["number line","数直線"]] },
+   { h:"簡単化：中から「ペア」を出す",
+     body:"<p>靴下は2つそろって初めて「1足」として棚に出せる。ルートの中の数も同じで、<b>2つそろった数（ペア）だけが、1人分になって外に出られる</b>。</p><p>√12 を見てみよう。12 ＝ 2 × 2 × 3 だから、中には2のペアが1組ある。そのペアが「2」として外に出て、相方のいない3は中にとどまる。√12 ＝ 2√3 だ。</p><p>これを簡単化 (simplify) という。やることは、中身を掛け算に分けて、ペアを探すことだけだ。</p>",
+     kw:[["simplify","簡単化する"],["pair","ペア（2つで1組）"]] },
+   { h:"大学への橋：式の中のルートを読む",
+     body:"<p>大学の物理では、ルートは「1つの数」にではなく、<b>式の丸ごと</b>にかかって出てくる。読み方は同じ。「何を2回かけたら、この式になる？」だ。</p><p>たとえば、壁に立てかけた梯子。足元が壁から4m、届く高さが3mのとき、梯子の長さは三平方の定理 (Pythagorean theorem) で √（3² ＋ 4²）＝ √25 ＝ 5m。三角関数の単元で見た斜辺 (hypotenuse) の計算だ。</p><svg class='les-svg' viewBox='0 0 260 170' role='img' aria-label='3・4・5の直角三角形'><polygon points='55,20 55,140 215,140' style='fill:rgba(29,111,184,.08)' stroke='var(--accent)' stroke-width='2.5'/><path d='M73 140 V122 H55' fill='none' style='stroke:var(--sub)' stroke-width='1.5'/><text x='38' y='86' text-anchor='middle' font-size='15' style='fill:var(--ink)'>3</text><text x='135' y='163' text-anchor='middle' font-size='15' style='fill:var(--ink)'>4</text><text x='150' y='68' text-anchor='middle' font-size='16' font-weight='700' style='fill:var(--orange)'>5</text></svg><p>落下時間の式 t ＝ √<span class=\"fr\"><span>2h</span><span>g</span></span> も、読み方は同じ。「2h ÷ g の全体にルートがかかっている」と読めばいい。</p><p>そして x² ＝ 5 のような問題。「2回かけて5になる数」が答えで、x ＝ √5（と −√5）。方程式の答えとしてルートが現れる、最初の場所だ。</p>",
+     kw:[["Pythagorean theorem","三平方の定理"],["hypotenuse","斜辺（三角関数の単元と接続）"]] }
+  ],
+  qs:[
+   { q:"√25 はいくつ？",
+     a:"5",
+     why:"確かめは2回かけること。5 × 5 ＝ 25 だから、√25 ＝ 5。" },
+   { q:"面積が 16 の正方形の床タイル。一辺は何枚分？",
+     a:"4枚分",
+     why:"面積から一辺を逆算するのが √。√16 ＝ 4（4 × 4 ＝ 16）。" },
+   { q:"√2 は 1.4 と 1.5 のどちらに近い？",
+     a:"1.4",
+     why:"1.4 × 1.4 ＝ 1.96、1.5 × 1.5 ＝ 2.25。2 は 1.96 の方にずっと近い。" },
+   { q:"√18 を簡単にすると？",
+     a:"3√2",
+     why:"18 ＝ 3 × 3 × 2。3 のペアが1組、外に出て 3。中に相方のいない 2 が残る。" },
+   { q:"直角三角形の2辺が 6 と 8。斜辺の長さは？",
+     a:"10",
+     why:"√（6² ＋ 8²）＝ √（36 ＋ 64）＝ √100 ＝ 10。三平方の定理。" }
+  ]
+},
+{ id:"log-intro", subject:"math", grp:"微積分", icon:"calc",
+  title:"対数入門", sub:"微積分の基礎 ・ 「何回かけたか」を数える道具",
+  intro:"微積分の Sec 1.5 と 3.6 では、log（対数）が主役になる。でも正体は難しくない。log は「何回かけたら、その数になる？」と聞く道具だ。入口は、2をかけるたびに一段上がる階段のイメージから。",
+  sections:[
+   { h:"出発点：指数を「逆から聞く」",
+     body:"<p>まず普通のかけ算から。2³ ＝ 2 × 2 × 2 ＝ 8。「2を3回かけると8になる」——これは階段をのぼる動きだ。2をかけるたびに一段上がり、1 → 2 → 4 → 8 と一段ごとに2倍になっていく。</p><svg class='les-svg' viewBox='0 0 300 195' role='img' aria-label='2をかける階段'><line x1='20' y1='158' x2='290' y2='158' style='stroke:var(--sub)' stroke-width='2'/><rect x='28' y='134' width='60' height='24' style='fill:rgba(29,111,184,.35)'/><rect x='94' y='106' width='60' height='52' style='fill:rgba(29,111,184,.52)'/><rect x='160' y='78' width='60' height='80' style='fill:rgba(29,111,184,.68)'/><rect x='226' y='50' width='60' height='108' style='fill:rgba(29,111,184,.85)'/><text x='58' y='126' text-anchor='middle' font-size='16' font-weight='700' style='fill:var(--ink)'>1</text><text x='124' y='98' text-anchor='middle' font-size='16' font-weight='700' style='fill:var(--ink)'>2</text><text x='190' y='70' text-anchor='middle' font-size='16' font-weight='700' style='fill:var(--ink)'>4</text><text x='256' y='42' text-anchor='middle' font-size='16' font-weight='700' style='fill:var(--ink)'>8</text><text x='58' y='180' text-anchor='middle' font-size='14' style='fill:var(--sub)'>2⁰</text><text x='124' y='180' text-anchor='middle' font-size='14' style='fill:var(--sub)'>2¹</text><text x='190' y='180' text-anchor='middle' font-size='14' style='fill:var(--sub)'>2²</text><text x='256' y='180' text-anchor='middle' font-size='14' style='fill:var(--sub)'>2³</text></svg><p>ここで質問を逆にする。「2を<b>何回</b>かけたら8になる？」答えは3回。その「3」を書き表す記号が log で、log₂ 8 ＝ 3 と書く。</p><p>つまり指数 (exponent) が「のぼる動き」なら、対数 (logarithm) は「何段のぼったかの記録」。log は階段の段数を数える道具だ。</p>",
+     kw:[["exponent","指数（何回かけるか）"],["logarithm","対数（log）"]] },
+   { h:"底と真数：log の読み方",
+     body:"<p>log₂ 8 の部品を見よう。小さく書かれた 2 が底 (base)——「どの数をかけていくか」。大きく書かれた 8 が真数——「どこまで増やすか」。そして log の答えが「何回かけたか（何段のぼったか）」になる。</p><p>底が10の log₁₀ は、ゼロの個数と仲がいい。10 は一段で log₁₀ 10 ＝ 1、100 は二段で 2、1000 は三段で 3。桁が1つ増えるごとに、log はちょうど1増える。</p><svg class='les-svg' viewBox='0 0 300 160' role='img' aria-label='10の階段と常用対数'><line x1='16' y1='128' x2='288' y2='128' style='stroke:var(--sub)' stroke-width='2'/><rect x='22' y='104' width='78' height='24' style='fill:rgba(232,147,12,.45)'/><rect x='108' y='78' width='78' height='50' style='fill:rgba(232,147,12,.65)'/><rect x='194' y='52' width='78' height='76' style='fill:rgba(232,147,12,.85)'/><text x='61' y='121' text-anchor='middle' font-size='15' font-weight='700' style='fill:#fff'>10</text><text x='147' y='112' text-anchor='middle' font-size='15' font-weight='700' style='fill:#fff'>100</text><text x='233' y='99' text-anchor='middle' font-size='15' font-weight='700' style='fill:#fff'>1000</text><text x='61' y='94' text-anchor='middle' font-size='13' font-weight='700' style='fill:var(--accent)'>log = 1</text><text x='147' y='68' text-anchor='middle' font-size='13' font-weight='700' style='fill:var(--accent)'>log = 2</text><text x='233' y='42' text-anchor='middle' font-size='13' font-weight='700' style='fill:var(--accent)'>log = 3</text></svg><p>だから log₁₀ は「だいたい何桁の数か」を測る物差しにもなる。この、底が10の log を常用対数 (common logarithm) という。</p>",
+     kw:[["base","底（かけていく数）"],["common logarithm","常用対数（底が10の log）"]] },
+   { h:"性質の入口：掛け算を足し算に変える",
+     body:"<p>log の一番の魔法はこれだ。<b>掛け算を、足し算に翻訳できる</b>。</p><p>階段で考えると自然に見える。100（2段）× 1000（3段）という掛け算は、「2段のぼって、さらに3段のぼる」ことと同じ。合計5段で、たどり着くのは 100000。つまり log₁₀（100 × 1000）＝ 2 ＋ 3 ＝ 5 だ。</p><p>一般に log(ab) ＝ log a ＋ log b と書く。重たい掛け算を軽い足し算に変える翻訳機——昔の人はこの性質を使い、対数表と計算尺で大きな計算をこなしていた。微積分の中でも、この「翻訳」の力が効いてくる。</p>",
+     kw:[["product","積（掛け算の答え）"],["sum","和（足し算の答え）"]] },
+   { h:"ln と e の入口：微積分の主役",
+     body:"<p>微積分で主役になる log は、底が特別な数 e（≒ 2.718）のものだ。これを自然対数 (natural logarithm) といい、ln と書く。</p><p>e は「増え方の基準」になる数だ。休みなく利息がついて増え続けるお金や、だんだん冷めていく熱い飲みもの——自然界のなめらかな増減は、たいてい e で書ける。</p><p>今は顔と名前だけでいい。「微積分の log は、ほぼ ln のこと」と覚えておこう。Sec 3.6 で、(ln x) の微分が 1/x になる場面でまた会う。</p>",
+     kw:[["natural logarithm","自然対数（ln）"],["e","ネイピア数（≒ 2.718）"]] },
+   { h:"大学への橋：log は指数の「逆関数」",
+     body:"<p>最後に、大学の見方を1つ。y ＝ 2ˣ（指数関数）と x ＝ log₂ y は、同じ関係を裏表から書いたものだ。「2を何回かけたら y になる？」への答えが x——同じ文の読み替えにすぎない。</p><p>だから log は、指数関数の逆関数 (inverse function) と呼ばれる。鏡に映したように、役割がそっくり入れ替わった関数だ。</p><p>これは微積分の Sec 1.5「逆関数と対数」と、Sec 3.6「対数関数の微分」の入口そのもの。この単元で「何回かけたか」のイメージを持っておくと、その2つのセクションがずっと読みやすくなる。</p>",
+     kw:[["inverse function","逆関数"],["exponential function","指数関数"]] }
+  ],
+  qs:[
+   { q:"log₃ 9 はいくつ？",
+     a:"2",
+     why:"「3を何回かけたら9？」3 × 3 ＝ 9 だから2回。" },
+   { q:"log₁₀ 1000 はいくつ？",
+     a:"3",
+     why:"ゼロの個数が3個、つまり3段。10³ ＝ 1000 だから 3。" },
+   { q:"2ˣ ＝ 32 のとき、x を log で書くと？そして x はいくつ？",
+     a:"x ＝ log₂ 32 ＝ 5",
+     why:"2 → 4 → 8 → 16 → 32 と、5回かけると32になる。" },
+   { q:"log₁₀ 20 が、1 と 2 の間にあるのはなぜ？",
+     a:"20 が 10 と 100 の間にあるから",
+     why:"log₁₀ 10 ＝ 1、log₁₀ 100 ＝ 2。20 はその間にあるから、段数も1と2の間になる。" },
+   { q:"log₂（4 × 8）を、足し算の形にすると？",
+     a:"log₂ 4 ＋ log₂ 8 ＝ 2 ＋ 3 ＝ 5",
+     why:"掛け算は「段数の足し算」に翻訳できる。確かめ：4 × 8 ＝ 32 で、log₂ 32 ＝ 5 と一致する。" }
+  ]
 }
 ];
 const LS_LESSONS = "stem-english-lessons-v1";
@@ -2877,7 +2954,13 @@ function renderSubjects(){
       + segBar(tot, kn, fl) + '</span><span class="go">›</span></button>';
   }).join("");
   const lesHere = LESSONS.filter(x=>x.subject===curDeck);
-  $("subjLessons").innerHTML = lesHere.length ? '<div class="grp">' + l.secLessons + '</div>' + lesHere.map(lessonCardHTML).join("") : "";
+  let lesHTML = "";
+  if(lesHere.length){
+    lesHTML = '<div class="grp">' + l.secLessons + '</div>' + lesHere.filter(x=>!x.grp).map(lessonCardHTML).join("");
+    const grps = []; lesHere.forEach(x=>{ if(x.grp && grps.indexOf(x.grp)<0) grps.push(x.grp); });
+    grps.forEach(g=>{ lesHTML += '<div class="grp">' + g + '</div>' + lesHere.filter(x=>x.grp===g).map(lessonCardHTML).join(""); });
+  }
+  $("subjLessons").innerHTML = lesHTML;
   document.querySelectorAll("#subjLessons .lcard").forEach(b=>b.addEventListener("click", ()=>{ se("tap"); openLesson(b.dataset.lesson, "subjects"); }));
   document.querySelectorAll(".chap-row").forEach(b=>b.addEventListener("click", ()=>startStudy(b.dataset.ch)));
 }
@@ -3783,31 +3866,31 @@ ja:{tab:"設定",title:"設定",langGt:"言語",langLb:"表示言語",themeLb:"�
  unkLb:"覚えた以外だけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",bgLb:"背景アニメーション",
  dataGt:"データ",progLb:"学習の進捗",progVal:(k,t)=>"覚えた "+k+" / "+t+" 語",resetLb:"進捗リセット",reset:"リセット",
  resetConfirm:"覚えた記録を全部リセットしますか？",aboutGt:"このアプリについて",
- about:"STEM English v60<br>英語で理系を学ぶ人の単語カード。9つのリスト、全1,200語。進捗はこの端末の中だけに保存されます。"},
+ about:"STEM English v61<br>英語で理系を学ぶ人の単語カード。9つのリスト、全1,200語。進捗はこの端末の中だけに保存されます。"},
 ko:{tab:"설정",title:"설정",langGt:"언어",langLb:"표시 언어",themeLb:"테마",light:"라이트",dark:"다크",
  fontLb:"글자 크기",fsS:"작게",fsM:"보통",fsL:"크게",studyGt:"학습",qcountLb:"테스트 출제 수 (1회)",speakLb:"발음 자동 재생",seLb:"효과음",shufLb:"셔플 (기본값)",
  unkLb:"외운 단어 제외 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",bgLb:"배경 애니메이션",
  dataGt:"데이터",progLb:"학습 진도",progVal:(k,t)=>"외움 "+k+" / "+t+"개",resetLb:"진도 초기화",reset:"초기화",
  resetConfirm:"외운 기록을 전부 초기화할까요?",aboutGt:"이 앱에 대하여",
- about:"STEM English v60<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 9개 리스트, 총 1,200개. 진도는 이 기기에만 저장됩니다."},
+ about:"STEM English v61<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 9개 리스트, 총 1,200개. 진도는 이 기기에만 저장됩니다."},
 zh:{tab:"设置",title:"设置",langGt:"语言",langLb:"显示语言",themeLb:"主题",light:"浅色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"学习",qcountLb:"测试题数（每次）",speakLb:"自动播放发音",seLb:"音效",shufLb:"随机顺序（默认）",
  unkLb:"只看未掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",bgLb:"背景动画",
  dataGt:"数据",progLb:"学习进度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 个",resetLb:"重置进度",reset:"重置",
  resetConfirm:"要重置全部掌握记录吗？",aboutGt:"关于本应用",
- about:"STEM English v60<br>为用英语学习理工科的人准备的单词卡。9 个列表，共 1,200 个词。进度只保存在本设备中。"},
+ about:"STEM English v61<br>为用英语学习理工科的人准备的单词卡。9 个列表，共 1,200 个词。进度只保存在本设备中。"},
 tw:{tab:"設定",title:"設定",langGt:"語言",langLb:"顯示語言",themeLb:"主題",light:"淺色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"學習",qcountLb:"測試題數（每次）",speakLb:"自動播放發音",seLb:"音效",shufLb:"隨機順序（預設）",
  unkLb:"只看未掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",bgLb:"背景動畫",
  dataGt:"資料",progLb:"學習進度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 個",resetLb:"重置進度",reset:"重置",
  resetConfirm:"要重置全部掌握記錄嗎？",aboutGt:"關於本應用",
- about:"STEM English v60<br>為用英語學習理工科的人準備的單字卡。9 個列表，共 1,200 個詞。進度只保存在本裝置中。"},
+ about:"STEM English v61<br>為用英語學習理工科的人準備的單字卡。9 個列表，共 1,200 個詞。進度只保存在本裝置中。"},
 en:{tab:"Settings",title:"Settings",langGt:"Language",langLb:"Display language",themeLb:"Theme",light:"Light",dark:"Dark",
  fontLb:"Font size",fsS:"S",fsM:"M",fsL:"L",studyGt:"Study",qcountLb:"Questions per test",speakLb:"Auto-play pronunciation",seLb:"Sound effects",shufLb:"Shuffle (default)",
  unkLb:"Hide learned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",bgLb:"Background animation",
  dataGt:"Data",progLb:"Progress",progVal:(k,t)=>"Learned "+k+" / "+t,resetLb:"Reset progress",reset:"Reset",
  resetConfirm:"Reset all learned records?",aboutGt:"About",
- about:"STEM English v60<br>Word cards for studying science in English. 1,200 terms across 9 lists. Progress is stored only on this device."}
+ about:"STEM English v61<br>Word cards for studying science in English. 1,200 terms across 9 lists. Progress is stored only on this device."}
 };
 const LS_SET = "stem-english-settings";
 let settings = {theme:"light", font:"m", autoNext:true, anim:true, qcount:10, autoSpeak:true, se:true};
