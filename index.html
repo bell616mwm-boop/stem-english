@@ -669,6 +669,45 @@
   .witem:active{box-shadow:0 3px 10px rgba(50,70,110,.08), inset 0 1px 0 rgba(255,255,255,.85);}
   /* interactive rows always paint in front of decorative layers above them */
   .opt-row{position:relative; z-index:3;}
+
+  /* ---- v56: ambient water-ripple background (every screen) ----
+     A quiet pond behind the whole app: JS spawns .rip rings inside
+     #rippleBg, a clipped pointer-events:none layer that sits under the
+     views inside .views, so the water shows on every screen and never
+     scrolls, intercepts a tap or shifts layout. A ripple is born as a
+     dot, swells slowly into one large ring while its centre drifts a
+     few px, then shrinks away and fades — transform + opacity only.
+     The outer .rip carries the drift + the opacity envelope (peaks are
+     per-ripple CSS vars set from JS, so no calc() is needed); .ripIn
+     carries the growing/shrinking ring itself, plus a fainter second
+     ring inside it. Spawning runs only while the page is visible, the
+     background-animation setting is ON and the OS is not requesting
+     reduced motion (body.noanim — the card-animation OFF setting —
+     also keeps the water still). The hero's old static dot + ring
+     retire: the ripples replace them. */
+  #rippleBg{position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0;}
+  .rip{position:absolute; pointer-events:none;
+    animation-name:ripDrift; animation-timing-function:ease-in-out; animation-fill-mode:both;}
+  .rip::before{content:""; position:absolute; left:50%; top:50%; width:9px; height:9px;
+    margin:-4.5px 0 0 -4.5px; border-radius:50%; background:var(--rc);
+    animation-name:ripDot; animation-timing-function:ease-out; animation-fill-mode:both;
+    animation-duration:inherit;}
+  @keyframes ripDrift{
+    0%{transform:translate(0,0); opacity:0;}
+    10%{opacity:var(--ro);}
+    58%{opacity:var(--ro2);}
+    100%{transform:translate(var(--dx), var(--dy)); opacity:0;}}
+  @keyframes ripDot{0%{opacity:.85;} 28%{opacity:0;} 100%{opacity:0;}}
+  .ripIn{position:absolute; inset:0; border-radius:50%; border:2px solid var(--rc);
+    animation-name:ripGrow; animation-timing-function:ease-in-out; animation-fill-mode:both;}
+  .ripIn::after{content:""; position:absolute; inset:12%; border-radius:50%;
+    border:1.5px solid var(--rc); opacity:.4;}
+  @keyframes ripGrow{
+    0%{transform:scale(.035);}
+    58%{transform:scale(1);}
+    100%{transform:scale(.05);}}
+  /* the hero's static floating dot + ring (v53/v55) retire — ripples replace them */
+  .hero::before{display:none;}
 </style>
 </head>
 <body>
@@ -693,6 +732,7 @@
   <div class="topspace"></div>
 
   <div class="views">
+    <div id="rippleBg" aria-hidden="true"></div>
     <section class="view active" id="view-home">
       <div class="masthead">
         <div class="logo"><img data-icon="mascot" alt="" style="width:32px;height:32px;border-radius:10px;display:block;"></div>
@@ -930,6 +970,8 @@
             <button class="set-chip" data-font-set="m" id="fontM">中</button>
             <button class="set-chip" data-font-set="l" id="fontL">大</button>
           </span></div>
+        <div class="set-row"><span class="lb" id="setBgLb">背景アニメーション</span>
+          <span class="ctl"><button class="set-chip" id="setBgTgl">ON</button></span></div>
       </div>
       <div class="set-group">
         <div class="gt" id="setStudyGt">学習</div>
@@ -3376,38 +3418,125 @@ function spawnConfetti(){
   }
 }
 
+/* ================= v56: ambient water-ripple background =================
+   Ripples live in #rippleBg, a clipped layer under every view, so the
+   water is behind all screens. A ripple is born as a dot, swells slowly
+   into one large ring while its centre drifts a few px, then shrinks
+   away and fades. Colours come from the app palette — blue and orange
+   first, with the soap-bubble pastels mixed in. Spawning runs only
+   while the page is visible and the background-animation setting is
+   ON; the OS reduced-motion preference and the card-animation OFF
+   setting (body.noanim) keep the water still. The ON/OFF choice is
+   kept in its own storage key — the progress data and the settings
+   record are not touched. */
+const LS_BG = "stem-english-bganim-v1";
+let bgAnimOn = true;
+try{ bgAnimOn = store.get(LS_BG) !== "0"; }catch(e){}
+const RIP_MAX = 4;
+let ripTimer = null, ripLive = 0;
+const _mqRM = (typeof window !== "undefined" && typeof window.matchMedia === "function")
+  ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+function ripOK(){
+  if(!bgAnimOn || document.hidden) return false;
+  if(_mqRM && _mqRM.matches) return false;
+  if(document.body && document.body.classList.contains("noanim")) return false;
+  return true;
+}
+function ripPickColor(){
+  const dark = document.body && document.body.classList.contains("dark");
+  const cols = dark
+    ? ["rgba(120,180,250,.85)","rgba(140,200,255,.85)","rgba(250,180,90,.85)","rgba(200,170,255,.8)","rgba(150,235,190,.8)","rgba(255,170,200,.8)"]
+    : ["rgba(29,111,184,.85)","rgba(96,165,250,.85)","rgba(232,147,12,.8)","rgba(168,140,250,.8)","rgba(110,205,160,.8)","rgba(250,150,180,.8)"];
+  const wts = [30,18,22,12,10,8]; /* blue / sky / orange / lavender / mint / pink */
+  let r = Math.random() * 100;
+  for(let i = 0; i < cols.length; i++){ r -= wts[i]; if(r < 0) return cols[i]; }
+  return cols[0];
+}
+function ripMake(){
+  const box = document.getElementById("rippleBg");
+  if(!box || ripLive >= RIP_MAX) return;
+  const W = box.clientWidth, H = box.clientHeight;
+  if(!W || !H) return;
+  const D = Math.round(120 + Math.random() * 320);          /* diameter 120–440px (radius 60–220) */
+  const mx = D * .22, my = D * .22;                          /* centre stays mostly on-screen */
+  const cx = mx + Math.random() * Math.max(10, W - mx * 2);
+  const cy = my + Math.random() * Math.max(10, H - my * 2);
+  const dur = Math.round(6000 + Math.random() * 6000);       /* 6–12s per ripple */
+  const dx = Math.round(Math.random() * 28 - 14) + "px";     /* slow drift, up to ±14px / ±10px */
+  const dy = Math.round(Math.random() * 20 - 10) + "px";
+  const peak = .36 + Math.random() * .18;                    /* opacity envelope peak */
+  const el = document.createElement("div");
+  el.className = "rip";
+  el.style.cssText = "left:" + (cx - D / 2) + "px; top:" + (cy - D / 2) + "px;"
+    + " width:" + D + "px; height:" + D + "px;"
+    + " --rc:" + ripPickColor() + "; --ro:" + peak.toFixed(2) + "; --ro2:" + (peak * .55).toFixed(2) + ";"
+    + " --dx:" + dx + "; --dy:" + dy + "; animation-duration:" + dur + "ms;";
+  const inner = document.createElement("div");
+  inner.className = "ripIn";
+  inner.style.animationDuration = dur + "ms";
+  el.appendChild(inner);
+  box.appendChild(el);
+  ripLive++;
+  let gone = false;
+  const kill = ()=>{ if(gone) return; gone = true; ripLive--; if(el.parentNode) el.parentNode.removeChild(el); };
+  el.addEventListener("animationend", kill);
+  setTimeout(kill, dur + 800); /* safety net if animationend is missed */
+}
+function ripLoop(){
+  ripTimer = null;
+  if(!ripOK()) return;
+  ripMake();
+  ripTimer = setTimeout(ripLoop, Math.round(1500 + Math.random() * 2500)); /* next in 1.5–4s */
+}
+function ripKick(){
+  if(ripTimer == null && ripOK()) ripTimer = setTimeout(ripLoop, 350);
+}
+function ripStopAll(){
+  if(ripTimer != null){ clearTimeout(ripTimer); ripTimer = null; }
+  const box = document.getElementById("rippleBg");
+  if(box) box.innerHTML = "";
+  ripLive = 0;
+}
+function ripApply(){ if(bgAnimOn) ripKick(); else ripStopAll(); }
+document.addEventListener("visibilitychange", ()=>{
+  if(document.hidden){ if(ripTimer != null){ clearTimeout(ripTimer); ripTimer = null; } }
+  else ripKick();
+});
+if(_mqRM && typeof _mqRM.addEventListener === "function")
+  _mqRM.addEventListener("change", ()=>{ if(_mqRM.matches) ripStopAll(); else ripKick(); });
+
 /* ================= settings ================= */
 const SET = {
 ja:{tab:"設定",title:"設定",langGt:"言語",langLb:"表示言語",themeLb:"テーマ",light:"ライト",dark:"ダーク",
  fontLb:"文字サイズ",fsS:"小",fsM:"中",fsL:"大",studyGt:"学習",qcountLb:"テストの出題数（1回）",speakLb:"発音を自動再生",seLb:"効果音",shufLb:"シャッフル（初期値）",
- unkLb:"覚えた以外だけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",
+ unkLb:"覚えた以外だけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",bgLb:"背景アニメーション",
  dataGt:"データ",progLb:"学習の進捗",progVal:(k,t)=>"覚えた "+k+" / "+t+" 語",resetLb:"進捗リセット",reset:"リセット",
  resetConfirm:"覚えた記録を全部リセットしますか？",aboutGt:"このアプリについて",
- about:"STEM English v55<br>英語で理系を学ぶ人の単語カード。9つのリスト、全1,200語。進捗はこの端末の中だけに保存されます。"},
+ about:"STEM English v56<br>英語で理系を学ぶ人の単語カード。9つのリスト、全1,200語。進捗はこの端末の中だけに保存されます。"},
 ko:{tab:"설정",title:"설정",langGt:"언어",langLb:"표시 언어",themeLb:"테마",light:"라이트",dark:"다크",
  fontLb:"글자 크기",fsS:"작게",fsM:"보통",fsL:"크게",studyGt:"학습",qcountLb:"테스트 출제 수 (1회)",speakLb:"발음 자동 재생",seLb:"효과음",shufLb:"셔플 (기본값)",
- unkLb:"외운 단어 제외 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",
+ unkLb:"외운 단어 제외 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",bgLb:"배경 애니메이션",
  dataGt:"데이터",progLb:"학습 진도",progVal:(k,t)=>"외움 "+k+" / "+t+"개",resetLb:"진도 초기화",reset:"초기화",
  resetConfirm:"외운 기록을 전부 초기화할까요?",aboutGt:"이 앱에 대하여",
- about:"STEM English v55<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 9개 리스트, 총 1,200개. 진도는 이 기기에만 저장됩니다."},
+ about:"STEM English v56<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 9개 리스트, 총 1,200개. 진도는 이 기기에만 저장됩니다."},
 zh:{tab:"设置",title:"设置",langGt:"语言",langLb:"显示语言",themeLb:"主题",light:"浅色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"学习",qcountLb:"测试题数（每次）",speakLb:"自动播放发音",seLb:"音效",shufLb:"随机顺序（默认）",
- unkLb:"只看未掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",
+ unkLb:"只看未掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",bgLb:"背景动画",
  dataGt:"数据",progLb:"学习进度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 个",resetLb:"重置进度",reset:"重置",
  resetConfirm:"要重置全部掌握记录吗？",aboutGt:"关于本应用",
- about:"STEM English v55<br>为用英语学习理工科的人准备的单词卡。9 个列表，共 1,200 个词。进度只保存在本设备中。"},
+ about:"STEM English v56<br>为用英语学习理工科的人准备的单词卡。9 个列表，共 1,200 个词。进度只保存在本设备中。"},
 tw:{tab:"設定",title:"設定",langGt:"語言",langLb:"顯示語言",themeLb:"主題",light:"淺色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"學習",qcountLb:"測試題數（每次）",speakLb:"自動播放發音",seLb:"音效",shufLb:"隨機順序（預設）",
- unkLb:"只看未掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",
+ unkLb:"只看未掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",bgLb:"背景動畫",
  dataGt:"資料",progLb:"學習進度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 個",resetLb:"重置進度",reset:"重置",
  resetConfirm:"要重置全部掌握記錄嗎？",aboutGt:"關於本應用",
- about:"STEM English v55<br>為用英語學習理工科的人準備的單字卡。9 個列表，共 1,200 個詞。進度只保存在本裝置中。"},
+ about:"STEM English v56<br>為用英語學習理工科的人準備的單字卡。9 個列表，共 1,200 個詞。進度只保存在本裝置中。"},
 en:{tab:"Settings",title:"Settings",langGt:"Language",langLb:"Display language",themeLb:"Theme",light:"Light",dark:"Dark",
  fontLb:"Font size",fsS:"S",fsM:"M",fsL:"L",studyGt:"Study",qcountLb:"Questions per test",speakLb:"Auto-play pronunciation",seLb:"Sound effects",shufLb:"Shuffle (default)",
- unkLb:"Hide learned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",
+ unkLb:"Hide learned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",bgLb:"Background animation",
  dataGt:"Data",progLb:"Progress",progVal:(k,t)=>"Learned "+k+" / "+t,resetLb:"Reset progress",reset:"Reset",
  resetConfirm:"Reset all learned records?",aboutGt:"About",
- about:"STEM English v55<br>Word cards for studying science in English. 1,200 terms across 9 lists. Progress is stored only on this device."}
+ about:"STEM English v56<br>Word cards for studying science in English. 1,200 terms across 9 lists. Progress is stored only on this device."}
 };
 const LS_SET = "stem-english-settings";
 let settings = {theme:"light", font:"m", autoNext:true, anim:true, qcount:10, autoSpeak:true, se:true};
@@ -3441,6 +3570,7 @@ function applySettingsText(){
   $("setSeLb").textContent = s.seLb;
   $("setShufLb").textContent = s.shufLb; $("setUnkLb").textContent = s.unkLb;
   $("setAutoLb").textContent = s.autoLb; $("setAnimLb").textContent = s.animLb;
+  $("setBgLb").textContent = s.bgLb;
   $("setDataGt").textContent = s.dataGt;
   $("setProgLb").textContent = s.progLb; $("setResetLb").textContent = s.resetLb;
   $("btnResetProg").textContent = s.reset;
@@ -3453,7 +3583,7 @@ function renderSettings(){
   document.querySelectorAll("[data-font-set]").forEach(b=>b.classList.toggle("active", b.dataset.fontSet===settings.font));
   const tg = (el,on)=>{ el.textContent = on?"ON":"OFF"; el.classList.toggle("active", on); };
   tg($("setShufTgl"), optShuffle); tg($("setUnkTgl"), optUnknown);
-  tg($("setAutoTgl"), settings.autoNext); tg($("setAnimTgl"), settings.anim);
+  tg($("setAutoTgl"), settings.autoNext); tg($("setAnimTgl"), settings.anim); tg($("setBgTgl"), bgAnimOn);
   document.querySelectorAll("[data-qcount]").forEach(b=>b.classList.toggle("active", Number(b.dataset.qcount)===settings.qcount));
   tg($("setSpeakTgl"), settings.autoSpeak);
   tg($("setSeTgl"), settings.se);
@@ -3468,7 +3598,8 @@ document.querySelectorAll("[data-font-set]").forEach(b=>b.addEventListener("clic
 $("setShufTgl").addEventListener("click", ()=>{ optShuffle=!optShuffle; saveSettings(); renderSettings(); });
 $("setUnkTgl").addEventListener("click", ()=>{ optUnknown=!optUnknown; saveSettings(); renderSettings(); });
 $("setAutoTgl").addEventListener("click", ()=>{ settings.autoNext=!settings.autoNext; saveSettings(); renderSettings(); });
-$("setAnimTgl").addEventListener("click", ()=>{ settings.anim=!settings.anim; saveSettings(); applySettings(); renderSettings(); });
+$("setAnimTgl").addEventListener("click", ()=>{ settings.anim=!settings.anim; saveSettings(); applySettings(); renderSettings(); ripKick(); });
+$("setBgTgl").addEventListener("click", ()=>{ bgAnimOn=!bgAnimOn; try{ store.set(LS_BG, bgAnimOn?"1":"0"); }catch(e){} ripApply(); renderSettings(); });
 document.querySelectorAll("[data-qcount]").forEach(b=>b.addEventListener("click", ()=>{
   settings.qcount = Number(b.dataset.qcount); saveSettings(); renderSettings();
 }));
@@ -3481,6 +3612,7 @@ $("btnResetProg").addEventListener("click", ()=>{
 applySettings();
 applyStatic();
 renderHome();
+ripKick();
 </script>
 </body>
 </html>
