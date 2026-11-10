@@ -235,6 +235,39 @@
   .lc-labels{display:flex; margin-top:4px;}
   .lc-labels span{flex:1; text-align:center; font-size:10px; color:var(--sub); min-width:0;}
   .motiv .act-barwrap{height:74px;}
+  /* v62: daily goal ring (home) + activity calendar (progress) */
+  :root{--ring-track:rgba(29,111,184,.13);}
+  body.dark{--ring-track:rgba(140,180,250,.18);}
+  .goal-row{display:flex; align-items:center; gap:18px; margin-top:16px;}
+  .goal-ring{flex:0 0 auto; width:118px; height:118px; position:relative;}
+  .goal-ring svg.ring{width:100%; height:100%; display:block; transform:rotate(-90deg);}
+  .goal-ring .gr-track{fill:none; stroke:var(--ring-track); stroke-width:13;}
+  .goal-ring .gr-arc{fill:none; stroke:url(#goalGrad); stroke-width:13; stroke-linecap:round; transition:stroke-dashoffset 1s cubic-bezier(.22,.8,.3,1);}
+  .goal-side{min-width:0;}
+  .goal-lbl{font-size:13px; color:var(--sub); font-weight:700;}
+  .goal-frac{font-size:40px; font-weight:800; line-height:1.15; color:var(--ink); letter-spacing:-.5px; white-space:nowrap;}
+  .goal-frac .gf-num{color:var(--accent);}
+  .goal-frac .gf-unit{font-size:17px; font-weight:700; color:var(--sub); margin-left:5px;}
+  .goal-row.done .goal-frac .gf-num{color:var(--orange);}
+  .goal-sub{font-size:12.5px; color:var(--sub); font-weight:700; margin-top:2px;}
+  .goal-row.done .goal-sub{color:var(--orange);}
+  @media (prefers-reduced-motion: reduce){ .goal-ring .gr-arc{transition:none;} }
+  .goal-step{align-items:center;}
+  .goal-val{font-size:16px; font-weight:800; color:var(--ink); min-width:36px; text-align:center;}
+  .cal-dow{display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-top:16px;}
+  .cal-dow span{text-align:center; font-size:11px; color:var(--faint); font-weight:700;}
+  .cal-month{margin-top:20px;}
+  .cal-mhead{font-size:16px; font-weight:800; color:var(--ink); margin:0 2px 8px;}
+  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:4px;}
+  .cal-cell{display:flex; flex-direction:column; align-items:center; gap:2px; padding:4px 0 2px; min-height:54px;}
+  .cal-num{font-size:13.5px; font-weight:600; color:var(--ink); width:24px; height:24px; display:grid; place-items:center; border-radius:50%;}
+  .cal-cell.fut .cal-num{color:var(--faint);}
+  .cal-cell.today .cal-num{background:var(--accent); color:#fff; font-weight:800;}
+  .cal-ring{width:30px; height:30px; display:block;}
+  .cal-ring svg{width:100%; height:100%; display:block; transform:rotate(-90deg);}
+  .cal-ring .cr-track{fill:none; stroke:var(--ring-track); stroke-width:4.5;}
+  .cal-ring .cr-arc{fill:none; stroke:var(--accent); stroke-width:4.5; stroke-linecap:round;}
+  .cal-ring.full .cr-arc{stroke:var(--orange);}
   .grp{font-size:12px; letter-spacing:.14em; color:var(--faint); font-weight:700; margin:20px 2px 8px;}
   .searchbox{width:100%; border:1.5px solid var(--line); border-radius:14px; background:var(--glass2);
     padding:14px 16px; font-size:16px; color:var(--ink); outline:none; box-shadow:0 4px 12px rgba(50,70,110,.10);}
@@ -910,8 +943,17 @@
           </div>
           <div class="motiv-side" id="homeActLine"></div>
         </div>
-        <div class="chart-switch"><button class="fchip cs-btn" data-period="month"></button><button class="fchip cs-btn" data-period="year"></button></div>
-        <div id="homeActChart" class="act-chart"></div>
+        <div class="goal-row" id="homeGoalRow">
+          <div class="goal-ring" id="homeRing">
+            <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="goalGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1d6fb8"/><stop offset="1" stop-color="#e8930c"/></linearGradient></defs></svg>
+            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="gr-track" cx="60" cy="60" r="52"></circle><circle class="gr-arc" id="homeGoalArc" cx="60" cy="60" r="52"></circle></svg>
+          </div>
+          <div class="goal-side">
+            <div class="goal-lbl" id="homeGoalLbl"></div>
+            <div class="goal-frac"><span class="gf-num" id="homeGoalFrac">0/10</span><span class="gf-unit" id="homeGoalUnit"></span></div>
+            <div class="goal-sub" id="homeGoalSub"></div>
+          </div>
+        </div>
       </div>
       <h2 class="sec" id="secSubjects">科目</h2>
       <p class="sec-sub" id="secSubjectsSub"></p>
@@ -1085,6 +1127,8 @@
         <div class="stat-cell"><div class="v" id="stActWeek">0</div><div class="k" id="stActWeekK"></div></div>
         <div class="stat-cell"><div class="v" id="stActWeekKnown">0</div><div class="k" id="stActWeekKnownK"></div></div>
       </div>
+      <div class="cal-dow" id="actCalDow"></div>
+      <div id="actCal"></div>
       <div class="chart-switch"><button class="fchip cs-btn" data-period="month"></button><button class="fchip cs-btn" data-period="year"></button></div>
       <div id="actChart" class="act-chart"></div>
       <div class="empty" id="actNone" style="display:none"></div>
@@ -1134,6 +1178,12 @@
           <span class="ctl"><button class="set-chip" id="setAutoTgl">ON</button></span></div>
         <div class="set-row"><span class="lb" id="setAnimLb">カードの回転アニメーション</span>
           <span class="ctl"><button class="set-chip" id="setAnimTgl">ON</button></span></div>
+        <div class="set-row"><span class="lb" id="setGoalLb">1日の目標</span>
+          <span class="ctl goal-step">
+            <button class="set-chip" id="goalMinus">−</button>
+            <span class="goal-val" id="goalVal">10</span>
+            <button class="set-chip" id="goalPlus">＋</button>
+          </span></div>
         <div class="set-row"><span class="lb" id="setCntLb">テストの出題数（1回）</span>
           <span class="ctl">
             <button class="set-chip" data-qcount="5">5</button>
@@ -2920,9 +2970,7 @@ function renderHome(){
   $("homeKnownBig").textContent = actWeekKnown();
   $("homeKnownLbl").textContent = l.bigWeek;
   $("homeActLine").innerHTML = l.actLine(actTodayCount(), actStreak());
-  renderChartSwitches();
-  $("homeActChart").innerHTML = chartHTML();
-  scrollLineCharts();
+  renderGoalRing();
 }
 
 /* ---------- subjects ---------- */
@@ -3125,7 +3173,7 @@ ja:{testBtn:"テスト",testBtnLong:"テストを受ける",progBtn:"進行度",
  overallLbl:"全体・単元別",testLbl:"テスト成績",attempts:"受験回数",avg:"平均",best:"最高",
  recentLbl:"最近の結果",noTest:"テスト記録はまだなし。",
  quitTitle:"テストをやめますか？",quitMsg:"今やめると、今回の成績は記録されません。やめますか？",
- quitStay:"テストを続ける",quitLeave:"やめる（記録しない）",dailyBtn:"今日の単語",dailyCta:"今日の単語10",dailySub:"",dailyReview:"カードで確認する",dailyTestNow:"このままテストする",dailyAfter:"見直し完了。この10語でテスト。",dailyDone:"今日の10語は完了。",dailyWordsLbl:"今日の10語",actLbl:"日別の記録",actToday:"今日やった単語",actStreak:"連続日数",actWeek:"直近7日の合計",actWeekKnown:"今週覚えた単語",chartW:"週",chartM:"月",chartY:"年",actNone:"まだ記録なし。カードをめくると貯まります。"},
+ quitStay:"テストを続ける",quitLeave:"やめる（記録しない）",dailyBtn:"今日の単語",dailyCta:"今日の単語10",dailySub:"",dailyReview:"カードで確認する",dailyTestNow:"このままテストする",dailyAfter:"見直し完了。この10語でテスト。",dailyDone:"今日の10語は完了。",dailyWordsLbl:"今日の10語",actLbl:"日別の記録",actToday:"今日やった単語",actStreak:"連続日数",actWeek:"直近7日の合計",actWeekKnown:"今週覚えた単語",chartW:"週",chartM:"月",chartY:"年",actNone:"まだ記録なし。カードをめくると貯まります。",goalLbl:"今日の目標",goalDone:"目標達成",goalLeft:n=>"あと "+n+" 語",dowCal:["月","火","水","木","金","土","日"]},
 ko:{testBtn:"테스트",testBtnLong:"테스트 받기",progBtn:"진행도",testTitle:"테스트",
  testSub:"맞히면 '외움', 틀리면 '못 외움'으로 기록됩니다.",
  deckLbl:"리스트",chLbl:"범위",fmtLbl:"형식",fmtChoice:"4지선다",fmtType:"입력",dirLbl:"방향",
@@ -3139,7 +3187,7 @@ ko:{testBtn:"테스트",testBtnLong:"테스트 받기",progBtn:"진행도",testT
  overallLbl:"전체·단원별",testLbl:"테스트 성적",attempts:"응시 횟수",avg:"평균",best:"최고",
  recentLbl:"최근 결과",noTest:"테스트 기록이 아직 없어요.",
  quitTitle:"테스트를 그만둘까요?",quitMsg:"지금 그만두면 이번 성적은 기록되지 않습니다. 그만둘까요?",
- quitStay:"계속하기",quitLeave:"그만두기 (기록 안 함)",dailyBtn:"오늘의 단어",dailyCta:"오늘의 단어 10",dailySub:"",dailyReview:"카드로 확인",dailyTestNow:"바로 테스트",dailyAfter:"이 10단어로 테스트해요.",dailyDone:"오늘의 10단어 완료.",dailyWordsLbl:"오늘의 10단어",actLbl:"날짜별 기록",actToday:"오늘 한 단어",actStreak:"연속 일수",actWeek:"최근 7일 합계",actWeekKnown:"이번 주 외운 단어",chartW:"주",chartM:"월",chartY:"년",actNone:"아직 기록 없음. 카드를 넘기면 쌓여요."},
+ quitStay:"계속하기",quitLeave:"그만두기 (기록 안 함)",dailyBtn:"오늘의 단어",dailyCta:"오늘의 단어 10",dailySub:"",dailyReview:"카드로 확인",dailyTestNow:"바로 테스트",dailyAfter:"이 10단어로 테스트해요.",dailyDone:"오늘의 10단어 완료.",dailyWordsLbl:"오늘의 10단어",actLbl:"날짜별 기록",actToday:"오늘 한 단어",actStreak:"연속 일수",actWeek:"최근 7일 합계",actWeekKnown:"이번 주 외운 단어",chartW:"주",chartM:"월",chartY:"년",actNone:"아직 기록 없음. 카드를 넘기면 쌓여요.",goalLbl:"오늘의 목표",goalDone:"목표 달성",goalLeft:n=>n+"개 남음",dowCal:["월","화","수","목","금","토","일"]},
 zh:{testBtn:"测试",testBtnLong:"参加测试",progBtn:"进度",testTitle:"测试",
  testSub:"答对记为「会了」，答错记为「还没记住」。",
  deckLbl:"列表",chLbl:"范围",fmtLbl:"形式",fmtChoice:"四选一",fmtType:"输入",dirLbl:"方向",
@@ -3153,7 +3201,7 @@ zh:{testBtn:"测试",testBtnLong:"参加测试",progBtn:"进度",testTitle:"测�
  overallLbl:"整体・各单元",testLbl:"测试成绩",attempts:"测试次数",avg:"平均",best:"最高",
  recentLbl:"最近结果",noTest:"暂无测试记录。",
  quitTitle:"要退出测试吗？",quitMsg:"现在退出，本次成绩不会被记录。退出吗？",
- quitStay:"继续测试",quitLeave:"退出（不记录）",dailyBtn:"今日单词",dailyCta:"今日单词10",dailySub:"",dailyReview:"用卡片复习",dailyTestNow:"直接测试",dailyAfter:"复习完成！用这10个单词测试。",dailyDone:"今日10词完成。",dailyWordsLbl:"今日10词",actLbl:"每日记录",actToday:"今日学的单词",actStreak:"连续天数",actWeek:"近7天合计",actWeekKnown:"本周已掌握单词",chartW:"周",chartM:"月",chartY:"年",actNone:"暂无记录。翻卡片后会积累起来。"},
+ quitStay:"继续测试",quitLeave:"退出（不记录）",dailyBtn:"今日单词",dailyCta:"今日单词10",dailySub:"",dailyReview:"用卡片复习",dailyTestNow:"直接测试",dailyAfter:"复习完成！用这10个单词测试。",dailyDone:"今日10词完成。",dailyWordsLbl:"今日10词",actLbl:"每日记录",actToday:"今日学的单词",actStreak:"连续天数",actWeek:"近7天合计",actWeekKnown:"本周已掌握单词",chartW:"周",chartM:"月",chartY:"年",actNone:"暂无记录。翻卡片后会积累起来。",goalLbl:"今日目标",goalDone:"目标达成",goalLeft:n=>"还差 "+n+" 个",dowCal:["一","二","三","四","五","六","日"]},
 tw:{testBtn:"測驗",testBtnLong:"參加測驗",progBtn:"進度",testTitle:"測驗",
  testSub:"答對記為「會了」，答錯記為「還沒記住」。",
  deckLbl:"列表",chLbl:"範圍",fmtLbl:"形式",fmtChoice:"四選一",fmtType:"輸入",dirLbl:"方向",
@@ -3167,7 +3215,7 @@ tw:{testBtn:"測驗",testBtnLong:"參加測驗",progBtn:"進度",testTitle:"測�
  overallLbl:"整體・各單元",testLbl:"測驗成績",attempts:"測驗次數",avg:"平均",best:"最高",
  recentLbl:"最近結果",noTest:"尚無測驗記錄。",
  quitTitle:"要退出測驗嗎？",quitMsg:"現在退出，本次成績不會被記錄。退出嗎？",
- quitStay:"繼續測驗",quitLeave:"退出（不記錄）",dailyBtn:"今日單字",dailyCta:"今日單字10",dailySub:"",dailyReview:"用卡片複習",dailyTestNow:"直接測驗",dailyAfter:"複習完成！用這10個單字測驗。",dailyDone:"今日10字完成。",dailyWordsLbl:"今日10字",actLbl:"每日記錄",actToday:"今日學的單字",actStreak:"連續天數",actWeek:"近7天合計",actWeekKnown:"本週已掌握單字",chartW:"週",chartM:"月",chartY:"年",actNone:"尚無記錄。翻卡片後會累積起來。"},
+ quitStay:"繼續測驗",quitLeave:"退出（不記錄）",dailyBtn:"今日單字",dailyCta:"今日單字10",dailySub:"",dailyReview:"用卡片複習",dailyTestNow:"直接測驗",dailyAfter:"複習完成！用這10個單字測驗。",dailyDone:"今日10字完成。",dailyWordsLbl:"今日10字",actLbl:"每日記錄",actToday:"今日學的單字",actStreak:"連續天數",actWeek:"近7天合計",actWeekKnown:"本週已掌握單字",chartW:"週",chartM:"月",chartY:"年",actNone:"尚無記錄。翻卡片後會累積起來。",goalLbl:"今日目標",goalDone:"目標達成",goalLeft:n=>"還差 "+n+" 個",dowCal:["一","二","三","四","五","六","日"]},
 en:{testBtn:"Test",testBtnLong:"Take a test",progBtn:"Progress",testTitle:"Test",
  testSub:"Right answers are marked learned; misses are marked not learned yet.",
  deckLbl:"Lists",chLbl:"Range",fmtLbl:"Format",fmtChoice:"Multiple choice",fmtType:"Typing",dirLbl:"Direction",
@@ -3181,7 +3229,7 @@ en:{testBtn:"Test",testBtnLong:"Take a test",progBtn:"Progress",testTitle:"Test"
  overallLbl:"Overall & by unit",testLbl:"Test results",attempts:"Tests taken",avg:"Average",best:"Best",
  recentLbl:"Recent results",noTest:"No tests taken yet.",
  quitTitle:"Quit the test?",quitMsg:"Quit now, and this attempt will not be recorded. Quit?",
- quitStay:"Keep going",quitLeave:"Quit (don't record)",dailyBtn:"Today's words",dailyCta:"Today's 10 words",dailySub:"",dailyReview:"Review with cards",dailyTestNow:"Test now",dailyAfter:"Review done! Let's test these 10 words.",dailyDone:"Today's 10 are done.",dailyWordsLbl:"Today's 10 words",actLbl:"Daily activity",actToday:"Words today",actStreak:"Day streak",actWeek:"Last 7 days total",actWeekKnown:"Learned this week",chartW:"Week",chartM:"Month",chartY:"Year",actNone:"No records yet. Flip a card and they'll start appearing."}
+ quitStay:"Keep going",quitLeave:"Quit (don't record)",dailyBtn:"Today's words",dailyCta:"Today's 10 words",dailySub:"",dailyReview:"Review with cards",dailyTestNow:"Test now",dailyAfter:"Review done! Let's test these 10 words.",dailyDone:"Today's 10 are done.",dailyWordsLbl:"Today's 10 words",actLbl:"Daily activity",actToday:"Words today",actStreak:"Day streak",actWeek:"Last 7 days total",actWeekKnown:"Learned this week",chartW:"Week",chartM:"Month",chartY:"Year",actNone:"No records yet. Flip a card and they'll start appearing.",goalLbl:"Today's goal",goalDone:"Goal reached",goalLeft:n=>n+" to go",dowCal:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]}
 };
 const T = () => TEST_I18N[lang];
 const LS_LOG = "stem-english-testlog";
@@ -3530,7 +3578,6 @@ function renderChartSwitches(){
 }
 function paintCharts(){
   const html = chartHTML();
-  $("homeActChart").innerHTML = html;
   $("actChart").innerHTML = html;
 }
 function actLineChartHTML(buckets, withLbl){
@@ -3583,6 +3630,71 @@ document.querySelectorAll(".cs-btn").forEach(b=>b.addEventListener("click", ()=>
   store.set("stem-english-chartperiod", chartPeriod);
   renderChartSwitches(); paintCharts(); scrollLineCharts();
 }));
+/* ---------- v62: daily goal ring (home) + activity calendar (progress) ----------
+   The home panel's headline is no longer the line chart: it is a single
+   activity ring for today's word goal, Fitness-summary style (big ring on
+   the left, small label + big fraction on the right) but drawn in this
+   app's own glass / blue-orange world. The goal lives in its own storage
+   key; the study data and settings record are untouched. The progress
+   view gains a Fitness-history style calendar: months flow vertically
+   (current month last), Monday-first, every day carries a mini ring
+   filled by that day's count against the *current* goal. */
+const LS_GOAL = "stem-english-dailygoal-v1";
+let dailyGoal = 10;
+try{ const g = parseInt(store.get(LS_GOAL), 10); if(Number.isFinite(g) && g >= 1 && g <= 999) dailyGoal = g; }catch(e){}
+function saveDailyGoal(){ try{ store.set(LS_GOAL, String(dailyGoal)); }catch(e){} }
+const RING_C = 2 * Math.PI * 52;
+function renderGoalRing(){
+  const t = T(), l = L();
+  const c = actTodayCount(), g = dailyGoal;
+  const frac = g > 0 ? Math.max(0, Math.min(1, c / g)) : 0;
+  const arc = $("homeGoalArc");
+  if(arc){ arc.style.strokeDasharray = RING_C.toFixed(1); arc.style.strokeDashoffset = (RING_C * (1 - frac)).toFixed(1); }
+  $("homeGoalLbl").textContent = t.goalLbl;
+  $("homeGoalFrac").textContent = c + "/" + g;
+  $("homeGoalUnit").textContent = l.unit;
+  $("homeGoalRow").classList.toggle("done", c >= g);
+  $("homeGoalSub").textContent = c >= g ? t.goalDone : t.goalLeft(g - c);
+}
+const CAL_MONTHS = 4; /* current month + 3 back; the activity log keeps ~90 days */
+function calMonthTitle(d){
+  const y = d.getFullYear(), m = d.getMonth();
+  if(lang === "en") return monthLabel(d) + " " + y;
+  if(lang === "ko") return y + "년 " + (m + 1) + "월";
+  return y + "年" + (m + 1) + "月";
+}
+function miniRingHTML(c, g){
+  const C = 2 * Math.PI * 13.5;
+  const f = g > 0 ? Math.max(0, Math.min(1, c / g)) : 0;
+  return '<span class="cal-ring' + (g > 0 && c >= g ? " full" : "") + '"><svg viewBox="0 0 34 34"><circle class="cr-track" cx="17" cy="17" r="13.5"></circle>'
+    + (f > 0 ? '<circle class="cr-arc" cx="17" cy="17" r="13.5" stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + (C * (1 - f)).toFixed(1) + '"></circle>' : "")
+    + "</svg></span>";
+}
+function renderCalendar(){
+  const t = T();
+  $("actCalDow").innerHTML = (t.dowCal || ["月","火","水","木","金","土","日"]).map(x=>"<span>" + x + "</span>").join("");
+  const now = new Date();
+  const todayK = actKey(now);
+  let html = "";
+  for(let back = CAL_MONTHS - 1; back >= 0; back--){
+    const first = new Date(now.getFullYear(), now.getMonth() - back, 1);
+    const y = first.getFullYear(), m = first.getMonth();
+    const daysIn = new Date(y, m + 1, 0).getDate();
+    const lead = (first.getDay() + 6) % 7; /* Monday-first offset */
+    html += '<div class="cal-month"><div class="cal-mhead">' + calMonthTitle(first) + '</div><div class="cal-grid">';
+    for(let i = 0; i < lead; i++) html += '<div class="cal-cell"></div>';
+    for(let dd = 1; dd <= daysIn; dd++){
+      const d = new Date(y, m, dd), k = actKey(d);
+      const a = activity[k];
+      const c = a ? a.w.length : 0;
+      const cls = "cal-cell" + (k === todayK ? " today" : "") + (d > now ? " fut" : "");
+      html += '<div class="' + cls + '"><span class="cal-num">' + dd + "</span>" + miniRingHTML(c, dailyGoal) + "</div>";
+    }
+    html += "</div></div>";
+  }
+  $("actCal").innerHTML = html;
+}
+
 function renderActivity(){
   const t = T();
   $("progActLbl").textContent = t.actLbl;
@@ -3601,6 +3713,7 @@ function renderActivity(){
   $("actChart").style.display = any ? "flex" : "none";
   renderChartSwitches();
   $("actChart").innerHTML = chartHTML();
+  renderCalendar();
   scrollLineCharts();
 }
 
@@ -3863,34 +3976,34 @@ if(_mqRM && typeof _mqRM.addEventListener === "function")
 const SET = {
 ja:{tab:"設定",title:"設定",langGt:"言語",langLb:"表示言語",themeLb:"テーマ",light:"ライト",dark:"ダーク",
  fontLb:"文字サイズ",fsS:"小",fsM:"中",fsL:"大",studyGt:"学習",qcountLb:"テストの出題数（1回）",speakLb:"発音を自動再生",seLb:"効果音",shufLb:"シャッフル（初期値）",
- unkLb:"覚えた以外だけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",bgLb:"背景アニメーション",
+ unkLb:"覚えた以外だけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",bgLb:"背景アニメーション",goalLb:"1日の目標",
  dataGt:"データ",progLb:"学習の進捗",progVal:(k,t)=>"覚えた "+k+" / "+t+" 語",resetLb:"進捗リセット",reset:"リセット",
  resetConfirm:"覚えた記録を全部リセットしますか？",aboutGt:"このアプリについて",
- about:"STEM English v61<br>英語で理系を学ぶ人の単語カード。9つのリスト、全1,200語。進捗はこの端末の中だけに保存されます。"},
+ about:"STEM English v62<br>英語で理系を学ぶ人の単語カード。9つのリスト、全1,200語。進捗はこの端末の中だけに保存されます。"},
 ko:{tab:"설정",title:"설정",langGt:"언어",langLb:"표시 언어",themeLb:"테마",light:"라이트",dark:"다크",
  fontLb:"글자 크기",fsS:"작게",fsM:"보통",fsL:"크게",studyGt:"학습",qcountLb:"테스트 출제 수 (1회)",speakLb:"발음 자동 재생",seLb:"효과음",shufLb:"셔플 (기본값)",
- unkLb:"외운 단어 제외 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",bgLb:"배경 애니메이션",
+ unkLb:"외운 단어 제외 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",bgLb:"배경 애니메이션",goalLb:"하루 목표",
  dataGt:"데이터",progLb:"학습 진도",progVal:(k,t)=>"외움 "+k+" / "+t+"개",resetLb:"진도 초기화",reset:"초기화",
  resetConfirm:"외운 기록을 전부 초기화할까요?",aboutGt:"이 앱에 대하여",
- about:"STEM English v61<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 9개 리스트, 총 1,200개. 진도는 이 기기에만 저장됩니다."},
+ about:"STEM English v62<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 9개 리스트, 총 1,200개. 진도는 이 기기에만 저장됩니다."},
 zh:{tab:"设置",title:"设置",langGt:"语言",langLb:"显示语言",themeLb:"主题",light:"浅色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"学习",qcountLb:"测试题数（每次）",speakLb:"自动播放发音",seLb:"音效",shufLb:"随机顺序（默认）",
- unkLb:"只看未掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",bgLb:"背景动画",
+ unkLb:"只看未掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",bgLb:"背景动画",goalLb:"每日目标",
  dataGt:"数据",progLb:"学习进度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 个",resetLb:"重置进度",reset:"重置",
  resetConfirm:"要重置全部掌握记录吗？",aboutGt:"关于本应用",
- about:"STEM English v61<br>为用英语学习理工科的人准备的单词卡。9 个列表，共 1,200 个词。进度只保存在本设备中。"},
+ about:"STEM English v62<br>为用英语学习理工科的人准备的单词卡。9 个列表，共 1,200 个词。进度只保存在本设备中。"},
 tw:{tab:"設定",title:"設定",langGt:"語言",langLb:"顯示語言",themeLb:"主題",light:"淺色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"學習",qcountLb:"測試題數（每次）",speakLb:"自動播放發音",seLb:"音效",shufLb:"隨機順序（預設）",
- unkLb:"只看未掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",bgLb:"背景動畫",
+ unkLb:"只看未掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",bgLb:"背景動畫",goalLb:"每日目標",
  dataGt:"資料",progLb:"學習進度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 個",resetLb:"重置進度",reset:"重置",
  resetConfirm:"要重置全部掌握記錄嗎？",aboutGt:"關於本應用",
- about:"STEM English v61<br>為用英語學習理工科的人準備的單字卡。9 個列表，共 1,200 個詞。進度只保存在本裝置中。"},
+ about:"STEM English v62<br>為用英語學習理工科的人準備的單字卡。9 個列表，共 1,200 個詞。進度只保存在本裝置中。"},
 en:{tab:"Settings",title:"Settings",langGt:"Language",langLb:"Display language",themeLb:"Theme",light:"Light",dark:"Dark",
  fontLb:"Font size",fsS:"S",fsM:"M",fsL:"L",studyGt:"Study",qcountLb:"Questions per test",speakLb:"Auto-play pronunciation",seLb:"Sound effects",shufLb:"Shuffle (default)",
- unkLb:"Hide learned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",bgLb:"Background animation",
+ unkLb:"Hide learned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",bgLb:"Background animation",goalLb:"Daily goal",
  dataGt:"Data",progLb:"Progress",progVal:(k,t)=>"Learned "+k+" / "+t,resetLb:"Reset progress",reset:"Reset",
  resetConfirm:"Reset all learned records?",aboutGt:"About",
- about:"STEM English v61<br>Word cards for studying science in English. 1,200 terms across 9 lists. Progress is stored only on this device."}
+ about:"STEM English v62<br>Word cards for studying science in English. 1,200 terms across 9 lists. Progress is stored only on this device."}
 };
 const LS_SET = "stem-english-settings";
 let settings = {theme:"light", font:"m", autoNext:true, anim:true, qcount:10, autoSpeak:true, se:true};
@@ -3925,6 +4038,7 @@ function applySettingsText(){
   $("setShufLb").textContent = s.shufLb; $("setUnkLb").textContent = s.unkLb;
   $("setAutoLb").textContent = s.autoLb; $("setAnimLb").textContent = s.animLb;
   $("setBgLb").textContent = s.bgLb;
+  $("setGoalLb").textContent = s.goalLb;
   $("setDataGt").textContent = s.dataGt;
   $("setProgLb").textContent = s.progLb; $("setResetLb").textContent = s.resetLb;
   $("btnResetProg").textContent = s.reset;
@@ -3942,6 +4056,7 @@ function renderSettings(){
   tg($("setSpeakTgl"), settings.autoSpeak);
   tg($("setSeTgl"), settings.se);
   $("setProgVal").textContent = s.progVal(known.size, TERMS.length);
+  $("goalVal").textContent = dailyGoal;
 }
 document.querySelectorAll("[data-theme-set]").forEach(b=>b.addEventListener("click", ()=>{
   settings.theme = b.dataset.themeSet; saveSettings(); applySettings(); renderSettings();
@@ -3954,6 +4069,8 @@ $("setUnkTgl").addEventListener("click", ()=>{ optUnknown=!optUnknown; saveSetti
 $("setAutoTgl").addEventListener("click", ()=>{ settings.autoNext=!settings.autoNext; saveSettings(); renderSettings(); });
 $("setAnimTgl").addEventListener("click", ()=>{ settings.anim=!settings.anim; saveSettings(); applySettings(); renderSettings(); ripKick(); });
 $("setBgTgl").addEventListener("click", ()=>{ bgAnimOn=!bgAnimOn; try{ store.set(LS_BG, bgAnimOn?"1":"0"); }catch(e){} ripApply(); renderSettings(); });
+$("goalMinus").addEventListener("click", ()=>{ dailyGoal = Math.max(5, dailyGoal - 5); saveDailyGoal(); renderSettings(); });
+$("goalPlus").addEventListener("click", ()=>{ dailyGoal = Math.min(100, dailyGoal + 5); saveDailyGoal(); renderSettings(); });
 document.querySelectorAll("[data-qcount]").forEach(b=>b.addEventListener("click", ()=>{
   settings.qcount = Number(b.dataset.qcount); saveSettings(); renderSettings();
 }));
@@ -3966,6 +4083,7 @@ $("btnResetProg").addEventListener("click", ()=>{
 applySettings();
 applyStatic();
 renderHome();
+paintCharts();
 ripKick();
 </script>
 </body>
