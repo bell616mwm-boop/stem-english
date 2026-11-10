@@ -203,6 +203,8 @@
   .lc-scroll .line-chart{width:200%;}
   .lc-plot{position:relative; height:104px;}
   .lc-grid{position:absolute; left:3px; transform:translateY(-50%); font-size:9.5px; color:var(--sub);}
+  .lc-wrap{position:relative; width:100%;}
+  .lc-yaxis{position:absolute; left:0; top:0; height:104px; width:26px; pointer-events:none;}
   .lc-plot svg{position:absolute; inset:0; width:100%; height:100%;}
   .lc-dot{position:absolute; width:7px; height:7px; border-radius:50%; background:#2563eb; transform:translate(-50%,-50%);}
   .lc-dot.today{background:#d97706; width:9px; height:9px;}
@@ -678,7 +680,7 @@ ja:{appTitle:"英語で学ぶ理系",totalWords:"収録",totalKnown:"覚えた",
  knownOf:(k,t)=>k+" / "+t+" 語 覚えた",
  subjNames:["物理 Physics","化学 Chemistry","微積分 Calculus","半導体 Semiconductor"],
  deckNames:["物理 Physics","STEM 理系","IELTS","IT・テクノロジー"],
- subjectsTitle:"物理 — 単元を選ぶ",
+ subjectsTitle:"物理 — 単元を選ぶ",subjectsSuffix:" — 単元を選ぶ",
  subjectsSub:"チャプターをタップすると学習が始まります。設定は選んだチャプターに適用されます。",
  optShuffle:o=>"シャッフル: "+(o?"ON":"OFF"), optUnknown:o=>"覚えた以外だけ: "+(o?"ON":"OFF"),
  allCh:"全チャプター通し", allChDesc:"Ch.1–4 ぜんぶ", knownLine:(k,t)=>"覚えた "+k+" / "+t,
@@ -689,7 +691,7 @@ ja:{appTitle:"英語で学ぶ理系",totalWords:"収録",totalKnown:"覚えた",
  bookTitle:"マイ単語帳", bookSub:"タップでその単語から学習開始。右のバッジをタップすると「覚えた→覚えてない→まだ」の順に切り替わります。",
  fAll:"全部", fOk:"覚えた", fNg:"覚えてない", fNew:"まだ", bookEmpty:"この条件の単語はありません。",
  searchTitle:"単語検索", searchSub:"英語・母国語どちらでも検索できます。",
- searchPh:"例: vector / ベクトル / 落下…", searchEmpty:"キーワードを入れると、58語から探します。",
+ searchPh:"例: vector / ベクトル / 落下…", searchEmpty:"キーワードを入れると、全リスト（1,200語）から探します。",
  searchNone:q=>"「"+q+"」に合う単語は見つかりませんでした。",
  tabs:["ホーム","科目","単語帳","検索"],
  chNames:{1:"Ch.1 測定",2:"Ch.2 ベクトル",3:"Ch.3 直線運動",4:"Ch.4 二次元運動"},
@@ -705,7 +707,7 @@ ko:{appTitle:"영어로 배우는 이공계",totalWords:"수록",totalKnown:"외
  knownOf:(k,t)=>k+" / "+t+"개 외움",
  subjNames:["물리 Physics","화학 Chemistry","미적분 Calculus","반도체 Semiconductor"],
  deckNames:["물리 Physics","STEM 이공계","IELTS","IT·기술"],
- subjectsTitle:"물리 — 단원 선택",
+ subjectsTitle:"물리 — 단원 선택",subjectsSuffix:" — 단원 선택",
  subjectsSub:"챕터를 누르면 학습이 시작됩니다. 설정은 선택한 챕터에 적용됩니다.",
  optShuffle:o=>"셔플: "+(o?"ON":"OFF"), optUnknown:o=>"외운 단어 제외: "+(o?"ON":"OFF"),
  allCh:"전 챕터 통째로", allChDesc:"Ch.1–4 전부", knownLine:(k,t)=>"외움 "+k+" / "+t,
@@ -716,7 +718,7 @@ ko:{appTitle:"영어로 배우는 이공계",totalWords:"수록",totalKnown:"외
  bookTitle:"내 단어장", bookSub:"누르면 그 단어부터 학습을 시작합니다. 오른쪽 배지를 누르면 '외움 → 못 외움 → 아직' 순으로 바뀝니다.",
  fAll:"전부", fOk:"외움", fNg:"못 외움", fNew:"아직", bookEmpty:"이 조건의 단어가 없습니다.",
  searchTitle:"단어 검색", searchSub:"영어와 모국어 모두로 검색할 수 있어요.",
- searchPh:"예: vector / 벡터 / 낙하…", searchEmpty:"키워드를 입력하면 58개 단어에서 찾습니다.",
+ searchPh:"예: vector / 벡터 / 낙하…", searchEmpty:"키워드를 입력하면 전체 리스트(1,200개)에서 찾습니다.",
  searchNone:q=>"\""+q+"\"와(과) 맞는 단어가 없습니다.",
  tabs:["홈","과목","단어장","검색"],
  chNames:{1:"Ch.1 측정",2:"Ch.2 벡터",3:"Ch.3 직선 운동",4:"Ch.4 2차원 운동"},
@@ -732,7 +734,7 @@ zh:{appTitle:"用英语学理工",totalWords:"收录",totalKnown:"已掌握",uni
  knownOf:(k,t)=>"已掌握 "+k+" / "+t+" 个",
  subjNames:["物理 Physics","化学 Chemistry","微积分 Calculus","半导体 Semiconductor"],
  deckNames:["物理 Physics","STEM 理工","IELTS 雅思","IT·科技"],
- subjectsTitle:"物理 — 选择单元",
+ subjectsTitle:"物理 — 选择单元",subjectsSuffix:" — 选择单元",
  subjectsSub:"点按章节即可开始学习。设置会应用到所选章节。",
  optShuffle:o=>"随机顺序: "+(o?"开":"关"), optUnknown:o=>"只看未掌握的: "+(o?"开":"关"),
  allCh:"全部章节通学", allChDesc:"Ch.1–4 全部", knownLine:(k,t)=>"已掌握 "+k+" / "+t,
@@ -743,7 +745,7 @@ zh:{appTitle:"用英语学理工",totalWords:"收录",totalKnown:"已掌握",uni
  bookTitle:"我的单词本", bookSub:"点按单词从该词开始学习。点右侧标记按「会了→还没记住→未学」的顺序切换。",
  fAll:"全部", fOk:"会了", fNg:"还没记住", fNew:"未学", bookEmpty:"没有符合条件的单词。",
  searchTitle:"单词搜索", searchSub:"可以用英语或母语搜索。",
- searchPh:"例: vector / 矢量 / 落下…", searchEmpty:"输入关键词，从58个单词中查找。",
+ searchPh:"例: vector / 矢量 / 落下…", searchEmpty:"输入关键词，可从全部 1,200 个单词中查找。",
  searchNone:q=>"没有找到与「"+q+"」匹配的单词。",
  tabs:["首页","科目","单词本","搜索"],
  chNames:{1:"Ch.1 测量",2:"Ch.2 矢量",3:"Ch.3 直线运动",4:"Ch.4 二维运动"},
@@ -759,7 +761,7 @@ tw:{appTitle:"用英語學理工",totalWords:"收錄",totalKnown:"已掌握",uni
  knownOf:(k,t)=>"已掌握 "+k+" / "+t+" 個",
  subjNames:["物理 Physics","化學 Chemistry","微積分 Calculus","半導體 Semiconductor"],
  deckNames:["物理 Physics","STEM 理工","IELTS 雅思","IT·科技"],
- subjectsTitle:"物理 — 選擇單元",
+ subjectsTitle:"物理 — 選擇單元",subjectsSuffix:" — 選擇單元",
  subjectsSub:"點按章節即可開始學習。設定會套用到所選章節。",
  optShuffle:o=>"隨機順序: "+(o?"開":"關"), optUnknown:o=>"只看未掌握的: "+(o?"開":"關"),
  allCh:"全部章節通學", allChDesc:"Ch.1–4 全部", knownLine:(k,t)=>"已掌握 "+k+" / "+t,
@@ -770,7 +772,7 @@ tw:{appTitle:"用英語學理工",totalWords:"收錄",totalKnown:"已掌握",uni
  bookTitle:"我的單字本", bookSub:"點按單字從該詞開始學習。點右側標記按「會了→還沒記住→未學」的順序切換。",
  fAll:"全部", fOk:"會了", fNg:"還沒記住", fNew:"未學", bookEmpty:"沒有符合條件的單字。",
  searchTitle:"單字搜尋", searchSub:"可以用英語或母語搜尋。",
- searchPh:"例: vector / 向量 / 落下…", searchEmpty:"輸入關鍵字，從58個單字中查找。",
+ searchPh:"例: vector / 向量 / 落下…", searchEmpty:"輸入關鍵字，可從全部 1,200 個單字中查找。",
  searchNone:q=>"沒有找到與「"+q+"」相符的單字。",
  tabs:["首頁","科目","單字本","搜尋"],
  chNames:{1:"Ch.1 測量",2:"Ch.2 向量",3:"Ch.3 直線運動",4:"Ch.4 二維運動"},
@@ -786,7 +788,7 @@ en:{appTitle:"Science in English",totalWords:"Words",totalKnown:"Learned",unit:"
  knownOf:(k,t)=>k+" / "+t+" words learned",
  subjNames:["Physics","Chemistry","Calculus","Semiconductors"],
  deckNames:["Physics","STEM Science","IELTS","IT & Tech"],
- subjectsTitle:"Physics — Choose a unit",
+ subjectsTitle:"Physics — Choose a unit",subjectsSuffix:" — Choose a unit",
  subjectsSub:"Tap a chapter to start. Settings apply to the chapter you choose.",
  optShuffle:o=>"Shuffle: "+(o?"ON":"OFF"), optUnknown:o=>"Hide learned cards: "+(o?"ON":"OFF"),
  allCh:"All chapters", allChDesc:"Ch.1–4, everything", knownLine:(k,t)=>"Learned "+k+" / "+t,
@@ -797,7 +799,7 @@ en:{appTitle:"Science in English",totalWords:"Words",totalKnown:"Learned",unit:"
  bookTitle:"My Wordbook", bookSub:"Tap a word to study from it. Tap the badge to cycle: learned → didn't know → new.",
  fAll:"All", fOk:"Learned", fNg:"Didn't know", fNew:"New", bookEmpty:"No words match this filter.",
  searchTitle:"Search words", searchSub:"Search in English or your own language.",
- searchPh:"e.g. vector / fall / slope…", searchEmpty:"Type a keyword to search the 58 words.",
+ searchPh:"e.g. vector / fall / slope…", searchEmpty:"Type a keyword to search all 1,200 words.",
  searchNone:q=>"No words match \""+q+"\".",
  tabs:["Home","Subjects","Wordbook","Search"],
  chNames:{1:"Ch.1 Measurement",2:"Ch.2 Vectors",3:"Ch.3 1-D Motion",4:"Ch.4 2-D Motion"},
@@ -2139,7 +2141,7 @@ function applyStatic(){
   $("unitWords").textContent = l.unit; $("unitWords2").textContent = l.unit;
   $("secSubjects").textContent = l.secSubjects;
   $("secSubjectsSub").textContent = l.secSubjectsSub;
-  $("subjectsTitle").textContent = l.subjectsTitle;
+  $("subjectsTitle").textContent = deckName(curDeck) + (l.subjectsSuffix || "");
   $("subjectsSub").textContent = l.subjectsSub;
   $("tapHint").textContent = l.tapHint;
   $("lblBad").textContent = l.still; $("lblGood").textContent = l.got;
@@ -2209,6 +2211,7 @@ function renderSubjects(){
   $("optShuffle").classList.toggle("on", optShuffle);
   $("optUnknownLbl").textContent = l.optUnknown(optUnknown);
   $("optUnknown").classList.toggle("on", optUnknown);
+  $("subjectsTitle").textContent = deckName(curDeck) + (L().subjectsSuffix || "");
   $("deckChips").innerHTML = DECKS.map(d=>'<button class="fchip'+(d===curDeck?" active":"")+'" data-deck="'+d+'">'+deckName(d)+'</button>').join("");
   document.querySelectorAll("#deckChips .fchip").forEach(b=>b.addEventListener("click", ()=>{ curDeck = b.dataset.deck; renderSubjects(); }));
   let rows;
@@ -2325,7 +2328,7 @@ document.addEventListener("keydown", e=>{
 function itemHTML(i){
   const l = L(), t = TERMS[i], st = stateOf(i);
   const lbl = st==="ok" ? l.stOk : (st==="ng" ? l.stNg : l.stNew);
-  return '<button class="witem" data-i="'+i+'"><span><span class="en">'+t.en+'</span><span class="wipa">'+(t.ipa||"")+'</span><div class="jp2">'+tr(t)+' ・ '+l.chNames[t.ch]+'</div></span>'
+  return '<button class="witem" data-i="'+i+'"><span><span class="en">'+t.en+'</span><span class="wipa">'+(t.ipa||"")+'</span><div class="jp2">'+tr(t)+' ・ '+(t.ch ? l.chNames[t.ch] : deckName(deckOf(i)))+'</div></span>'
     + '<span class="st '+st+'" data-toggle="'+i+'">'+lbl+'</span></button>';
 }
 function bindItems(root){
@@ -2796,7 +2799,7 @@ function paintCharts(){
   $("homeActChart").innerHTML = html;
   $("actChart").innerHTML = html;
 }
-function actLineChartHTML(buckets){
+function actLineChartHTML(buckets, withLbl){
   const n = buckets.length;
   const max = Math.max(1, ...buckets.map(x=>x.c));
   const X = i => ((i + 0.5) / n * 1000).toFixed(1);
@@ -2812,14 +2815,24 @@ function actLineChartHTML(buckets){
   const labels = buckets.map(x=>'<span>'+x.label+'</span>').join("");
   let grid = '<line x1="0" y1="96" x2="1000" y2="96" stroke="rgba(100,116,139,.35)" stroke-width="1" vector-effect="non-scaling-stroke"></line>', gridLbl = "";
   const gridLine = c => '<line x1="0" y1="'+Y(c)+'" x2="1000" y2="'+Y(c)+'" stroke="rgba(100,116,139,.22)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"></line>';
-  if(max >= 1){ grid += gridLine(max); gridLbl += '<span class="lc-grid" style="top:'+Y(max)+'%;">'+max+'</span>'; }
+  if(max >= 1){ grid += gridLine(max); if(withLbl !== false) gridLbl += '<span class="lc-grid" style="top:'+Y(max)+'%;">'+max+'</span>'; }
   const midC = Math.floor(max / 2);
-  if(midC >= 1 && midC < max){ grid += gridLine(midC); gridLbl += '<span class="lc-grid" style="top:'+Y(midC)+'%;">'+midC+'</span>'; }
+  if(midC >= 1 && midC < max){ grid += gridLine(midC); if(withLbl !== false) gridLbl += '<span class="lc-grid" style="top:'+Y(midC)+'%;">'+midC+'</span>'; }
   return '<div class="line-chart"><div class="lc-plot"><svg viewBox="0 0 1000 100" preserveAspectRatio="none">'+grid+'<polygon points="'+X(0)+',96 '+pts+' '+X(upto)+',96" fill="rgba(37,99,235,.12)"></polygon><polyline points="'+pts+'" fill="none" stroke="#2563eb" stroke-width="3" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"></polyline></svg>'+gridLbl+dots+vals+'</div><div class="lc-labels">'+labels+'</div></div>';
 }
+function gridLabelHTML(buckets){
+  const max = Math.max(1, ...buckets.map(x=>x.c));
+  const Y = c => (96 - (c / max) * 84).toFixed(1);
+  let s = "";
+  if(max >= 1) s += '<span class="lc-grid" style="top:'+Y(max)+'%;">'+max+'</span>';
+  const midC = Math.floor(max / 2);
+  if(midC >= 1 && midC < max) s += '<span class="lc-grid" style="top:'+Y(midC)+'%;">'+midC+'</span>';
+  return s;
+}
 function chartHTML(){
-  const h = actLineChartHTML(actBuckets());
-  return chartPeriod === "month" ? '<div class="lc-scroll">' + h + '</div>' : h;
+  const b = actBuckets();
+  if(chartPeriod === "month") return '<div class="lc-wrap"><div class="lc-scroll">' + actLineChartHTML(b, false) + '</div><div class="lc-yaxis">' + gridLabelHTML(b) + '</div></div>';
+  return actLineChartHTML(b);
 }
 function scrollLineCharts(){
   requestAnimationFrame(()=>{ document.querySelectorAll(".lc-scroll").forEach(el=>{
@@ -3029,31 +3042,31 @@ ja:{tab:"設定",title:"設定",langGt:"言語",langLb:"表示言語",themeLb:"�
  unkLb:"覚えた以外だけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",
  dataGt:"データ",progLb:"学習の進捗",progVal:(k,t)=>"覚えた "+k+" / "+t+" 語",resetLb:"進捗リセット",reset:"リセット",
  resetConfirm:"覚えた記録を全部リセットしますか？",aboutGt:"このアプリについて",
- about:"STEM English（仮） v36<br>英語で理系を学ぶ学生のための用語カード。現在は物理58語を収録し、日本語・韓国語・簡体中文・繁體中文・英語に対応。進捗はこの端末の中だけに保存されます。"},
+ about:"STEM English（仮） v37<br>英語で理系を学ぶ学生のための用語カード。物理・STEM・IELTS・ITテクノロジーの4リスト、全1,200語を収録し、日本語・韓国語・簡体中文・繁體中文・英語に対応。進捗はこの端末の中だけに保存されます。"},
 ko:{tab:"설정",title:"설정",langGt:"언어",langLb:"표시 언어",themeLb:"테마",light:"라이트",dark:"다크",
  fontLb:"글자 크기",fsS:"작게",fsM:"보통",fsL:"크게",studyGt:"학습",qcountLb:"테스트 출제 수 (1회)",speakLb:"발음 자동 재생",seLb:"효과음",shufLb:"셔플 (기본값)",
  unkLb:"외운 단어 제외 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",
  dataGt:"데이터",progLb:"학습 진도",progVal:(k,t)=>"외움 "+k+" / "+t+"개",resetLb:"진도 초기화",reset:"초기화",
  resetConfirm:"외운 기록을 전부 초기화할까요?",aboutGt:"이 앱에 대하여",
- about:"STEM English(가칭) v36<br>영어로 이공계를 배우는 학생을 위한 용어 카드. 현재 물리 58개를 수록하고 일본어·한국어·简体中文·繁體中文·영어를 지원합니다. 진도는 이 기기에만 저장됩니다."},
+ about:"STEM English(가칭) v37<br>영어로 이공계를 배우는 학생을 위한 용어 카드. 물리·STEM·IELTS·IT 기술의 4개 리스트, 총 1,200개를 수록하고 일본어·한국어·简体中文·繁體中文·영어를 지원합니다. 진도는 이 기기에만 저장됩니다."},
 zh:{tab:"设置",title:"设置",langGt:"语言",langLb:"显示语言",themeLb:"主题",light:"浅色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"学习",qcountLb:"测试题数（每次）",speakLb:"自动播放发音",seLb:"音效",shufLb:"随机顺序（默认）",
  unkLb:"只看未掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",
  dataGt:"数据",progLb:"学习进度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 个",resetLb:"重置进度",reset:"重置",
  resetConfirm:"要重置全部掌握记录吗？",aboutGt:"关于本应用",
- about:"STEM English（暂定名） v36<br>为用英语学习理工科的学生制作的术语卡。目前收录物理58个词，支持日语、韩语、简体中文、繁體中文和英语。进度只保存在本设备中。"},
+ about:"STEM English（暂定名） v37<br>为用英语学习理工科的学生制作的术语卡。收录物理、STEM、IELTS、IT科技 4 个列表共 1,200 个词，支持日语、韩语、简体中文、繁體中文和英语。进度只保存在本设备中。"},
 tw:{tab:"設定",title:"設定",langGt:"語言",langLb:"顯示語言",themeLb:"主題",light:"淺色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"學習",qcountLb:"測試題數（每次）",speakLb:"自動播放發音",seLb:"音效",shufLb:"隨機順序（預設）",
  unkLb:"只看未掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",
  dataGt:"資料",progLb:"學習進度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 個",resetLb:"重置進度",reset:"重置",
  resetConfirm:"要重置全部掌握記錄嗎？",aboutGt:"關於本應用",
- about:"STEM English（暫定名） v36<br>為用英語學習理工科的學生製作的術語卡。目前收錄物理58個詞，支援日語、韓語、简体中文、繁體中文和英語。進度只保存在本裝置中。"},
+ about:"STEM English（暫定名） v37<br>為用英語學習理工科的學生製作的術語卡。收錄物理、STEM、IELTS、IT科技 4 個列表共 1,200 個詞，支援日語、韓語、简体中文、繁體中文和英語。進度只保存在本裝置中。"},
 en:{tab:"Settings",title:"Settings",langGt:"Language",langLb:"Display language",themeLb:"Theme",light:"Light",dark:"Dark",
  fontLb:"Font size",fsS:"S",fsM:"M",fsL:"L",studyGt:"Study",qcountLb:"Questions per test",speakLb:"Auto-play pronunciation",seLb:"Sound effects",shufLb:"Shuffle (default)",
  unkLb:"Hide learned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",
  dataGt:"Data",progLb:"Progress",progVal:(k,t)=>"Learned "+k+" / "+t,resetLb:"Reset progress",reset:"Reset",
  resetConfirm:"Reset all learned records?",aboutGt:"About",
- about:"STEM English (working title) v36<br>Word cards for students who study science in English. Currently 58 physics terms, in Japanese, Korean, Simplified Chinese, Traditional Chinese, and English. Progress is stored only on this device."}
+ about:"STEM English (working title) v37<br>Word cards for students who study science in English. Now 1,200 terms across 4 lists (Physics, STEM, IELTS, IT & Tech), in Japanese, Korean, Simplified Chinese, Traditional Chinese, and English. Progress is stored only on this device."}
 };
 const LS_SET = "stem-english-settings";
 let settings = {theme:"light", font:"m", autoNext:true, anim:true, qcount:10, autoSpeak:true, se:true};
