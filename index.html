@@ -52,9 +52,8 @@
       radial-gradient(900px 550px at -10% 15%, rgba(147,178,228,.55), transparent 60%),
       radial-gradient(700px 500px at 55% 115%, rgba(163,181,210,.45), transparent 60%),
       var(--bg);
-    background-attachment:fixed;
   }
-  .app{height:100dvh; max-height:100dvh; display:flex; flex-direction:column; max-width:880px; margin:0 auto; padding:0 16px; position:relative;}
+  .app{height:100dvh; max-height:100dvh; display:flex; flex-direction:column; max-width:880px; margin:0 auto; padding:0; position:relative;}
   .topspace{position:absolute; top:0; left:0; right:0; height:calc(env(safe-area-inset-top) + 26px); pointer-events:none; z-index:5;}
   .masthead{display:flex; align-items:center; gap:10px; padding:2px 2px 12px;}
   .logo{width:38px; height:38px; border-radius:11px; display:grid; place-items:center; font-size:19px;
@@ -64,7 +63,7 @@
   .masthead .total{margin-left:auto; text-align:right; font-size:13px; color:var(--ink); line-height:1.5;}
   .masthead .total b{color:var(--ink); font-size:14px;}
   .views{flex:1 1 auto; min-height:0; position:relative;}
-  .view{position:absolute; inset:0; overflow-y:auto; display:none; padding:calc(env(safe-area-inset-top) + 30px) 2px 18px; scrollbar-width:none;}
+  .view{position:absolute; inset:0; overflow-y:auto; display:none; padding:calc(env(safe-area-inset-top) + 30px) 18px 18px; scrollbar-width:none;}
   .view::-webkit-scrollbar{display:none;}
   .view.active{display:block;}
   .view.study{overflow:hidden; display:none;}
@@ -243,7 +242,7 @@
   .empty{color:var(--sub); text-align:center; padding:28px 10px; font-size:14px; line-height:1.7;}
   /* tab bar */
   .tabbar{flex:0 0 auto; display:flex; gap:4px; border-top:1px solid var(--line);
-    padding:8px 16px calc(8px + env(safe-area-inset-bottom)); background:rgba(248,250,252,.85); backdrop-filter:blur(8px); margin:0 -16px;}
+    padding:8px 16px calc(8px + env(safe-area-inset-bottom)); background:rgba(248,250,252,.85); backdrop-filter:blur(8px); margin:0;}
   .tab{flex:1; border:none; background:none; cursor:pointer; color:var(--sub);
     font-size:11.5px; font-weight:600; padding:6px 2px; border-radius:12px; display:flex; flex-direction:column; align-items:center; gap:3px;}
   .tab .ic{font-size:20px; line-height:1;}
@@ -565,16 +564,16 @@
     --glint:radial-gradient(430px 200px at 16% -12%, rgba(255,255,255,.16), rgba(255,255,255,0) 62%);
   }
   /* THE STACK — layered frames (offset silhouette twins) */
-  .hero{box-shadow:var(--glass-sh), 10px 10px 0 var(--lay-a);}
-  .motiv{box-shadow:var(--glass-sh), 8px 8px 0 var(--lay-warm);}
-  .subj{box-shadow:var(--glass-sh), 8px 8px 0 color-mix(in srgb, var(--tl) 55%, #6f9bd8 45%);}
-  .qcard{box-shadow:0 0 0 1px rgba(178,160,255,.20), 0 18px 40px rgba(50,70,110,.22), 10px 10px 0 var(--lay-a), 17px 17px 0 var(--lay-b);}
+  .hero{box-shadow:var(--glass-sh);}
+  .motiv{box-shadow:var(--glass-sh);}
+  .subj{box-shadow:var(--glass-sh);}
+  .qcard{box-shadow:0 0 0 1px rgba(178,160,255,.20), 0 18px 40px rgba(50,70,110,.22);}
   .modal-card{box-shadow:0 0 0 1px rgba(178,160,255,.20), 0 26px 55px rgba(20,35,65,.4), 10px 10px 0 var(--lay-a);}
-  .chap-row{box-shadow:var(--glass-sh), 7px 7px 0 var(--lay-a);}
-  .set-group{box-shadow:var(--glass-sh), 6px 6px 0 var(--lay-b);}
-  .stat-cell{box-shadow:0 5px 14px rgba(50,70,110,.11), 5px 5px 0 var(--lay-b);}
-  .witem{box-shadow:0 8px 22px rgba(50,70,110,.10), inset 0 1px 0 rgba(255,255,255,.85), 5px 5px 0 var(--lay-b);}
-  .log-row{box-shadow:5px 5px 0 var(--lay-b);}
+  .chap-row{box-shadow:var(--glass-sh);}
+  .set-group{box-shadow:var(--glass-sh);}
+  .stat-cell{box-shadow:0 5px 14px rgba(50,70,110,.11);}
+  .witem{box-shadow:0 8px 22px rgba(50,70,110,.10), inset 0 1px 0 rgba(255,255,255,.85);}
+  .log-row{box-shadow:none;}
   /* the study deck — two real sheets fan out behind the flashcard */
   .scene::before,.scene::after{content:""; position:absolute; inset:0; margin:auto; pointer-events:none;
     width:calc(100% - 12px); height:calc(100% - 12px); max-height:548px; border-radius:var(--r-5);
@@ -607,6 +606,69 @@
   body.dark .qcard{background:var(--glint), var(--film), linear-gradient(160deg,#1d2a47,#131e35);}
   .modal-card{background:var(--glint), var(--film), var(--paper);}
   body.dark .modal-card{background:var(--glint), var(--film), linear-gradient(160deg,#1d2a47,#131e35);}
+
+  /* ---- v55: layered frames rebuilt as real sheets + stacking audit ----
+     Why: the v54 twins were zero-blur box-shadows. Inside a scroll view they
+     were clipped at the container's padding edge (16px in from the screen) —
+     every shadow stopped on the same vertical line at both edges, which read
+     as pale bands hiding the shadows, and the hard cut through the offset
+     twin read as a vertical streak in the shadow (WebKit also streaks hard
+     shadows combined with large radii / backdrop-filter). Fixes:
+     1) The horizontal inset moved from .app (16px) into .view itself (18px):
+        cards sit exactly where they did (16+2), but the clip edge is now the
+        physical screen edge, and every sheet (<=17px) fits inside the room.
+        body background-attachment:fixed (an iOS rendering quirk source) went
+        with it — html/body are exactly viewport-sized, so it was redundant.
+     2) Twins are now real sheets: ::before/::after boxes at inset:0,
+        translated by the same offsets in the same tints, border-radius
+        inherited so they follow silhouettes (including the sweep) exactly.
+        A negative-z sheet only passes behind the card's own background when
+        the card creates no stacking context, so the layered cards drop
+        backdrop-filter — their near-opaque glass gradient over the page's
+        already-soft pastel background renders the same without it (chips,
+        choices and the tab bar keep their blur). Pressable layered cards
+        trade the scale-squish for a shadow press: a transform would trap
+        the sheet above the card face mid-press.
+     3) Stacking audit — decoration behind, controls in front: .opt-row gets
+        position + z-index so a preceding glow can never paint over buttons
+        again (the home CTA sits at z-index:2 over the hero, and its orange
+        glow was washing over the Test / Progress buttons below it).
+        The modal card keeps its box-shadow twin on purpose: it lives
+        outside any scroll container (no clipping, no streaks) and a sheet
+        there would flash above its face during the pop animation. */
+  .motiv,.chap-row,.set-group,.stat-cell,.witem,.log-row,.qcard{position:relative;}
+  .hero,.motiv,.subj,.chap-row,.set-group{-webkit-backdrop-filter:none; backdrop-filter:none;}
+  .motiv::before,.subj::before,.chap-row::before,.set-group::before,.stat-cell::before,
+  .witem::before,.log-row::before,.qcard::before,.qcard::after{
+    content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    border-radius:inherit; background:var(--lay-b);}
+  .motiv::before{background:var(--lay-warm); transform:translate(8px,8px);}
+  .subj::before{background:color-mix(in srgb, var(--tl) 55%, #6f9bd8 45%); transform:translate(8px,8px);}
+  .chap-row::before{background:var(--lay-a); transform:translate(7px,7px);}
+  .set-group::before{transform:translate(6px,6px);}
+  .stat-cell::before,.witem::before,.log-row::before{transform:translate(5px,5px);}
+  .qcard::before{background:var(--lay-b); transform:translate(17px,17px); z-index:-2;}
+  .qcard::after{background:var(--lay-a); transform:translate(10px,10px);}
+  /* hero sheet (its ::after was the floating ring — the ring moves into ::before) */
+  .hero::after{content:""; position:absolute; inset:0; width:auto; height:auto; border:none;
+    border-radius:inherit; background:var(--lay-a); transform:translate(10px,10px);
+    z-index:-1; pointer-events:none;}
+  /* hero floating shapes combined into one overlay strip (dot + ring as gradients) */
+  .hero::before{content:""; position:absolute; left:0; right:0; top:-20px; width:auto; height:44px;
+    border-radius:0; pointer-events:none;
+    background:
+      radial-gradient(circle, rgba(29,111,184,.22) 0 6px, rgba(29,111,184,0) 7px),
+      radial-gradient(circle, rgba(232,147,12,0) 0 7px, rgba(232,147,12,.26) 8px 14px, rgba(232,147,12,0) 15px);
+    background-size:13px 13px, 30px 30px;
+    background-position:right 172px top 11px, right 112px top 4px;
+    background-repeat:no-repeat;}
+  /* press feedback for layered cards: shadow press instead of scale-squish */
+  .subj:active,.chap-row:active,.witem:active{transform:none;}
+  .subj:active{box-shadow:0 3px 10px rgba(50,70,110,.10);}
+  .chap-row:active{box-shadow:0 3px 10px rgba(50,70,110,.10);}
+  .witem:active{box-shadow:0 3px 10px rgba(50,70,110,.08), inset 0 1px 0 rgba(255,255,255,.85);}
+  /* interactive rows always paint in front of decorative layers above them */
+  .opt-row{position:relative; z-index:3;}
 </style>
 </head>
 <body>
@@ -3321,31 +3383,31 @@ ja:{tab:"設定",title:"設定",langGt:"言語",langLb:"表示言語",themeLb:"�
  unkLb:"覚えた以外だけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",
  dataGt:"データ",progLb:"学習の進捗",progVal:(k,t)=>"覚えた "+k+" / "+t+" 語",resetLb:"進捗リセット",reset:"リセット",
  resetConfirm:"覚えた記録を全部リセットしますか？",aboutGt:"このアプリについて",
- about:"STEM English v54<br>英語で理系を学ぶ人の単語カード。9つのリスト、全1,200語。進捗はこの端末の中だけに保存されます。"},
+ about:"STEM English v55<br>英語で理系を学ぶ人の単語カード。9つのリスト、全1,200語。進捗はこの端末の中だけに保存されます。"},
 ko:{tab:"설정",title:"설정",langGt:"언어",langLb:"표시 언어",themeLb:"테마",light:"라이트",dark:"다크",
  fontLb:"글자 크기",fsS:"작게",fsM:"보통",fsL:"크게",studyGt:"학습",qcountLb:"테스트 출제 수 (1회)",speakLb:"발음 자동 재생",seLb:"효과음",shufLb:"셔플 (기본값)",
  unkLb:"외운 단어 제외 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",
  dataGt:"데이터",progLb:"학습 진도",progVal:(k,t)=>"외움 "+k+" / "+t+"개",resetLb:"진도 초기화",reset:"초기화",
  resetConfirm:"외운 기록을 전부 초기화할까요?",aboutGt:"이 앱에 대하여",
- about:"STEM English v54<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 9개 리스트, 총 1,200개. 진도는 이 기기에만 저장됩니다."},
+ about:"STEM English v55<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 9개 리스트, 총 1,200개. 진도는 이 기기에만 저장됩니다."},
 zh:{tab:"设置",title:"设置",langGt:"语言",langLb:"显示语言",themeLb:"主题",light:"浅色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"学习",qcountLb:"测试题数（每次）",speakLb:"自动播放发音",seLb:"音效",shufLb:"随机顺序（默认）",
  unkLb:"只看未掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",
  dataGt:"数据",progLb:"学习进度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 个",resetLb:"重置进度",reset:"重置",
  resetConfirm:"要重置全部掌握记录吗？",aboutGt:"关于本应用",
- about:"STEM English v54<br>为用英语学习理工科的人准备的单词卡。9 个列表，共 1,200 个词。进度只保存在本设备中。"},
+ about:"STEM English v55<br>为用英语学习理工科的人准备的单词卡。9 个列表，共 1,200 个词。进度只保存在本设备中。"},
 tw:{tab:"設定",title:"設定",langGt:"語言",langLb:"顯示語言",themeLb:"主題",light:"淺色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"學習",qcountLb:"測試題數（每次）",speakLb:"自動播放發音",seLb:"音效",shufLb:"隨機順序（預設）",
  unkLb:"只看未掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",
  dataGt:"資料",progLb:"學習進度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 個",resetLb:"重置進度",reset:"重置",
  resetConfirm:"要重置全部掌握記錄嗎？",aboutGt:"關於本應用",
- about:"STEM English v54<br>為用英語學習理工科的人準備的單字卡。9 個列表，共 1,200 個詞。進度只保存在本裝置中。"},
+ about:"STEM English v55<br>為用英語學習理工科的人準備的單字卡。9 個列表，共 1,200 個詞。進度只保存在本裝置中。"},
 en:{tab:"Settings",title:"Settings",langGt:"Language",langLb:"Display language",themeLb:"Theme",light:"Light",dark:"Dark",
  fontLb:"Font size",fsS:"S",fsM:"M",fsL:"L",studyGt:"Study",qcountLb:"Questions per test",speakLb:"Auto-play pronunciation",seLb:"Sound effects",shufLb:"Shuffle (default)",
  unkLb:"Hide learned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",
  dataGt:"Data",progLb:"Progress",progVal:(k,t)=>"Learned "+k+" / "+t,resetLb:"Reset progress",reset:"Reset",
  resetConfirm:"Reset all learned records?",aboutGt:"About",
- about:"STEM English v54<br>Word cards for studying science in English. 1,200 terms across 9 lists. Progress is stored only on this device."}
+ about:"STEM English v55<br>Word cards for studying science in English. 1,200 terms across 9 lists. Progress is stored only on this device."}
 };
 const LS_SET = "stem-english-settings";
 let settings = {theme:"light", font:"m", autoNext:true, anim:true, qcount:10, autoSpeak:true, se:true};
