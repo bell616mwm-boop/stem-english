@@ -24,6 +24,22 @@
     --cute:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Apple SD Gothic Neo","Noto Sans KR","Hiragino Sans","Noto Sans JP",sans-serif;
     --serif:var(--cute);
     --ipa:-apple-system,"Helvetica Neue","Segoe UI","Noto Sans",Arial,sans-serif;
+    /* v51 design tokens: spacing / radius / elevation / surfaces / bars */
+    --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px;
+    --r-1:12px; --r-2:16px; --r-3:20px; --r-4:24px; --r-5:28px; --r-pill:999px;
+    --sh-1:0 2px 8px rgba(50,70,110,.08);
+    --sh-2:0 6px 18px rgba(50,70,110,.12);
+    --sh-3:0 12px 32px rgba(50,70,110,.15);
+    --sh-4:0 20px 44px rgba(50,70,110,.22);
+    --glass-bg:linear-gradient(165deg, rgba(255,255,255,.78), rgba(255,255,255,.52));
+    --glass2-bg:rgba(255,255,255,.66);
+    --glass-bd:1px solid rgba(255,255,255,.7);
+    --glass-sh:0 12px 32px rgba(50,70,110,.13), inset 0 1px 0 rgba(255,255,255,.85);
+    --chip-bg:linear-gradient(165deg, rgba(255,255,255,.75), rgba(255,255,255,.5));
+    --paper:linear-gradient(160deg,#ffffff,#e2eaf6);
+    --track:rgba(63,88,130,.15);
+    --bar-grad:linear-gradient(90deg,var(--orange),var(--accent));
+    --fs-1:11px; --fs-2:12.5px; --fs-3:13.5px; --fs-4:15px; --fs-5:17px; --fs-6:20px;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{touch-action:pan-x pan-y; overscroll-behavior:none;}
@@ -53,7 +69,7 @@
   .view.active{display:block;}
   .view.study{overflow:hidden; display:none;}
   .view.study.active{display:flex; flex-direction:column;}
-  h2.sec{font-family:var(--serif); font-size:21px; margin:18px 0 4px;}
+  h2.sec{font-family:var(--serif); font-size:21px; margin:22px 0 4px;}
   .sec-sub{color:var(--sub); font-size:13px; margin:0 0 14px; line-height:1.6;}
   /* language selector */
   .lang-row{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:2px 0 14px;}
@@ -70,20 +86,19 @@
   .ring .val{stroke:url(#ringGrad); transform:rotate(-90deg); transform-origin:center; transition:stroke-dashoffset .5s ease;}
   .ring text{fill:var(--ink); font-size:20px; font-weight:800; text-anchor:middle;}
   .hero .big{font-size:18px; font-weight:800;}
-  .hero .small{color:var(--sub); font-size:13px; margin-top:4px; line-height:1.6;}
+  .hero .small{color:var(--sub); font-size:var(--fs-4); margin-top:4px; line-height:1.55;}
   .cta{margin-top:14px; width:100%; border:none; cursor:pointer; border-radius:16px; padding:15px;
-    background:linear-gradient(135deg,#2f83c5,var(--accent-d)); color:#fff; font-size:16px; font-weight:800;
-    box-shadow:0 10px 24px rgba(29,111,184,.35);}
+    background:linear-gradient(135deg,#2f83c5,var(--accent-d)); color:#fff; font-size:16px; font-weight:800;}
   .cta:active{transform:scale(.98);}
   .subj-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;}
   @media (max-width:520px){ .subj-grid{grid-template-columns:1fr;} }
-  .subj{background:var(--glass); border:1.5px solid var(--line); border-radius:18px; padding:15px 16px; cursor:pointer;
+  .subj{background:var(--glass); border:1.5px solid var(--line); border-radius:18px; padding:14px 16px; cursor:pointer;
     box-shadow:0 6px 18px rgba(50,70,110,.13); text-align:left; width:100%; color:var(--ink);}
   .subj:hover{background:var(--glass2);}
   .subj .nm{font-family:var(--serif); font-size:17px; font-weight:700;}
   .subj .ds{color:var(--sub); font-size:12.5px; margin-top:3px;}
-  .subj .bar{height:7px; border-radius:99px; background:rgba(63,88,130,.15); margin-top:11px; overflow:hidden;}
-  .subj .bar i{display:block; height:100%; background:linear-gradient(90deg,var(--orange),var(--accent)); border-radius:99px;}
+  .subj .bar{height:7px; border-radius:99px; background:var(--track); margin-top:11px; overflow:hidden;}
+  .subj .bar i{display:block; height:100%; background:var(--bar-grad); border-radius:99px;}
   .subj .pt{font-size:12px; color:var(--sub); margin-top:6px;}
   .subj.off{opacity:.55; cursor:default;}
   .subj.off:hover{background:var(--glass);}
@@ -93,7 +108,7 @@
   /* subjects */
   .opt-row{display:flex; gap:8px; margin:2px 0 14px;}
   .opt{flex:1; border:1.5px solid var(--line); background:var(--glass); color:var(--sub);
-    padding:10px 8px; border-radius:12px; font-size:13.5px; cursor:pointer; box-shadow:0 4px 12px rgba(50,70,110,.10);}
+    padding:12px 10px; border-radius:12px; font-size:13.5px; cursor:pointer; box-shadow:0 4px 12px rgba(50,70,110,.10);}
   .opt.on{color:var(--ink); border-color:var(--accent); background:#e8f1fb; font-weight:700;}
   .chap-row{display:flex; align-items:center; gap:14px; width:100%; text-align:left; cursor:pointer; color:var(--ink);
     background:var(--glass); border:1.5px solid var(--line); border-radius:16px; padding:14px 16px; margin-bottom:10px;
@@ -101,8 +116,8 @@
   .chap-row:hover{background:var(--glass2);}
   .chap-row .nm{font-family:var(--serif); font-size:16.5px; font-weight:700;}
   .chap-row .ds{color:var(--sub); font-size:12.5px; margin-top:2px;}
-  .chap-row .bar{height:6px; border-radius:99px; background:rgba(63,88,130,.15); margin-top:9px; overflow:hidden; max-width:340px;}
-  .chap-row .bar i{display:block; height:100%; background:linear-gradient(90deg,var(--orange),var(--accent));}
+  .chap-row .bar{height:6px; border-radius:99px; background:var(--track); margin-top:9px; overflow:hidden; max-width:340px;}
+  .chap-row .bar i{display:block; height:100%; background:var(--bar-grad);}
   .chap-row .go{margin-left:auto; color:var(--accent); font-size:20px; flex:0 0 auto;}
   /* study */
   .study-head{display:flex; align-items:center; gap:10px; padding:2px 0 10px; flex:0 0 auto;}
@@ -118,7 +133,7 @@
   .face{position:absolute; inset:0; overflow:hidden; backface-visibility:hidden; -webkit-backface-visibility:hidden;
     border-radius:26px; padding:clamp(18px,4vw,34px);
     display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
-    background:linear-gradient(160deg,#ffffff,#e2eaf6); border:1.5px solid rgba(63,88,130,.45);
+    background:var(--paper); border:1.5px solid rgba(63,88,130,.45);
     box-shadow:0 10px 22px rgba(50,70,110,.25), 0 2px 8px rgba(50,70,110,.15), inset 0 1px 0 rgba(255,255,255,.9);}
   .face.back{transform:rotateY(180deg); background:linear-gradient(160deg,#dfeafb,#b7cff0); border-color:rgba(30,80,160,.55);}
   /* answer-side photo background (v20): rich image under a readability scrim */
@@ -167,13 +182,13 @@
   /* wordbook & search */
   .filter-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;}
   .fchip{border:1.5px solid var(--line); background:var(--glass); color:var(--sub); border-radius:999px;
-    padding:7px 13px; font-size:13px; cursor:pointer;}
+    padding:8px 14px; font-size:13px; cursor:pointer;}
   .fchip.active{background:#e8f1fb; color:var(--ink); border-color:var(--accent); font-weight:700;}
   .witem{display:flex; align-items:center; gap:12px; width:100%; text-align:left; cursor:pointer; color:var(--ink);
-    background:var(--glass); border:1px solid var(--line); border-radius:14px; padding:11px 14px; margin-bottom:8px;
+    background:var(--glass); border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin-bottom:8px;
     box-shadow:0 3px 10px rgba(50,70,110,.08);}
   .witem:hover{background:var(--glass2);}
-  .witem .en{font-family:var(--serif); font-size:16.5px; font-weight:700;}
+  .witem .en{font-family:var(--serif); font-size:17px; font-weight:700;}
   .wipa{font-family:var(--ipa); font-weight:400; color:var(--faint); font-size:12.5px; margin-left:6px;}
   .ipa-row{display:inline-flex; align-items:center; gap:8px; margin-top:7px; cursor:pointer;
     background:rgba(255,255,255,.55); border:1.5px solid rgba(63,88,130,.28); border-radius:999px; padding:5px 14px;
@@ -198,7 +213,6 @@
   .act-col.today .act-bar{background:linear-gradient(180deg,#f2c879,#d97706);}
   .act-day{font-size:9.5px; color:var(--faint); white-space:nowrap;}
   .act-col.today .act-day{color:var(--ink); font-weight:700;}
-  .hero .small{font-size:15px; line-height:1.55;}
   .motiv{margin-top:14px; padding:16px; border-radius:20px; background:var(--glass); border:1px solid var(--line); box-shadow:0 10px 24px rgba(31,52,84,.10);}
   .motiv-top{display:flex; justify-content:space-between; align-items:flex-end; gap:10px;}
   .motiv-num{font-size:52px; font-weight:800; line-height:1; color:var(--ink); letter-spacing:-1px;}
@@ -222,9 +236,9 @@
   .lc-labels{display:flex; margin-top:4px;}
   .lc-labels span{flex:1; text-align:center; font-size:10px; color:var(--sub); min-width:0;}
   .motiv .act-barwrap{height:74px;}
-  .grp{font-size:12px; letter-spacing:.14em; color:var(--faint); font-weight:700; margin:16px 2px 8px;}
+  .grp{font-size:12px; letter-spacing:.14em; color:var(--faint); font-weight:700; margin:20px 2px 8px;}
   .searchbox{width:100%; border:1.5px solid var(--line); border-radius:14px; background:var(--glass2);
-    padding:13px 15px; font-size:16px; color:var(--ink); outline:none; box-shadow:0 4px 12px rgba(50,70,110,.10);}
+    padding:14px 16px; font-size:16px; color:var(--ink); outline:none; box-shadow:0 4px 12px rgba(50,70,110,.10);}
   .searchbox:focus{border-color:var(--accent);}
   .empty{color:var(--sub); text-align:center; padding:28px 10px; font-size:14px; line-height:1.7;}
   /* tab bar */
@@ -243,7 +257,7 @@
   .set-row .lb{font-size:14.5px; font-weight:600;}
   .set-row .ctl{margin-left:auto; display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end;}
   .set-chip{border:1.5px solid var(--line); background:var(--glass2); color:var(--sub); border-radius:999px;
-    padding:7px 13px; font-size:13px; cursor:pointer;}
+    padding:8px 14px; font-size:13px; cursor:pointer;}
   .set-chip.active{background:#e8f1fb; color:var(--ink); border-color:var(--accent); font-weight:800;}
   .danger{border:1.5px solid rgba(176,64,47,.5); background:rgba(176,64,47,.08); color:#9c3626;
     border-radius:12px; padding:10px 16px; font-size:14px; font-weight:700; cursor:pointer;}
@@ -253,7 +267,7 @@
   body.fs-l .term{font-size:clamp(34px,8.4vw,54px);} body.fs-l .jp{font-size:clamp(30px,7vw,44px);} body.fs-l .note{font-size:clamp(16px,3vw,18.5px);}
   body.noanim .card{transition:none;}
   /* dark theme */
-  body.dark{--bg:#0c1322; --ink:#e8eefb; --ink-en:#e8eefb; --sub:#9db0cc; --faint:#647d9f;
+  body.dark{--glass-bg:linear-gradient(165deg, rgba(38,54,88,.66), rgba(20,31,56,.55)); --glass2-bg:rgba(20,31,56,.6); --glass-bd:1px solid rgba(140,170,220,.35); --glass-sh:0 12px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.12); --chip-bg:linear-gradient(165deg, rgba(38,54,88,.6), rgba(20,31,56,.5)); --track:rgba(140,170,220,.18); --bg:#0c1322; --ink:#e8eefb; --ink-en:#e8eefb; --sub:#9db0cc; --faint:#647d9f;
     --glass:#141f38; --glass2:#1a2745; --line:rgba(140,170,220,.38);
     background:
       radial-gradient(1100px 600px at 85% -10%, rgba(217,119,6,.16), transparent 60%),
@@ -272,8 +286,8 @@
   body.dark .opt.on, body.dark .fchip.active, body.dark .lang-chip.active, body.dark .set-chip.active{background:#1d3355;}
   body.dark .st.ok{background:rgba(61,122,68,.25);} body.dark .st.ng{background:rgba(176,64,47,.22);} body.dark .st.new{background:rgba(120,140,170,.22);}
   /* ---------- test & progress ---------- */
-  .qcard{background:linear-gradient(160deg,#ffffff,#e2eaf6); border:1.5px solid rgba(63,88,130,.45); border-radius:22px;
-    box-shadow:0 18px 40px rgba(50,70,110,.22); padding:26px 20px; text-align:center; margin-bottom:14px;}
+  .qcard{background:var(--paper); border:1.5px solid rgba(63,88,130,.45); border-radius:22px;
+    box-shadow:0 18px 40px rgba(50,70,110,.22); padding:24px 20px; text-align:center; margin-bottom:14px;}
   body.dark .qcard{background:linear-gradient(160deg,#1d2a47,#131e35);}
   .qprompt{font-family:var(--serif); font-size:clamp(24px,6vw,36px); font-weight:700; line-height:1.3; word-break:break-word;}
   .qhint{color:var(--sub); font-size:13px; margin-top:8px;}
@@ -290,7 +304,7 @@
   .qfeedback.ok{color:var(--good);} .qfeedback.ng{color:var(--bad);}
   .stat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px;}
   .stat-grid.four{grid-template-columns:repeat(4,1fr);}
-  .stat-cell{background:var(--glass); border:1.5px solid var(--line); border-radius:16px; padding:13px 8px; text-align:center;
+  .stat-cell{background:var(--glass); border:1.5px solid var(--line); border-radius:var(--r-2); padding:14px 8px; text-align:center;
     box-shadow:0 5px 14px rgba(50,70,110,.11);}
   .stat-cell .v{font-size:21px; font-weight:800;}
   .stat-cell .k{color:var(--sub); font-size:11.5px; margin-top:2px;}
@@ -303,7 +317,7 @@
   .modal-ov{position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center;
     background:rgba(18,28,48,.52); backdrop-filter:blur(3px); padding:22px; animation:fadeIn .18s ease;}
   @keyframes fadeIn{from{opacity:0;}}
-  .modal-card{background:linear-gradient(160deg,#ffffff,#e6edf8); border:1.5px solid rgba(63,88,130,.45); border-radius:22px;
+  .modal-card{background:var(--paper); border:1.5px solid rgba(63,88,130,.45); border-radius:22px;
     box-shadow:0 26px 55px rgba(20,35,65,.4); padding:24px 22px; max-width:400px; width:100%; text-align:center;
     animation:modalPop .28s cubic-bezier(.2,.9,.3,1.3);}
   @keyframes modalPop{from{opacity:0; transform:scale(.9) translateY(10px);}}
@@ -380,28 +394,22 @@
 
   /* ---- v45: iOS-style glass surfaces + rounder corners ---- */
   .hero,.motiv,.subj,.chap-row,.set-group,.choice,.searchbox{
-    background:linear-gradient(165deg, rgba(255,255,255,.78), rgba(255,255,255,.52));
+    background:var(--glass-bg);
     -webkit-backdrop-filter:blur(16px) saturate(1.5); backdrop-filter:blur(16px) saturate(1.5);
-    border:1px solid rgba(255,255,255,.7);
-    box-shadow:0 12px 32px rgba(50,70,110,.13), inset 0 1px 0 rgba(255,255,255,.85);}
-  .witem{background:rgba(255,255,255,.66); border:1px solid rgba(255,255,255,.7);
+    border:var(--glass-bd);
+    box-shadow:var(--glass-sh);}
+  .witem{background:var(--glass2-bg); border:var(--glass-bd);
     box-shadow:0 8px 22px rgba(50,70,110,.10), inset 0 1px 0 rgba(255,255,255,.85);}
-  .hero{border-radius:28px;} .motiv{border-radius:26px;} .subj{border-radius:22px;}
-  .chap-row{border-radius:20px;} .witem{border-radius:18px;} .set-group{border-radius:24px;}
-  .choice{border-radius:18px;} .searchbox{border-radius:18px;}
-  .btn{border-radius:20px;} .cta{border-radius:20px;} .opt{border-radius:16px;}
-  .modal-card{border-radius:28px;} .face{border-radius:30px;}
+  .hero{border-radius:var(--r-5);} .motiv{border-radius:var(--r-4);} .subj{border-radius:var(--r-3);}
+  .chap-row{border-radius:var(--r-3);} .witem{border-radius:var(--r-3);} .set-group{border-radius:var(--r-4);}
+  .choice{border-radius:var(--r-3);} .searchbox{border-radius:var(--r-3);}
+  .btn{border-radius:var(--r-3);} .cta{border-radius:var(--r-3);} .opt{border-radius:var(--r-2);}
+  .modal-card{border-radius:var(--r-5);} .face{border-radius:var(--r-5);}
   .lang-chip,.fchip,.set-chip,.opt{
-    background:linear-gradient(165deg, rgba(255,255,255,.75), rgba(255,255,255,.5));
+    background:var(--chip-bg);
     -webkit-backdrop-filter:blur(12px) saturate(1.4); backdrop-filter:blur(12px) saturate(1.4);}
   .tabbar{background:rgba(248,250,252,.72); -webkit-backdrop-filter:blur(18px) saturate(1.5); backdrop-filter:blur(18px) saturate(1.5);}
   .tab.active{border-radius:16px;}
-  body.dark .hero,body.dark .motiv,body.dark .subj,body.dark .chap-row,body.dark .set-group,body.dark .choice,body.dark .searchbox{
-    background:linear-gradient(165deg, rgba(38,54,88,.66), rgba(20,31,56,.55));
-    border-color:rgba(140,170,220,.35); box-shadow:0 12px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.12);}
-  body.dark .witem{background:rgba(20,31,56,.6); border-color:rgba(140,170,220,.35);}
-  body.dark .lang-chip,body.dark .fchip,body.dark .set-chip,body.dark .opt{
-    background:linear-gradient(165deg, rgba(38,54,88,.6), rgba(20,31,56,.5));}
   body.dark .tabbar{background:rgba(14,22,40,.72);}
 
   /* ---- v47: Chinese UIs keep Chinese fonts (not the cute font) ---- */
@@ -459,6 +467,19 @@
   .sp-bubble.bub3{right:16%; bottom:21%; width:38px; height:38px; animation-delay:1.25s;}
   @keyframes spBub{0%{opacity:0; transform:translateY(16px) scale(.7);} 25%{opacity:1;} 100%{opacity:1; transform:translateY(-10px) scale(1) rotate(5deg);}}
   body.dark .sp-bubble{background:rgba(20,31,56,.8);}
+
+  /* ---- v51: polish details + scalable deck UI ---- */
+  ::selection{background:rgba(47,111,180,.28);}
+  button:focus-visible, input:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:var(--r-1);}
+  #subjGrid>.deck-grp:first-child{margin-top:2px;}
+  .deck-grp{margin:22px 2px 10px;}
+  #deckChips{flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding:2px 2px 6px;}
+  #deckChips::-webkit-scrollbar{display:none;}
+  #deckChips .fchip{flex:0 0 auto;}
+  .back{min-width:40px; min-height:40px;}
+  .choice{display:flex; align-items:center; min-height:52px;}
+  .witem .st{white-space:nowrap;}
+  .witem .en, .witem .jp2{overflow-wrap:anywhere;}
 </style>
 </head>
 <body>
@@ -517,7 +538,7 @@
       </div>
       <h2 class="sec" id="secSubjects">科目</h2>
       <p class="sec-sub" id="secSubjectsSub"></p>
-      <div class="subj-grid" id="subjGrid"></div>
+      <div id="subjGrid"></div>
     </section>
 
     <section class="view" id="view-subjects">
@@ -786,9 +807,9 @@ ja:{appTitle:"英語で学ぶ理系",totalWords:"収録",totalKnown:"覚えた",
  heroBig:(k,t)=>"覚えた単語: "+k+" / "+t,
  hero0:"物理の英語用語からスタート。<br>少しずつ積み上げよう。",
  heroMid:r=>"いい調子。このまま続けよう。<br>残り "+r+" 語。",
- heroDone:"物理は全制覇 <br>次の科目の用語集を準備中です。",
+ heroDone:"全リスト制覇！ <br>復習で記憶をキープしよう。",
  cta:"学習をはじめる（科目を選ぶ）",secSubjects:"単語リスト",
- secSubjectsSub:"物理・数学・化学・生物・地球と宇宙・材料・科学一般・IELTS・ITテクノロジーの9リストから選べます。",
+ secSubjectsSub:"タップすると、そのリストの学習が始まります。",grpStem:"理系科目",grpExam:"英語テスト対策",grpTech:"テクノロジー",grpOther:"その他のリスト",
  badgeStudy:"学習中",badgeSoon:"準備中",subjDescReady:"Ch.1–4 ・ 58語",subjDescSoon:"用語集を準備中",
  knownOf:(k,t)=>k+" / "+t+" 語 覚えた",
  subjNames:["物理 Physics","化学 Chemistry","微積分 Calculus","半導体 Semiconductor"],
@@ -813,9 +834,9 @@ ko:{appTitle:"영어로 배우는 이공계",totalWords:"수록",totalKnown:"외
  heroBig:(k,t)=>"외운 단어: "+k+" / "+t,
  hero0:"물리 영어 용어부터 시작해요.<br>조금씩 쌓아 올려요.",
  heroMid:r=>"좋은 흐름이에요. 계속 가요.<br>"+r+"개 남았어요.",
- heroDone:"물리 전부 정복 <br>다음 과목 용어집을 준비 중입니다.",
+ heroDone:"전 리스트 정복! <br>복습으로 기억을 유지해요.",
  cta:"학습 시작 (과목 선택)",secSubjects:"단어 리스트",
- secSubjectsSub:"9개 리스트에서 고를 수 있습니다.",
+ secSubjectsSub:"누르면 그 리스트의 학습이 시작됩니다.",grpStem:"이공계 과목",grpExam:"영어 시험",grpTech:"테크놀로지",grpOther:"기타 리스트",
  badgeStudy:"학습 중",badgeSoon:"준비 중",subjDescReady:"Ch.1–4 ・ 58개",subjDescSoon:"용어집 준비 중",
  knownOf:(k,t)=>k+" / "+t+"개 외움",
  subjNames:["물리 Physics","화학 Chemistry","미적분 Calculus","반도체 Semiconductor"],
@@ -840,9 +861,9 @@ zh:{appTitle:"用英语学理工",totalWords:"收录",totalKnown:"已掌握",uni
  heroBig:(k,t)=>"已掌握单词: "+k+" / "+t,
  hero0:"从物理英语术语开始。<br>一点点积累起来。",
  heroMid:r=>"状态不错，继续保持。<br>还剩 "+r+" 个。",
- heroDone:"物理全部通关 <br>下一科的术语表正在准备中。",
+ heroDone:"全部列表通关！<br>继续复习，保持记忆。",
  cta:"开始学习（选择科目）",secSubjects:"单词列表",
- secSubjectsSub:"可从 9 个列表中选择。",
+ secSubjectsSub:"点按即可开始该列表的学习。",grpStem:"理工科目",grpExam:"英语考试",grpTech:"科技",grpOther:"其他列表",
  badgeStudy:"学习中",badgeSoon:"准备中",subjDescReady:"Ch.1–4 ・ 58个",subjDescSoon:"术语表准备中",
  knownOf:(k,t)=>"已掌握 "+k+" / "+t+" 个",
  subjNames:["物理 Physics","化学 Chemistry","微积分 Calculus","半导体 Semiconductor"],
@@ -867,9 +888,9 @@ tw:{appTitle:"用英語學理工",totalWords:"收錄",totalKnown:"已掌握",uni
  heroBig:(k,t)=>"已掌握單字: "+k+" / "+t,
  hero0:"從物理英語術語開始。<br>一點點累積起來。",
  heroMid:r=>"狀態不錯，繼續保持。<br>還剩 "+r+" 個。",
- heroDone:"物理全部通關 <br>下一科的術語表正在準備中。",
+ heroDone:"全部列表通關！<br>繼續複習，保持記憶。",
  cta:"開始學習（選擇科目）",secSubjects:"單字列表",
- secSubjectsSub:"可從 9 個列表中選擇。",
+ secSubjectsSub:"點按即可開始該列表的學習。",grpStem:"理工科目",grpExam:"英語考試",grpTech:"科技",grpOther:"其他列表",
  badgeStudy:"學習中",badgeSoon:"準備中",subjDescReady:"Ch.1–4 ・ 58個",subjDescSoon:"術語表準備中",
  knownOf:(k,t)=>"已掌握 "+k+" / "+t+" 個",
  subjNames:["物理 Physics","化學 Chemistry","微積分 Calculus","半導體 Semiconductor"],
@@ -894,9 +915,9 @@ en:{appTitle:"Science in English",totalWords:"Words",totalKnown:"Learned",unit:"
  heroBig:(k,t)=>"Learned: "+k+" / "+t,
  hero0:"Start with physics terms in English.<br>Build up little by little.",
  heroMid:r=>"Good pace. Keep going.<br>"+r+" words to go.",
- heroDone:"Physics complete <br>More subjects are on the way.",
+ heroDone:"Every list complete! <br>Keep it fresh with review.",
  cta:"Start learning (choose a subject)",secSubjects:"Word Lists",
- secSubjectsSub:"Choose from 9 subject lists.",
+ secSubjectsSub:"Tap a list to start studying it.",grpStem:"STEM subjects",grpExam:"English tests",grpTech:"Technology",grpOther:"More lists",
  badgeStudy:"In progress",badgeSoon:"Coming soon",subjDescReady:"Ch.1–4 · 58 words",subjDescSoon:"Word list in preparation",
  knownOf:(k,t)=>k+" / "+t+" words learned",
  subjNames:["Physics","Chemistry","Calculus","Semiconductors"],
@@ -2243,6 +2264,7 @@ function segBar(tot, kn, fl){
 function chCount(ch){ return TERMS.filter(t=>t.ch===ch).length; }
 function chKnown(ch){ return TERMS.filter((t,i)=>t.ch===ch && known.has(i)).length; }
 const DECKS = ["physics","math","chem","bio","earth","materials","general","ielts","it"];
+const DECK_GROUPS = [{key:"grpStem", decks:["physics","math","chem","bio","earth","materials","general"]},{key:"grpExam", decks:["ielts","toeic"]},{key:"grpTech", decks:["it"]}];
 const deckOf = i => TERMS[i].deck || "physics";
 function deckName(d){ const l = L(); const arr = l.deckNames || l.subjNames; const ix = DECKS.indexOf(d); return arr[ix<0?0:ix]; }
 function deckCount(d){ return TERMS.filter(t=>(t.deck||"physics")===d).length; }
@@ -2308,12 +2330,19 @@ function renderHome(){
   $("heroSmall").innerHTML = k===0 ? l.hero0 : k>=total ? l.heroDone : l.heroMid(total-k);
   $("totalKnown").textContent = k;
   $("totalWords").textContent = total;
-  $("subjGrid").innerHTML = DECKS.map(d=>{
-    const sic = {physics:"atom", math:"calc", chem:"chem", bio:"sun", earth:"rocket", materials:"gear", general:"search", ielts:"exam", it:"chip"}[d];
+  const subjCard = d=>{
+    const sic = {physics:"atom", math:"calc", chem:"chem", bio:"sun", earth:"rocket", materials:"gear", general:"search", ielts:"exam", it:"chip"}[d] || "book";
     const tot = deckCount(d), kn = deckKnown(d), fl = deckFailed(d);
     return '<button class="subj" data-deck="'+d+'"><img class="subjic" src="'+ICONIMG[sic]+'" alt=""><span class="nm">'+deckName(d)+'</span><span class="badge">'+tot+' '+l.unit+'</span>'
       + segBar(tot, kn, fl) + '<div class="pt">'+l.knownOf(kn,tot)+(fl?' ・ '+l.failedLbl+' '+fl:'')+((tot-kn-fl)>0?' ・ '+l.stNew+' '+(tot-kn-fl):'')+'</div></button>';
-  }).join("");
+  };
+  const groups = DECK_GROUPS.map(g=>({key:g.key, decks:DECKS.filter(d=>g.decks.indexOf(d)>=0)})).filter(g=>g.decks.length);
+  const covered = {}; groups.forEach(g=>g.decks.forEach(d=>{ covered[d]=1; }));
+  const restDecks = DECKS.filter(d=>!covered[d]);
+  if(restDecks.length) groups.push({key:"grpOther", decks:restDecks});
+  $("subjGrid").innerHTML = groups.length>1
+    ? groups.map(g=>'<div class="grp deck-grp">'+(l[g.key]||"")+'</div><div class="subj-grid">'+g.decks.map(subjCard).join("")+'</div>').join("")
+    : groups.map(g=>g.decks.map(subjCard).join("")).join("");
   document.querySelectorAll("#subjGrid .subj").forEach(b=>b.addEventListener("click", ()=>{ curDeck = b.dataset.deck; show("subjects"); }));
   $("homeKnownBig").textContent = actWeekKnown();
   $("homeKnownLbl").textContent = l.bigWeek;
@@ -2333,6 +2362,8 @@ function renderSubjects(){
   $("subjectsTitle").textContent = deckName(curDeck) + (L().subjectsSuffix || "");
   $("deckChips").innerHTML = DECKS.map(d=>'<button class="fchip'+(d===curDeck?" active":"")+'" data-deck="'+d+'">'+deckName(d)+'</button>').join("");
   document.querySelectorAll("#deckChips .fchip").forEach(b=>b.addEventListener("click", ()=>{ curDeck = b.dataset.deck; renderSubjects(); }));
+  const actChip = document.querySelector("#deckChips .fchip.active");
+  if(actChip && typeof actChip.scrollIntoView === "function"){ try{ actChip.scrollIntoView({block:"nearest", inline:"center"}); }catch(e){} }
   let rows;
   if(curDeck==="physics"){
     rows = [{ch:"deck:physics", nm:l.allCh, ds:l.allChDesc}]
@@ -3163,31 +3194,31 @@ ja:{tab:"設定",title:"設定",langGt:"言語",langLb:"表示言語",themeLb:"�
  unkLb:"覚えた以外だけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",
  dataGt:"データ",progLb:"学習の進捗",progVal:(k,t)=>"覚えた "+k+" / "+t+" 語",resetLb:"進捗リセット",reset:"リセット",
  resetConfirm:"覚えた記録を全部リセットしますか？",aboutGt:"このアプリについて",
- about:"STEM English（仮） v50<br>英語で理系を学ぶ学生のための用語カード。物理・数学・化学・生物など9つのリスト、全1,200語を収録し、日本語・韓国語・簡体中文・繁體中文・英語に対応。進捗はこの端末の中だけに保存されます。"},
+ about:"STEM English（仮） v51<br>英語で理系を学ぶ学生のための用語カード。物理・数学・化学・生物など9つのリスト、全1,200語を収録し、日本語・韓国語・簡体中文・繁體中文・英語に対応。進捗はこの端末の中だけに保存されます。"},
 ko:{tab:"설정",title:"설정",langGt:"언어",langLb:"표시 언어",themeLb:"테마",light:"라이트",dark:"다크",
  fontLb:"글자 크기",fsS:"작게",fsM:"보통",fsL:"크게",studyGt:"학습",qcountLb:"테스트 출제 수 (1회)",speakLb:"발음 자동 재생",seLb:"효과음",shufLb:"셔플 (기본값)",
  unkLb:"외운 단어 제외 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",
  dataGt:"데이터",progLb:"학습 진도",progVal:(k,t)=>"외움 "+k+" / "+t+"개",resetLb:"진도 초기화",reset:"초기화",
  resetConfirm:"외운 기록을 전부 초기화할까요?",aboutGt:"이 앱에 대하여",
- about:"STEM English(가칭) v50<br>영어로 이공계를 배우는 학생을 위한 용어 카드. 9개 리스트, 총 1,200개를 수록하고 일본어·한국어·简体中文·繁體中文·영어를 지원합니다. 진도는 이 기기에만 저장됩니다."},
+ about:"STEM English(가칭) v51<br>영어로 이공계를 배우는 학생을 위한 용어 카드. 9개 리스트, 총 1,200개를 수록하고 일본어·한국어·简体中文·繁體中文·영어를 지원합니다. 진도는 이 기기에만 저장됩니다."},
 zh:{tab:"设置",title:"设置",langGt:"语言",langLb:"显示语言",themeLb:"主题",light:"浅色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"学习",qcountLb:"测试题数（每次）",speakLb:"自动播放发音",seLb:"音效",shufLb:"随机顺序（默认）",
  unkLb:"只看未掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",
  dataGt:"数据",progLb:"学习进度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 个",resetLb:"重置进度",reset:"重置",
  resetConfirm:"要重置全部掌握记录吗？",aboutGt:"关于本应用",
- about:"STEM English（暂定名） v50<br>为用英语学习理工科的学生制作的术语卡。收录 9 个列表共 1,200 个词，支持日语、韩语、简体中文、繁體中文和英语。进度只保存在本设备中。"},
+ about:"STEM English（暂定名） v51<br>为用英语学习理工科的学生制作的术语卡。收录 9 个列表共 1,200 个词，支持日语、韩语、简体中文、繁體中文和英语。进度只保存在本设备中。"},
 tw:{tab:"設定",title:"設定",langGt:"語言",langLb:"顯示語言",themeLb:"主題",light:"淺色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"學習",qcountLb:"測試題數（每次）",speakLb:"自動播放發音",seLb:"音效",shufLb:"隨機順序（預設）",
  unkLb:"只看未掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",
  dataGt:"資料",progLb:"學習進度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 個",resetLb:"重置進度",reset:"重置",
  resetConfirm:"要重置全部掌握記錄嗎？",aboutGt:"關於本應用",
- about:"STEM English（暫定名） v50<br>為用英語學習理工科的學生製作的術語卡。收錄 9 個列表共 1,200 個詞，支援日語、韓語、简体中文、繁體中文和英語。進度只保存在本裝置中。"},
+ about:"STEM English（暫定名） v51<br>為用英語學習理工科的學生製作的術語卡。收錄 9 個列表共 1,200 個詞，支援日語、韓語、简体中文、繁體中文和英語。進度只保存在本裝置中。"},
 en:{tab:"Settings",title:"Settings",langGt:"Language",langLb:"Display language",themeLb:"Theme",light:"Light",dark:"Dark",
  fontLb:"Font size",fsS:"S",fsM:"M",fsL:"L",studyGt:"Study",qcountLb:"Questions per test",speakLb:"Auto-play pronunciation",seLb:"Sound effects",shufLb:"Shuffle (default)",
  unkLb:"Hide learned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",
  dataGt:"Data",progLb:"Progress",progVal:(k,t)=>"Learned "+k+" / "+t,resetLb:"Reset progress",reset:"Reset",
  resetConfirm:"Reset all learned records?",aboutGt:"About",
- about:"STEM English (working title) v50<br>Word cards for students who study science in English. Now 1,200 terms across 9 subject lists, in Japanese, Korean, Simplified Chinese, Traditional Chinese, and English. Progress is stored only on this device."}
+ about:"STEM English (working title) v51<br>Word cards for students who study science in English. Now 1,200 terms across 9 subject lists, in Japanese, Korean, Simplified Chinese, Traditional Chinese, and English. Progress is stored only on this device."}
 };
 const LS_SET = "stem-english-settings";
 let settings = {theme:"light", font:"m", autoNext:true, anim:true, qcount:10, autoSpeak:true, se:true};
