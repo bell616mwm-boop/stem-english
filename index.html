@@ -698,16 +698,79 @@
     58%{opacity:var(--ro2);}
     100%{transform:translate(var(--dx), var(--dy)); opacity:0;}}
   @keyframes ripDot{0%{opacity:.85;} 28%{opacity:0;} 100%{opacity:0;}}
-  .ripIn{position:absolute; inset:0; border-radius:50%; border:2px solid var(--rc);
+  .ripIn{position:absolute; inset:0; border-radius:50%; border:3.5px solid var(--rc);
     animation-name:ripGrow; animation-timing-function:ease-in-out; animation-fill-mode:both;}
   .ripIn::after{content:""; position:absolute; inset:12%; border-radius:50%;
-    border:1.5px solid var(--rc); opacity:.4;}
+    border:2.5px solid var(--rc); opacity:.45;}
   @keyframes ripGrow{
     0%{transform:scale(.035);}
     58%{transform:scale(1);}
     100%{transform:scale(.05);}}
   /* the hero's static floating dot + ring (v53/v55) retire — ripples replace them */
   .hero::before{display:none;}
+
+  /* ---- v57: study units (LESSONS) — reading view in the same grammar ----
+     Lesson cards reuse THE SWEEP silhouette + a real ::before sheet (v55 way,
+     no box-shadow twins) with the subject deck's pale tint. Reading surfaces
+     (.les-sec) are quiet glass with a 5px sheet; body text gets reading
+     line-height. Fractions are real stacked fractions (.fr), never slashes. */
+  .lcard{position:relative; display:block; width:100%; text-align:left; cursor:pointer;
+    font-family:inherit; color:var(--ink);
+    border-radius:20px 64px 22px 22px; border:var(--glass-bd);
+    padding:42px 16px 14px; margin-top:26px;
+    --tl:#e6e2f7;
+    background:linear-gradient(155deg, rgba(255,255,255,.88), var(--tl));
+    box-shadow:var(--glass-sh); transition:transform .12s ease, box-shadow .15s;}
+  .lcard::before{content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    border-radius:inherit; transform:translate(8px,8px);
+    background:color-mix(in srgb, var(--tl) 55%, #6f9bd8 45%);}
+  .lcard:active{transform:none; box-shadow:0 3px 10px rgba(50,70,110,.10);}
+  .lcard .subjic{position:absolute; top:-16px; left:16px; width:48px; height:48px;
+    border-radius:16px; border:3px solid #fff; background:#fff; box-shadow:0 8px 18px rgba(50,70,110,.28);}
+  body.dark .lcard{--tl:#262048; background:linear-gradient(155deg, rgba(38,54,88,.50), var(--tl));}
+  body.dark .lcard .subjic{border-color:#26395f; background:#1a2745;}
+  .lcard .nm{font-family:var(--serif); font-weight:700; font-size:16.5px;}
+  .lcard .pt{color:var(--sub); font-size:12.5px; margin-top:5px; line-height:1.6;}
+  .lcard .badge{margin-left:8px;}
+  .lcard .badge.done{background:#dcefe0; color:var(--good);}
+  body.dark .lcard .badge.done{background:#173526; color:#9fd3a8;}
+  #subjLessons .lcard{margin-bottom:6px;}
+  #subjLessons:empty{display:none;}
+
+  .les-intro{font-size:15px; line-height:1.95; color:var(--sub); margin:0 2px 16px;}
+  .les-sec{position:relative; border-radius:var(--r-4); border:var(--glass-bd);
+    background:var(--glass-bg); box-shadow:var(--glass-sh);
+    padding:18px 18px 16px; margin-bottom:16px;}
+  .les-sec::before{content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    border-radius:inherit; background:var(--lay-b); transform:translate(5px,5px);}
+  .les-sec h3{font-family:var(--serif); font-size:17px; font-weight:700; margin:0 0 8px; line-height:1.5;}
+  .les-sec p{font-size:15px; line-height:1.95; margin:0 0 10px;}
+  .les-sec p:last-child{margin-bottom:0;}
+  .kw-row{display:flex; flex-wrap:wrap; gap:6px; margin-top:12px;}
+  .kw{font-size:12.5px; color:var(--sub); background:var(--chip-bg); border:var(--glass-bd);
+    border-radius:999px; padding:5px 11px; line-height:1.5;}
+  .kw b{color:var(--ink-en); font-weight:700;}
+  .les-img{display:block; width:100%; height:auto; border-radius:var(--r-3);
+    border:var(--glass-bd); box-shadow:var(--sh-2); margin:2px 0 8px;}
+  .les-cap{font-size:12.5px; color:var(--sub); text-align:center; line-height:1.7; margin:0 4px 16px;}
+  .fr{display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle;
+    margin:0 .18em; line-height:1.3; font-size:.95em; font-weight:700;}
+  .fr>span{padding:0 .32em; white-space:nowrap;}
+  .fr>span+span{border-top:2px solid currentColor;}
+  .qa-q{font-weight:700; font-size:15px; line-height:1.85;}
+  .qa-tgl{margin-top:10px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;
+    color:var(--accent-d); background:var(--chip-bg); border:1.5px solid var(--line);
+    border-radius:999px; padding:8px 16px; min-height:40px;}
+  body.dark .qa-tgl{color:#9cc3ec;}
+  .qa-a{display:none; margin-top:12px; padding-top:12px; border-top:1px dashed var(--line);
+    font-size:14.5px; line-height:1.9;}
+  .qa-a.open{display:block;}
+  .qa-a .ans{font-weight:900; margin-bottom:4px;}
+  .les-done{display:flex; align-items:center; justify-content:center; width:100%;
+    font-family:inherit; font-size:15px; font-weight:700; cursor:pointer; color:var(--ink);
+    background:var(--chip-bg); border:1.5px solid var(--line); border-radius:var(--r-3);
+    padding:14px; min-height:52px; margin:4px 0 10px;}
+  .les-done.done{color:var(--good); border-color:var(--good);}
 </style>
 </head>
 <body>
@@ -768,6 +831,8 @@
       <h2 class="sec" id="secSubjects">科目</h2>
       <p class="sec-sub" id="secSubjectsSub"></p>
       <div id="subjGrid"></div>
+      <h2 class="sec" id="secLessons">学習ユニット</h2>
+      <div id="lessonGrid"></div>
     </section>
 
     <section class="view" id="view-subjects">
@@ -779,6 +844,7 @@
         <button class="opt" id="optUnknown"><img class="btnic" data-icon="target" alt=""><span id="optUnknownLbl"></span></button>
       </div>
       <div class="filter-row" id="deckChips" style="margin-bottom:12px;"></div>
+      <div id="subjLessons"></div>
       <div id="chapList"></div>
     </section>
 
@@ -1007,6 +1073,15 @@
         <p class="about-txt" id="setAboutTxt"></p>
       </div>
     </section>
+
+    <section class="view" id="view-lesson">
+      <div class="study-head">
+        <button class="back" id="btnLessonBack"><img class="backic" data-icon="back" alt=""></button>
+        <div class="ttl" id="lessonTitle">学習ユニット</div>
+        <div class="cnt" id="lessonCnt"></div>
+      </div>
+      <div id="lessonBody"></div>
+    </section>
   </div>
 
   <nav class="tabbar">
@@ -1040,7 +1115,7 @@ ja:{appTitle:"英語で学ぶ理系",totalWords:"収録",totalKnown:"覚えた",
  heroMid:r=>"残り "+r+" 語",
  heroDone:"全リスト制覇！",
  cta:"学習をはじめる（科目を選ぶ）",secSubjects:"単語リスト",
- secSubjectsSub:"",grpStem:"理系科目",grpExam:"英語テスト対策",grpTech:"テクノロジー",grpOther:"その他のリスト",
+ secSubjectsSub:"",secLessons:"学習ユニット",lesPractice:"練習問題",lesShow:"答えを見る",lesHide:"答えを隠す",lesDone:"読了",lesDoneBtn:"読み終わった",grpStem:"理系科目",grpExam:"英語テスト対策",grpTech:"テクノロジー",grpOther:"その他のリスト",
  badgeStudy:"学習中",badgeSoon:"準備中",subjDescReady:"Ch.1–4 ・ 58語",subjDescSoon:"用語集を準備中",
  knownOf:(k,t)=>k+" / "+t+" 語 覚えた",
  subjNames:["物理 Physics","化学 Chemistry","微積分 Calculus","半導体 Semiconductor"],
@@ -1067,7 +1142,7 @@ ko:{appTitle:"영어로 배우는 이공계",totalWords:"수록",totalKnown:"외
  heroMid:r=>r+"개 남음",
  heroDone:"전 리스트 정복!",
  cta:"학습 시작 (과목 선택)",secSubjects:"단어 리스트",
- secSubjectsSub:"",grpStem:"이공계 과목",grpExam:"영어 시험",grpTech:"테크놀로지",grpOther:"기타 리스트",
+ secSubjectsSub:"",secLessons:"학습 유닛",lesPractice:"연습 문제",lesShow:"정답 보기",lesHide:"정답 숨기기",lesDone:"완료",lesDoneBtn:"다 읽었어요",grpStem:"이공계 과목",grpExam:"영어 시험",grpTech:"테크놀로지",grpOther:"기타 리스트",
  badgeStudy:"학습 중",badgeSoon:"준비 중",subjDescReady:"Ch.1–4 ・ 58개",subjDescSoon:"용어집 준비 중",
  knownOf:(k,t)=>k+" / "+t+"개 외움",
  subjNames:["물리 Physics","화학 Chemistry","미적분 Calculus","반도체 Semiconductor"],
@@ -1094,7 +1169,7 @@ zh:{appTitle:"用英语学理工",totalWords:"收录",totalKnown:"已掌握",uni
  heroMid:r=>"还剩 "+r+" 个",
  heroDone:"全部列表通关！",
  cta:"开始学习（选择科目）",secSubjects:"单词列表",
- secSubjectsSub:"",grpStem:"理工科目",grpExam:"英语考试",grpTech:"科技",grpOther:"其他列表",
+ secSubjectsSub:"",secLessons:"学习单元",lesPractice:"练习题",lesShow:"看答案",lesHide:"隐藏答案",lesDone:"已读",lesDoneBtn:"读完了",grpStem:"理工科目",grpExam:"英语考试",grpTech:"科技",grpOther:"其他列表",
  badgeStudy:"学习中",badgeSoon:"准备中",subjDescReady:"Ch.1–4 ・ 58个",subjDescSoon:"术语表准备中",
  knownOf:(k,t)=>"已掌握 "+k+" / "+t+" 个",
  subjNames:["物理 Physics","化学 Chemistry","微积分 Calculus","半导体 Semiconductor"],
@@ -1121,7 +1196,7 @@ tw:{appTitle:"用英語學理工",totalWords:"收錄",totalKnown:"已掌握",uni
  heroMid:r=>"還剩 "+r+" 個",
  heroDone:"全部列表通關！",
  cta:"開始學習（選擇科目）",secSubjects:"單字列表",
- secSubjectsSub:"",grpStem:"理工科目",grpExam:"英語考試",grpTech:"科技",grpOther:"其他列表",
+ secSubjectsSub:"",secLessons:"學習單元",lesPractice:"練習題",lesShow:"看答案",lesHide:"隱藏答案",lesDone:"已讀",lesDoneBtn:"讀完了",grpStem:"理工科目",grpExam:"英語考試",grpTech:"科技",grpOther:"其他列表",
  badgeStudy:"學習中",badgeSoon:"準備中",subjDescReady:"Ch.1–4 ・ 58個",subjDescSoon:"術語表準備中",
  knownOf:(k,t)=>"已掌握 "+k+" / "+t+" 個",
  subjNames:["物理 Physics","化學 Chemistry","微積分 Calculus","半導體 Semiconductor"],
@@ -1148,7 +1223,7 @@ en:{appTitle:"Science in English",totalWords:"Words",totalKnown:"Learned",unit:"
  heroMid:r=>r+" words to go",
  heroDone:"Every list complete!",
  cta:"Start learning (choose a subject)",secSubjects:"Word Lists",
- secSubjectsSub:"",grpStem:"STEM subjects",grpExam:"English tests",grpTech:"Technology",grpOther:"More lists",
+ secSubjectsSub:"",secLessons:"Study units",lesPractice:"Practice",lesShow:"Show answer",lesHide:"Hide answer",lesDone:"Read",lesDoneBtn:"Finished reading",grpStem:"STEM subjects",grpExam:"English tests",grpTech:"Technology",grpOther:"More lists",
  badgeStudy:"In progress",badgeSoon:"Coming soon",subjDescReady:"Ch.1–4 · 58 words",subjDescSoon:"Word list in preparation",
  knownOf:(k,t)=>k+" / "+t+" words learned",
  subjNames:["Physics","Chemistry","Calculus","Semiconductors"],
@@ -2503,6 +2578,108 @@ function deckKnown(d){ return TERMS.filter((t,i)=>(t.deck||"physics")===d && kno
 function deckFailed(d){ return TERMS.filter((t,i)=>(t.deck||"physics")===d && failed.has(i)).length; }
 let curDeck = "physics";
 
+
+/* ---------- v57: study units (LESSONS) ----------
+   Structured lesson data: adding a unit = adding one object here.
+   { id, subject (deck key), icon, title, sub, intro,
+     sections: [{ h, body (HTML), kw: [[en, ja], ...], imgAfter }],
+     img, imgCap, qs: [{ q, a, why }] }
+   Progress (opened / done) lives under its own LS key; word data and the
+   existing LS keys are untouched. Lesson body text is Japanese (PoC). */
+const LESSONS = [
+{ id:"trig-intro", subject:"math", icon:"calc",
+  title:"三角関数入門", sub:"高校数学 ・ 直角三角形から始める sin / cos / tan",
+  img:"assets/lessons/trig-triangle.png",
+  imgCap:"まとめの図：辺の名前 ・ SOH / CAH / TOA ・ θ が引っ越したときの入れ替わり ・ 物理での分解",
+  intro:"物理のベクトルも、微積分の三角関数も、入口はこの直角三角形ひとつ。ここでは記号より先に「景色の見え方」をつかむ。合言葉はひとつ——θ の場所に立って景色を見る。",
+  sections:[
+   { h:"まず直角三角形を眺める",
+     body:"<p>三角関数の舞台は、直角三角形 (right triangle) ひとつだけ。角が3つあって、そのうち1つは必ず直角 (right angle) ＝ 90° だ。</p><p>最初に覚えることは、たった1つ。<b>直角の向かい側にある辺が、一番長い。</b>この辺を斜辺 (hypotenuse) という。斜めになった滑り台みたいな辺だ。</p><p>探し方も簡単。「直角はどこ？」と聞いて、その真向かいを見る。そこにあるのが斜辺。斜辺だけは、どんな問題でも絶対に動かない。</p>",
+     kw:[["right triangle","直角三角形"],["right angle","直角（90°）"],["hypotenuse","斜辺"]] },
+   { h:"θ の席に座ると、辺に名前がつく",
+     body:"<p>残り2辺の名前は、「どの角から見るか」で決まる。主役の角 θ の場所に、自分が立ってみよう。</p><p>立つと景色は3つ。向かいに見える壁 ＝ 対辺 (opposite)。足元に広がる床 ＝ 隣辺 (adjacent)。そして横にある滑り台 ＝ 斜辺。</p><p>大事なのは、名前は辺そのものについているんじゃない、ということ。<b>θ から見た位置関係</b>についている。だから最初の一手は、いつも「θ はどこ？」になる。</p>",
+     kw:[["opposite","対辺（向かいの壁）"],["adjacent","隣辺（足元の床）"],["angle","角（立つ場所）"]] },
+   { h:"sin ・ cos ・ tan は「長さ」じゃなく「比」",
+     body:"<p>ここが心臓部。sin θ は長さじゃない。2つの辺の長さの<b>比 (ratio)</b>、つまり割り算の答えだ。</p><p>sin θ ＝ <span class=\"fr\"><span>対辺</span><span>斜辺</span></span>、cos θ ＝ <span class=\"fr\"><span>隣辺</span><span>斜辺</span></span>、tan θ ＝ <span class=\"fr\"><span>対辺</span><span>隣辺</span></span>。英語の頭文字 SOH・CAH・TOA が、そのまま式になっている。</p><p>比だから、三角形を写真のように拡大しても値は変わらない。辺が 3・4・5 でも 6・8・10 でも、同じ角なら sin は同じ。変わるのは大きさだけで、形（＝比）は同じなのだ。</p>",
+     kw:[["ratio","比（割り算の答え）"],["sine / cosine / tangent","sin / cos / tan"]] },
+   { h:"θ が引っ越すと、対辺と隣辺が入れ替わる", imgAfter:true,
+     body:"<p>θ がもう一方の角へ引っ越したら、どうなる？さっき「向かいの壁」だった辺は、今度は「足元の床」になる。<b>対辺と隣辺が入れ替わる。</b></p><p>でも斜辺だけは引っ越ししない。「直角の向かい」という住所が変わらないからだ。</p><p>だから問題を見たら、計算の前にまず確認する。「θ はどこ？」——これが三角関数の最初の一手になる。</p>",
+     kw:[] },
+   { h:"物理への橋：速さを2方向に分ける",
+     body:"<p>物理でボールを斜め上に投げるとき、速さ v₀ は「地面に沿った分」と「空へ向かう分」に分けて考える。この分解こそ、三角関数の出番だ。</p><p>v₀ を斜辺だと思えばいい。地面にくっついている側が隣辺で、cos の担当。だから地面側 ＝ v₀ cos θ。空へ向かう側は対辺で、sin の担当。空側 ＝ v₀ sin θ。</p><p>覚え方はひとつ。<b>地面にくっついている方が cos。</b>これで物理の投射運動が、急にやさしく見えてくる。</p>",
+     kw:[["component","成分（分けた1方向分）"],["projectile motion","投射運動"]] }
+  ],
+  qs:[
+   { q:"直角三角形で、直角の真向かいにある一番長い辺の名前は？",
+     a:"斜辺 (hypotenuse)",
+     why:"直角の向かい ＝ 斜辺。θ がどこにいても、この辺だけは変わらない。" },
+   { q:"辺の長さが 対辺 3 ・ 隣辺 4 ・ 斜辺 5 の三角形。sin θ はいくつ？",
+     a:"sin θ ＝ <span class=\"fr\"><span>3</span><span>5</span></span>",
+     why:"SOH：sin は「対辺 ÷ 斜辺」。3 ÷ 5 でこの値になる。" },
+   { q:"同じ三角形で、cos θ と tan θ は？",
+     a:"cos θ ＝ <span class=\"fr\"><span>4</span><span>5</span></span>、tan θ ＝ <span class=\"fr\"><span>3</span><span>4</span></span>",
+     why:"CAH：cos は「隣辺 ÷ 斜辺」。TOA：tan は「対辺 ÷ 隣辺」。" },
+   { q:"θ がもう一方の角に引っ越した。さっきまで対辺だった長さ 3 の辺は、今度は何と呼ばれる？",
+     a:"隣辺",
+     why:"名前は θ から見た位置で決まる。向かいだった辺が、引っ越し先では足元の床になる。斜辺（5）だけはそのまま。" },
+   { q:"ボールを 10 m/s、角度 30° で斜め上に投げた。地面側の速さは？（cos 30° ≒ 0.87、sin 30° ＝ 0.5）",
+     a:"v₀ cos θ ＝ 10 × 0.87 ≒ 8.7 m/s",
+     why:"地面にくっついている方が cos。ついでに空側は v₀ sin θ ＝ 10 × 0.5 ＝ 5 m/s。" }
+  ]
+}
+];
+const LS_LESSONS = "stem-english-lessons-v1";
+let lessonProg = {};
+try{ lessonProg = JSON.parse(store.get(LS_LESSONS) || "{}") || {}; }catch(e){ lessonProg = {}; }
+function lessonState(id){ return lessonProg[id] || {}; }
+function saveLessonProg(){ try{ store.set(LS_LESSONS, JSON.stringify(lessonProg)); }catch(e){} }
+let curLesson = null, lessonFrom = "home";
+function lessonCardHTML(x){
+  const st = lessonState(x.id);
+  return '<button class="lcard" data-lesson="'+x.id+'"><img class="subjic" src="'+ICONIMG[x.icon || "book"]+'" alt=""><span class="nm">'+x.title+'</span>'
+    + (st.done ? '<span class="badge done">'+L().lesDone+'</span>' : '')
+    + '<div class="pt">'+x.sub+'</div></button>';
+}
+function openLesson(id, from){
+  curLesson = LESSONS.find(x=>x.id===id) || LESSONS[0];
+  lessonFrom = from || "home";
+  const st = lessonState(curLesson.id); st.opened = Date.now(); lessonProg[curLesson.id] = st; saveLessonProg();
+  show("lesson");
+}
+function renderLesson(){
+  const x = curLesson; if(!x) return;
+  const l = L();
+  $("lessonTitle").textContent = x.title;
+  $("lessonCnt").textContent = "";
+  let h = '<p class="les-intro">'+x.intro+'</p>';
+  x.sections.forEach(sec=>{
+    h += '<div class="les-sec"><h3>'+sec.h+'</h3>'+sec.body;
+    if(sec.kw && sec.kw.length) h += '<div class="kw-row">'+sec.kw.map(k=>'<span class="kw"><b>'+k[0]+'</b> '+k[1]+'</span>').join("")+'</div>';
+    h += '</div>';
+    if(sec.imgAfter && x.img) h += '<img class="les-img" src="'+x.img+'" alt=""><p class="les-cap">'+(x.imgCap||"")+'</p>';
+  });
+  h += '<div class="grp" style="margin-top:24px;">'+l.lesPractice+'</div>';
+  x.qs.forEach((q,i)=>{
+    h += '<div class="les-sec qa"><div class="qa-q">Q'+(i+1)+'. '+q.q+'</div>'
+       + '<button class="qa-tgl" data-q="'+i+'">'+l.lesShow+'</button>'
+       + '<div class="qa-a" id="qaA'+i+'"><div class="ans">'+q.a+'</div><div>'+q.why+'</div></div></div>';
+  });
+  const st = lessonState(x.id);
+  h += '<button class="les-done'+(st.done?" done":"")+'" id="lesDoneBtn">'+(st.done ? "✓ "+l.lesDone : l.lesDoneBtn)+'</button>';
+  $("lessonBody").innerHTML = h;
+  document.querySelectorAll("#lessonBody .qa-tgl").forEach(b=>b.addEventListener("click", ()=>{
+    const a = $("qaA"+b.dataset.q); if(!a) return;
+    const open = a.classList.toggle("open");
+    b.textContent = open ? l.lesHide : l.lesShow; se("tap");
+  }));
+  const db = $("lesDoneBtn");
+  if(db) db.addEventListener("click", ()=>{
+    const s2 = lessonState(x.id); s2.done = Date.now(); lessonProg[x.id] = s2; saveLessonProg(); se("good"); renderLesson();
+  });
+  $("view-lesson").scrollTop = 0;
+}
+$("btnLessonBack").addEventListener("click", ()=>show(lessonFrom));
+
 function applyStatic(){
   const l = L();
   document.documentElement.lang = ({ja:"ja",ko:"ko",zh:"zh-CN",tw:"zh-TW",en:"en"})[lang];
@@ -2513,6 +2690,7 @@ function applyStatic(){
   $("unitWords").textContent = l.unit; $("unitWords2").textContent = l.unit;
   $("secSubjects").textContent = l.secSubjects;
   $("secSubjectsSub").textContent = l.secSubjectsSub;
+  $("secLessons").textContent = l.secLessons;
   $("subjectsTitle").textContent = deckName(curDeck) + (l.subjectsSuffix || "");
   $("subjectsSub").textContent = l.subjectsSub;
   $("tapHint").textContent = l.tapHint;
@@ -2549,6 +2727,7 @@ function show(view){
   if(view==="test") renderTestSetup();
   if(view==="progress") renderProgress();
   if(view==="daily") renderDaily();
+  if(view==="lesson") renderLesson();
 }
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click", ()=>{ se("tap"); show(t.dataset.view); }));
 $("btnStart").addEventListener("click", ()=>{ se("start"); show("daily"); });
@@ -2575,6 +2754,8 @@ function renderHome(){
     ? groups.map(g=>'<div class="grp deck-grp">'+(l[g.key]||"")+'</div><div class="subj-grid">'+g.decks.map(subjCard).join("")+'</div>').join("")
     : groups.map(g=>g.decks.map(subjCard).join("")).join("");
   document.querySelectorAll("#subjGrid .subj").forEach(b=>b.addEventListener("click", ()=>{ curDeck = b.dataset.deck; show("subjects"); }));
+  $("lessonGrid").innerHTML = LESSONS.map(lessonCardHTML).join("");
+  document.querySelectorAll("#lessonGrid .lcard").forEach(b=>b.addEventListener("click", ()=>{ se("tap"); openLesson(b.dataset.lesson, "home"); }));
   $("homeKnownBig").textContent = actWeekKnown();
   $("homeKnownLbl").textContent = l.bigWeek;
   $("homeActLine").innerHTML = l.actLine(actTodayCount(), actStreak());
@@ -2611,6 +2792,9 @@ function renderSubjects(){
     return '<button class="chap-row" data-ch="'+r.ch+'"><span><span class="nm">'+r.nm+'</span><div class="ds">'+r.ds+' ・ '+l.knownLine(kn,tot)+(fl?' ・ '+l.failedLbl+' '+fl:'')+((tot-kn-fl)>0?' ・ '+l.stNew+' '+(tot-kn-fl):'')+'</div>'
       + segBar(tot, kn, fl) + '</span><span class="go">›</span></button>';
   }).join("");
+  const lesHere = LESSONS.filter(x=>x.subject===curDeck);
+  $("subjLessons").innerHTML = lesHere.length ? '<div class="grp">' + l.secLessons + '</div>' + lesHere.map(lessonCardHTML).join("") : "";
+  document.querySelectorAll("#subjLessons .lcard").forEach(b=>b.addEventListener("click", ()=>{ se("tap"); openLesson(b.dataset.lesson, "subjects"); }));
   document.querySelectorAll(".chap-row").forEach(b=>b.addEventListener("click", ()=>startStudy(b.dataset.ch)));
 }
 $("optShuffle").addEventListener("click", ()=>{ optShuffle=!optShuffle; saveSettings(); renderSubjects(); });
@@ -3457,14 +3641,17 @@ function ripMake(){
   if(!box || ripLive >= RIP_MAX) return;
   const W = box.clientWidth, H = box.clientHeight;
   if(!W || !H) return;
-  const D = Math.round(120 + Math.random() * 320);          /* diameter 120–440px (radius 60–220) */
+  const rb = Math.random();                                  /* v57: mottled sizes — small / mid / large buckets, never uniform mid-only */
+  const D = Math.round(rb < .35 ? 60 + Math.random() * 90    /* small: diameter 60–150px */
+                     : rb < .70 ? 180 + Math.random() * 200  /* mid: 180–380px */
+                     : 420 + Math.random() * 220);           /* large: 420–640px (may overflow the edges; the clipped layer crops it naturally) */
   const mx = D * .22, my = D * .22;                          /* centre stays mostly on-screen */
   const cx = mx + Math.random() * Math.max(10, W - mx * 2);
   const cy = my + Math.random() * Math.max(10, H - my * 2);
-  const dur = Math.round(6000 + Math.random() * 6000);       /* 6–12s per ripple */
+  const dur = Math.round(5500 + D * 6 + Math.random() * 3500); /* ≈6–13s; bigger rings live a little longer */
   const dx = Math.round(Math.random() * 28 - 14) + "px";     /* slow drift, up to ±14px / ±10px */
   const dy = Math.round(Math.random() * 20 - 10) + "px";
-  const peak = .36 + Math.random() * .18;                    /* opacity envelope peak */
+  const peak = .40 + Math.random() * .18;                    /* opacity envelope peak (v57: slightly lifted with the thicker ring) */
   const el = document.createElement("div");
   el.className = "rip";
   el.style.cssText = "left:" + (cx - D / 2) + "px; top:" + (cy - D / 2) + "px;"
@@ -3512,31 +3699,31 @@ ja:{tab:"設定",title:"設定",langGt:"言語",langLb:"表示言語",themeLb:"�
  unkLb:"覚えた以外だけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",bgLb:"背景アニメーション",
  dataGt:"データ",progLb:"学習の進捗",progVal:(k,t)=>"覚えた "+k+" / "+t+" 語",resetLb:"進捗リセット",reset:"リセット",
  resetConfirm:"覚えた記録を全部リセットしますか？",aboutGt:"このアプリについて",
- about:"STEM English v56<br>英語で理系を学ぶ人の単語カード。9つのリスト、全1,200語。進捗はこの端末の中だけに保存されます。"},
+ about:"STEM English v57<br>英語で理系を学ぶ人の単語カード。9つのリスト、全1,200語。進捗はこの端末の中だけに保存されます。"},
 ko:{tab:"설정",title:"설정",langGt:"언어",langLb:"표시 언어",themeLb:"테마",light:"라이트",dark:"다크",
  fontLb:"글자 크기",fsS:"작게",fsM:"보통",fsL:"크게",studyGt:"학습",qcountLb:"테스트 출제 수 (1회)",speakLb:"발음 자동 재생",seLb:"효과음",shufLb:"셔플 (기본값)",
  unkLb:"외운 단어 제외 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",bgLb:"배경 애니메이션",
  dataGt:"데이터",progLb:"학습 진도",progVal:(k,t)=>"외움 "+k+" / "+t+"개",resetLb:"진도 초기화",reset:"초기화",
  resetConfirm:"외운 기록을 전부 초기화할까요?",aboutGt:"이 앱에 대하여",
- about:"STEM English v56<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 9개 리스트, 총 1,200개. 진도는 이 기기에만 저장됩니다."},
+ about:"STEM English v57<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 9개 리스트, 총 1,200개. 진도는 이 기기에만 저장됩니다."},
 zh:{tab:"设置",title:"设置",langGt:"语言",langLb:"显示语言",themeLb:"主题",light:"浅色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"学习",qcountLb:"测试题数（每次）",speakLb:"自动播放发音",seLb:"音效",shufLb:"随机顺序（默认）",
  unkLb:"只看未掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",bgLb:"背景动画",
  dataGt:"数据",progLb:"学习进度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 个",resetLb:"重置进度",reset:"重置",
  resetConfirm:"要重置全部掌握记录吗？",aboutGt:"关于本应用",
- about:"STEM English v56<br>为用英语学习理工科的人准备的单词卡。9 个列表，共 1,200 个词。进度只保存在本设备中。"},
+ about:"STEM English v57<br>为用英语学习理工科的人准备的单词卡。9 个列表，共 1,200 个词。进度只保存在本设备中。"},
 tw:{tab:"設定",title:"設定",langGt:"語言",langLb:"顯示語言",themeLb:"主題",light:"淺色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"學習",qcountLb:"測試題數（每次）",speakLb:"自動播放發音",seLb:"音效",shufLb:"隨機順序（預設）",
  unkLb:"只看未掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",bgLb:"背景動畫",
  dataGt:"資料",progLb:"學習進度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 個",resetLb:"重置進度",reset:"重置",
  resetConfirm:"要重置全部掌握記錄嗎？",aboutGt:"關於本應用",
- about:"STEM English v56<br>為用英語學習理工科的人準備的單字卡。9 個列表，共 1,200 個詞。進度只保存在本裝置中。"},
+ about:"STEM English v57<br>為用英語學習理工科的人準備的單字卡。9 個列表，共 1,200 個詞。進度只保存在本裝置中。"},
 en:{tab:"Settings",title:"Settings",langGt:"Language",langLb:"Display language",themeLb:"Theme",light:"Light",dark:"Dark",
  fontLb:"Font size",fsS:"S",fsM:"M",fsL:"L",studyGt:"Study",qcountLb:"Questions per test",speakLb:"Auto-play pronunciation",seLb:"Sound effects",shufLb:"Shuffle (default)",
  unkLb:"Hide learned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",bgLb:"Background animation",
  dataGt:"Data",progLb:"Progress",progVal:(k,t)=>"Learned "+k+" / "+t,resetLb:"Reset progress",reset:"Reset",
  resetConfirm:"Reset all learned records?",aboutGt:"About",
- about:"STEM English v56<br>Word cards for studying science in English. 1,200 terms across 9 lists. Progress is stored only on this device."}
+ about:"STEM English v57<br>Word cards for studying science in English. 1,200 terms across 9 lists. Progress is stored only on this device."}
 };
 const LS_SET = "stem-english-settings";
 let settings = {theme:"light", font:"m", autoNext:true, anim:true, qcount:10, autoSpeak:true, se:true};
