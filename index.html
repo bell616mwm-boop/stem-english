@@ -19,7 +19,7 @@
     --glass:#f8fafc; --glass2:#ffffff;
     --line:rgba(63,88,130,.38);
     --accent:#1d6fb8; --accent-d:#185a96; --orange:#e8930c;
-    --good:#3d7a44; --bad:#b0402f;
+    --good:#1d6fb8; --bad:#b0402f;
     --ink-en:#232d4f;
     --cute:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Apple SD Gothic Neo","Noto Sans KR","Hiragino Sans","Noto Sans JP",sans-serif;
     --serif:var(--cute);
@@ -166,7 +166,7 @@
     font-size:16px; font-weight:800; cursor:pointer; color:var(--ink); box-shadow:0 7px 20px rgba(50,70,110,.18);}
   .btn:active{transform:scale(.97);}
   .btn.bad{background:linear-gradient(160deg,#f5e3e0,#faf0ee); border-color:rgba(176,64,47,.42); color:#9c3626;}
-  .btn.good{background:linear-gradient(160deg,#e0efe2,#f0f7f0); border-color:rgba(61,122,68,.45); color:#2f6234;}
+  .btn.good{background:linear-gradient(160deg,#dfeafb,#eef5fe); border-color:rgba(29,111,184,.45); color:#185a96;}
   .navrow{display:flex; gap:10px; width:100%; max-width:640px; margin:10px auto 2px; flex:0 0 auto;}
   .btn.navb{flex:1; background:var(--glass); font-size:14px; font-weight:600; padding:11px;}
   .done-msg{display:none; position:absolute; inset:0; height:fit-content; margin:auto; text-align:center; padding:30px 10px;}
@@ -197,12 +197,12 @@
   .qcard .ipa-row{margin-top:12px;}
   .witem .jp2{color:var(--sub); font-size:13px; margin-top:1px;}
   .witem .st{margin-left:auto; flex:0 0 auto; font-size:12px; font-weight:700; border-radius:999px; padding:4px 11px; border:1px solid;}
-  .st.ok{color:#2f6234; border-color:rgba(61,122,68,.5); background:rgba(61,122,68,.10);}
+  .st.ok{color:#185a96; border-color:rgba(29,111,184,.5); background:rgba(29,111,184,.10);}
   .st.ng{color:#9c3626; border-color:rgba(176,64,47,.4); background:rgba(176,64,47,.07);}
   .st.new{color:#5b6b84; border-color:rgba(91,107,132,.45); background:rgba(91,107,132,.09);}
   .bar.seg{display:flex;}
   .bar.seg i{animation:none; border-radius:0;}
-  .bar.seg i.sok{background:linear-gradient(90deg,#3d7a44,#5da463);}
+  .bar.seg i.sok{background:linear-gradient(90deg,#1d6fb8,#5da0d8);}
   .bar.seg i.sng{background:#d0603f;}
   .act-chart{display:flex; align-items:flex-end; gap:5px; margin-top:4px;}
   .act-col{flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; min-width:0;}
@@ -280,10 +280,10 @@
   body.dark .face.back .note{color:#c3d4ee;}
   body.dark .face.back .en-small{color:#8fb0dd;}
   body.dark .btn.bad{background:linear-gradient(160deg,#3a2320,#2a1a17); color:#f0a294;}
-  body.dark .btn.good{background:linear-gradient(160deg,#1e3320,#152316); color:#9fd3a8;}
+  body.dark .btn.good{background:linear-gradient(160deg,#1d3355,#131e35); color:#9cc3ec;}
   body.dark .tabbar{background:rgba(14,22,40,.9);}
   body.dark .opt.on, body.dark .fchip.active, body.dark .lang-chip.active, body.dark .set-chip.active{background:#1d3355;}
-  body.dark .st.ok{background:rgba(61,122,68,.25);} body.dark .st.ng{background:rgba(176,64,47,.22);} body.dark .st.new{background:rgba(120,140,170,.22);}
+  body.dark .st.ok{background:rgba(59,130,246,.28);} body.dark .st.ng{background:rgba(176,64,47,.22);} body.dark .st.new{background:rgba(120,140,170,.22);}
   /* ---------- test & progress ---------- */
   .qcard{background:var(--paper); border:1.5px solid rgba(63,88,130,.45); border-radius:22px;
     box-shadow:0 18px 40px rgba(50,70,110,.22); padding:24px 20px; text-align:center; margin-bottom:14px;}
@@ -294,10 +294,10 @@
     background:var(--glass); border:1.5px solid var(--line); border-radius:14px; padding:14px 16px; margin-bottom:9px;
     font-size:16px; box-shadow:0 4px 12px rgba(50,70,110,.10);}
   .choice:hover{background:var(--glass2);}
-  .choice.right{background:#e0efe2; border-color:rgba(61,122,68,.6); color:#2f6234; font-weight:700;}
+  .choice.right{background:#dfeafb; border-color:rgba(29,111,184,.6); color:#185a96; font-weight:700;}
   .choice.wrong{background:#f5e3e0; border-color:rgba(176,64,47,.55); color:#9c3626;}
   .choice:disabled{cursor:default; opacity:.92;}
-  body.dark .choice.right{background:#1e3320; color:#9fd3a8;}
+  body.dark .choice.right{background:#1d3355; color:#9cc3ec;}
   body.dark .choice.wrong{background:#3a2320; color:#f0a294;}
   .qfeedback{min-height:26px; text-align:center; font-size:15px; font-weight:700; margin:10px 0 4px;}
   .qfeedback.ok{color:var(--good);} .qfeedback.ng{color:var(--bad);}
@@ -555,12 +555,12 @@
      hugging the silhouette. */
   :root{
     --lay-a:#bfd4f3; --lay-b:#dbe7f9; --lay-warm:#f4dcae;
-    --film:linear-gradient(115deg, rgba(255,183,197,.16), rgba(255,236,170,.11) 24%, rgba(178,240,205,.11) 46%, rgba(165,216,255,.13) 68%, rgba(216,180,255,.13));
+    --film:linear-gradient(115deg, rgba(255,183,197,.16), rgba(255,236,170,.11) 24%, rgba(170,224,250,.11) 46%, rgba(165,216,255,.13) 68%, rgba(216,180,255,.13));
     --glint:radial-gradient(430px 200px at 16% -12%, rgba(255,255,255,.55), rgba(255,255,255,0) 62%);
   }
   body.dark{
     --lay-a:#263c68; --lay-b:#1d2f55; --lay-warm:#54401c;
-    --film:linear-gradient(115deg, rgba(255,150,180,.12), rgba(255,225,150,.08) 24%, rgba(150,240,190,.09) 46%, rgba(140,200,255,.11) 68%, rgba(200,160,255,.11));
+    --film:linear-gradient(115deg, rgba(255,150,180,.12), rgba(255,225,150,.08) 24%, rgba(140,205,250,.09) 46%, rgba(140,200,255,.11) 68%, rgba(200,160,255,.11));
     --glint:radial-gradient(430px 200px at 16% -12%, rgba(255,255,255,.16), rgba(255,255,255,0) 62%);
   }
   /* THE STACK — layered frames (offset silhouette twins) */
@@ -579,12 +579,12 @@
     width:calc(100% - 12px); height:calc(100% - 12px); max-height:548px; border-radius:var(--r-5);
     box-shadow:inset 0 1px 0 rgba(255,255,255,.85), 0 10px 22px rgba(50,70,110,.13); transition:opacity .3s;}
   .scene::before{z-index:-2; transform:rotate(-3deg) translate(-5px,7px);
-    background:var(--glint), linear-gradient(150deg,#f3d9e4,#cfdff5 55%,#d9f0e2);
+    background:var(--glint), linear-gradient(150deg,#f3d9e4,#cfdff5 55%,#d9eaf8);
     border:1.5px solid rgba(168,150,255,.40);}
   .scene::after{z-index:-1; transform:rotate(2.4deg) translate(6px,4px);
     background:var(--glint), linear-gradient(150deg,#e2f0ff,#e6dcf7 55%,#fdeeda);
     border:1.5px solid rgba(140,170,220,.45);}
-  body.dark .scene::before{background:linear-gradient(150deg,#3a2440,#1d3050 55%,#1d3a2e); border-color:rgba(190,160,255,.35);}
+  body.dark .scene::before{background:linear-gradient(150deg,#3a2440,#1d3050 55%,#17354a); border-color:rgba(190,160,255,.35);}
   body.dark .scene::after{background:linear-gradient(150deg,#1d3355,#2c2350 55%,#3d2f1c); border-color:rgba(140,170,220,.40);}
   .scene:has(> #doneMsg[style*="display: block"])::before,
   .scene:has(> #doneMsg[style*="display: block"])::after{opacity:0;}
@@ -732,8 +732,8 @@
   .lcard .nm{font-family:var(--serif); font-weight:700; font-size:16.5px;}
   .lcard .pt{color:var(--sub); font-size:12.5px; margin-top:5px; line-height:1.6;}
   .lcard .badge{margin-left:8px;}
-  .lcard .badge.done{background:#dcefe0; color:var(--good);}
-  body.dark .lcard .badge.done{background:#173526; color:#9fd3a8;}
+  .lcard .badge.done{background:#dce9fa; color:var(--good);}
+  body.dark .lcard .badge.done{background:#1d3355; color:#9cc3ec;}
   #subjLessons .lcard{margin-bottom:6px;}
   #subjLessons:empty{display:none;}
 
@@ -789,22 +789,31 @@
      views' bottom edge, and .view bottom padding grows 18px -> 26px so
      fully-scrolled content clears the overhang. Decoration stays behind
      the controls (v55 stacking rule): the domes are pointer-events:none
-     and every tab paints above them. */
+     and every tab paints above them.
+     v59 revision (Toma, on a real device): the v58 active bubble grew
+     upward on its own and left the icon behind at its bottom, the two
+     read as separate floating pieces, and the domes' crisp caps plus the
+     bubble's hard white 3px rim read as white protrusions. Now bubble
+     and icon move as ONE unit: the bubble stays centred on the icon in
+     both states (centre 20px) and on the active tab both ride up
+     together (bubble centre -> 10px, icon translateY(-10px)); the dome
+     edges are feathered into the background and the active rim is a
+     soft tinted edge instead of solid white. */
   .tabbar{position:relative; z-index:10; border-top:none;
     box-shadow:0 -10px 26px rgba(50,70,110,.10);}
-  .tabbar::before{content:""; position:absolute; left:0; right:0; top:-9px; height:10px;
+  .tabbar::before{content:""; position:absolute; left:0; right:0; top:-12px; height:13px;
     pointer-events:none;
-    background-image:radial-gradient(circle 15px at 50% 100%, rgba(248,250,252,.72) 13.5px, rgba(248,250,252,0) 15px);
-    background-size:20% 10px; background-repeat:repeat-x;}
+    background-image:radial-gradient(circle 17px at 50% 100%, rgba(248,250,252,.72) 8px, rgba(248,250,252,.36) 12.5px, rgba(248,250,252,0) 17px);
+    background-size:20% 13px; background-repeat:repeat-x;}
   body.dark .tabbar::before{
-    background-image:radial-gradient(circle 15px at 50% 100%, rgba(14,22,40,.72) 13.5px, rgba(14,22,40,0) 15px);}
+    background-image:radial-gradient(circle 17px at 50% 100%, rgba(14,22,40,.72) 8px, rgba(14,22,40,.36) 12.5px, rgba(14,22,40,0) 17px);}
   .view{padding-bottom:26px;}
   .tab{position:relative; z-index:0;}
   .tab::before{content:""; position:absolute; left:50%; top:20px; z-index:-1;
     width:40px; height:40px; border-radius:50%;
     transform:translate(-50%,-50%);
-    background:radial-gradient(circle at 34% 28%, rgba(255,255,255,.95), rgba(255,255,255,.42) 72%);
-    border:1.5px solid rgba(255,255,255,.65);
+    background:radial-gradient(circle at 34% 28%, rgba(255,255,255,.78), rgba(255,255,255,.34) 72%);
+    border:1.5px solid rgba(255,255,255,.45);
     box-shadow:0 3px 8px rgba(50,70,110,.10), inset 0 -3px 6px rgba(147,178,228,.20);
     transition:width .25s cubic-bezier(.2,.9,.3,1.3), height .25s cubic-bezier(.2,.9,.3,1.3),
       top .25s cubic-bezier(.2,.9,.3,1.3), background .2s, box-shadow .25s;}
@@ -813,11 +822,11 @@
     border-color:rgba(140,170,220,.35);
     box-shadow:0 3px 8px rgba(0,0,0,.30), inset 0 -3px 6px rgba(90,140,210,.18);}
   .tab.active{background:none; font-weight:800;}
-  .tab.active::before{width:58px; height:58px; top:7px;
-    background:var(--glint), var(--film), linear-gradient(160deg, rgba(255,255,255,.96), rgba(203,226,250,.94));
-    border:3px solid #fff;
+  .tab.active::before{width:58px; height:58px; top:10px;
+    background:var(--glint), var(--film), linear-gradient(160deg, rgba(244,249,255,.94), rgba(203,226,250,.92));
+    border:2px solid rgba(255,255,255,.55);
     box-shadow:0 12px 22px rgba(50,70,110,.30), inset 0 1px 0 rgba(255,255,255,.9);}
-  .tab.active::after{content:""; position:absolute; left:50%; top:7px; z-index:-2;
+  .tab.active::after{content:""; position:absolute; left:50%; top:10px; z-index:-2;
     width:58px; height:58px; border-radius:50%;
     transform:translate(-50%,-50%) translate(5px,6px);
     background:var(--lay-a);}
@@ -825,7 +834,7 @@
     background:var(--glint), var(--film), linear-gradient(160deg, rgba(56,80,124,.96), rgba(29,51,85,.96));
     border-color:#26395f;
     box-shadow:0 12px 22px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.14);}
-  .tab.active .tabic{transform:scale(1.18);}
+  .tab.active .tabic{transform:translateY(-10px) scale(1.18);}
 </style>
 </head>
 <body>
@@ -3684,9 +3693,9 @@ function ripOK(){
 function ripPickColor(){
   const dark = document.body && document.body.classList.contains("dark");
   const cols = dark
-    ? ["rgba(120,180,250,.85)","rgba(140,200,255,.85)","rgba(250,180,90,.85)","rgba(200,170,255,.8)","rgba(150,235,190,.8)","rgba(255,170,200,.8)"]
-    : ["rgba(29,111,184,.85)","rgba(96,165,250,.85)","rgba(232,147,12,.8)","rgba(168,140,250,.8)","rgba(110,205,160,.8)","rgba(250,150,180,.8)"];
-  const wts = [30,18,22,12,10,8]; /* blue / sky / orange / lavender / mint / pink */
+    ? ["rgba(120,180,250,.85)","rgba(140,200,255,.85)","rgba(250,180,90,.85)","rgba(200,170,255,.8)","rgba(150,215,250,.8)","rgba(255,170,200,.8)"]
+    : ["rgba(29,111,184,.85)","rgba(96,165,250,.85)","rgba(232,147,12,.8)","rgba(168,140,250,.8)","rgba(85,185,240,.8)","rgba(250,150,180,.8)"];
+  const wts = [30,18,22,12,10,8]; /* blue / sky / orange / lavender / azure / pink */
   let r = Math.random() * 100;
   for(let i = 0; i < cols.length; i++){ r -= wts[i]; if(r < 0) return cols[i]; }
   return cols[0];
@@ -3754,31 +3763,31 @@ ja:{tab:"設定",title:"設定",langGt:"言語",langLb:"表示言語",themeLb:"�
  unkLb:"覚えた以外だけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",bgLb:"背景アニメーション",
  dataGt:"データ",progLb:"学習の進捗",progVal:(k,t)=>"覚えた "+k+" / "+t+" 語",resetLb:"進捗リセット",reset:"リセット",
  resetConfirm:"覚えた記録を全部リセットしますか？",aboutGt:"このアプリについて",
- about:"STEM English v58<br>英語で理系を学ぶ人の単語カード。9つのリスト、全1,200語。進捗はこの端末の中だけに保存されます。"},
+ about:"STEM English v59<br>英語で理系を学ぶ人の単語カード。9つのリスト、全1,200語。進捗はこの端末の中だけに保存されます。"},
 ko:{tab:"설정",title:"설정",langGt:"언어",langLb:"표시 언어",themeLb:"테마",light:"라이트",dark:"다크",
  fontLb:"글자 크기",fsS:"작게",fsM:"보통",fsL:"크게",studyGt:"학습",qcountLb:"테스트 출제 수 (1회)",speakLb:"발음 자동 재생",seLb:"효과음",shufLb:"셔플 (기본값)",
  unkLb:"외운 단어 제외 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",bgLb:"배경 애니메이션",
  dataGt:"데이터",progLb:"학습 진도",progVal:(k,t)=>"외움 "+k+" / "+t+"개",resetLb:"진도 초기화",reset:"초기화",
  resetConfirm:"외운 기록을 전부 초기화할까요?",aboutGt:"이 앱에 대하여",
- about:"STEM English v58<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 9개 리스트, 총 1,200개. 진도는 이 기기에만 저장됩니다."},
+ about:"STEM English v59<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 9개 리스트, 총 1,200개. 진도는 이 기기에만 저장됩니다."},
 zh:{tab:"设置",title:"设置",langGt:"语言",langLb:"显示语言",themeLb:"主题",light:"浅色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"学习",qcountLb:"测试题数（每次）",speakLb:"自动播放发音",seLb:"音效",shufLb:"随机顺序（默认）",
  unkLb:"只看未掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",bgLb:"背景动画",
  dataGt:"数据",progLb:"学习进度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 个",resetLb:"重置进度",reset:"重置",
  resetConfirm:"要重置全部掌握记录吗？",aboutGt:"关于本应用",
- about:"STEM English v58<br>为用英语学习理工科的人准备的单词卡。9 个列表，共 1,200 个词。进度只保存在本设备中。"},
+ about:"STEM English v59<br>为用英语学习理工科的人准备的单词卡。9 个列表，共 1,200 个词。进度只保存在本设备中。"},
 tw:{tab:"設定",title:"設定",langGt:"語言",langLb:"顯示語言",themeLb:"主題",light:"淺色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"學習",qcountLb:"測試題數（每次）",speakLb:"自動播放發音",seLb:"音效",shufLb:"隨機順序（預設）",
  unkLb:"只看未掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",bgLb:"背景動畫",
  dataGt:"資料",progLb:"學習進度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 個",resetLb:"重置進度",reset:"重置",
  resetConfirm:"要重置全部掌握記錄嗎？",aboutGt:"關於本應用",
- about:"STEM English v58<br>為用英語學習理工科的人準備的單字卡。9 個列表，共 1,200 個詞。進度只保存在本裝置中。"},
+ about:"STEM English v59<br>為用英語學習理工科的人準備的單字卡。9 個列表，共 1,200 個詞。進度只保存在本裝置中。"},
 en:{tab:"Settings",title:"Settings",langGt:"Language",langLb:"Display language",themeLb:"Theme",light:"Light",dark:"Dark",
  fontLb:"Font size",fsS:"S",fsM:"M",fsL:"L",studyGt:"Study",qcountLb:"Questions per test",speakLb:"Auto-play pronunciation",seLb:"Sound effects",shufLb:"Shuffle (default)",
  unkLb:"Hide learned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",bgLb:"Background animation",
  dataGt:"Data",progLb:"Progress",progVal:(k,t)=>"Learned "+k+" / "+t,resetLb:"Reset progress",reset:"Reset",
  resetConfirm:"Reset all learned records?",aboutGt:"About",
- about:"STEM English v58<br>Word cards for studying science in English. 1,200 terms across 9 lists. Progress is stored only on this device."}
+ about:"STEM English v59<br>Word cards for studying science in English. 1,200 terms across 9 lists. Progress is stored only on this device."}
 };
 const LS_SET = "stem-english-settings";
 let settings = {theme:"light", font:"m", autoNext:true, anim:true, qcount:10, autoSpeak:true, se:true};
