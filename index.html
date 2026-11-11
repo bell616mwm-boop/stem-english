@@ -31,11 +31,11 @@
     --sh-2:0 6px 18px rgba(50,70,110,.12);
     --sh-3:0 12px 32px rgba(50,70,110,.15);
     --sh-4:0 20px 44px rgba(50,70,110,.22);
-    --glass-bg:linear-gradient(165deg, rgba(255,255,255,.78), rgba(255,255,255,.52));
-    --glass2-bg:rgba(255,255,255,.66);
+    --glass-bg:linear-gradient(165deg, rgba(255,255,255,.90), rgba(255,255,255,.74));
+    --glass2-bg:rgba(255,255,255,.78);
     --glass-bd:1px solid rgba(255,255,255,.7);
     --glass-sh:0 12px 32px rgba(50,70,110,.13), inset 0 1px 0 rgba(255,255,255,.85);
-    --chip-bg:linear-gradient(165deg, rgba(255,255,255,.75), rgba(255,255,255,.5));
+    --chip-bg:linear-gradient(165deg, rgba(255,255,255,.85), rgba(255,255,255,.68));
     --paper:linear-gradient(160deg,#ffffff,#e2eaf6);
     --track:rgba(63,88,130,.15);
     --bar-grad:linear-gradient(90deg,var(--orange),var(--accent));
@@ -311,7 +311,7 @@
   body.fs-l .term{font-size:clamp(34px,8.4vw,54px);} body.fs-l .jp{font-size:clamp(30px,7vw,44px);} body.fs-l .note{font-size:clamp(16px,3vw,18.5px);}
   body.noanim .card{transition:none;}
   /* dark theme */
-  body.dark{--glass-bg:linear-gradient(165deg, rgba(38,54,88,.66), rgba(20,31,56,.55)); --glass2-bg:rgba(20,31,56,.6); --glass-bd:1px solid rgba(140,170,220,.35); --glass-sh:0 12px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.12); --chip-bg:linear-gradient(165deg, rgba(38,54,88,.6), rgba(20,31,56,.5)); --track:rgba(140,170,220,.18); --bg:#0c1322; --ink:#e8eefb; --ink-en:#e8eefb; --sub:#9db0cc; --faint:#647d9f;
+  body.dark{--glass-bg:linear-gradient(165deg, rgba(38,54,88,.82), rgba(20,31,56,.72)); --glass2-bg:rgba(20,31,56,.72); --glass-bd:1px solid rgba(140,170,220,.35); --glass-sh:0 12px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.12); --chip-bg:linear-gradient(165deg, rgba(38,54,88,.74), rgba(20,31,56,.64)); --track:rgba(140,170,220,.18); --bg:#0c1322; --ink:#e8eefb; --ink-en:#e8eefb; --sub:#9db0cc; --faint:#647d9f;
     --glass:#141f38; --glass2:#1a2745; --line:rgba(140,170,220,.38);
     background:
       radial-gradient(1100px 600px at 85% -10%, rgba(217,119,6,.16), transparent 60%),
@@ -732,7 +732,10 @@
      retire: the ripples replace them. */
   /* v67: v65's bottom fade is reverted — Toma is fine with the water
      reaching the tab bar; only the scallop puffs had to go (v66). */
-  #rippleBg{position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0;}
+  /* v69: fixed + full-viewport — the ripples now run behind the floating
+     tab bar too, instead of being clipped at main's bottom edge (the clip
+     drew straight chord lines across the tab zone and sliced the rings). */
+  #rippleBg{position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0;}
   .rip{position:absolute; pointer-events:none;
     animation-name:ripDrift; animation-timing-function:ease-in-out; animation-fill-mode:both;}
   .rip::before{content:""; position:absolute; left:50%; top:50%; width:9px; height:9px;
@@ -868,7 +871,7 @@
      v68: tab labels shift 6px down — the active bubble's rim was touching
      the active label's top (Toma, on the v67 crop). */
   .tab>span{margin-top:6px;}
-  .view{padding-bottom:26px;}
+  .view{padding-bottom:46px;}
   .tab{position:relative; z-index:0;}
   .tab::before{content:""; position:absolute; left:50%; top:20px; z-index:-1;
     width:40px; height:40px; border-radius:50%;
@@ -3986,7 +3989,7 @@ function ripMake(){
   const dur = Math.round(5500 + D * 6 + Math.random() * 3500); /* ≈6–13s; bigger rings live a little longer */
   const dx = Math.round(Math.random() * 28 - 14) + "px";     /* slow drift, up to ±14px / ±10px */
   const dy = Math.round(Math.random() * 20 - 10) + "px";
-  const peak = .40 + Math.random() * .18;                    /* opacity envelope peak (v57: slightly lifted with the thicker ring) */
+  const peak = .32 + Math.random() * .14;                    /* opacity envelope peak (v69: softened so rings don't draw hard lines over cards) */
   const el = document.createElement("div");
   el.className = "rip";
   el.style.cssText = "left:" + (cx - D / 2) + "px; top:" + (cy - D / 2) + "px;"
@@ -4034,31 +4037,31 @@ ja:{tab:"設定",title:"設定",langGt:"言語",langLb:"表示言語",themeLb:"�
  unkLb:"覚えた以外だけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",bgLb:"背景アニメーション",goalLb:"1日の目標",
  dataGt:"データ",progLb:"学習の進捗",progVal:(k,t)=>"覚えた "+k+" / "+t+" 語",resetLb:"進捗リセット",reset:"リセット",
  resetConfirm:"覚えた記録を全部リセットしますか？",aboutGt:"このアプリについて",
- about:"STEM English v68<br>英語で理系を学ぶ人の単語カード。9つのリスト、全1,200語。進捗はこの端末の中だけに保存されます。"},
+ about:"STEM English v69<br>英語で理系を学ぶ人の単語カード。9つのリスト、全1,200語。進捗はこの端末の中だけに保存されます。"},
 ko:{tab:"설정",title:"설정",langGt:"언어",langLb:"표시 언어",themeLb:"테마",light:"라이트",dark:"다크",
  fontLb:"글자 크기",fsS:"작게",fsM:"보통",fsL:"크게",studyGt:"학습",qcountLb:"테스트 출제 수 (1회)",speakLb:"발음 자동 재생",seLb:"효과음",shufLb:"셔플 (기본값)",
  unkLb:"외운 단어 제외 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",bgLb:"배경 애니메이션",goalLb:"하루 목표",
  dataGt:"데이터",progLb:"학습 진도",progVal:(k,t)=>"외움 "+k+" / "+t+"개",resetLb:"진도 초기화",reset:"초기화",
  resetConfirm:"외운 기록을 전부 초기화할까요?",aboutGt:"이 앱에 대하여",
- about:"STEM English v68<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 9개 리스트, 총 1,200개. 진도는 이 기기에만 저장됩니다."},
+ about:"STEM English v69<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 9개 리스트, 총 1,200개. 진도는 이 기기에만 저장됩니다."},
 zh:{tab:"设置",title:"设置",langGt:"语言",langLb:"显示语言",themeLb:"主题",light:"浅色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"学习",qcountLb:"测试题数（每次）",speakLb:"自动播放发音",seLb:"音效",shufLb:"随机顺序（默认）",
  unkLb:"只看未掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",bgLb:"背景动画",goalLb:"每日目标",
  dataGt:"数据",progLb:"学习进度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 个",resetLb:"重置进度",reset:"重置",
  resetConfirm:"要重置全部掌握记录吗？",aboutGt:"关于本应用",
- about:"STEM English v68<br>为用英语学习理工科的人准备的单词卡。9 个列表，共 1,200 个词。进度只保存在本设备中。"},
+ about:"STEM English v69<br>为用英语学习理工科的人准备的单词卡。9 个列表，共 1,200 个词。进度只保存在本设备中。"},
 tw:{tab:"設定",title:"設定",langGt:"語言",langLb:"顯示語言",themeLb:"主題",light:"淺色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"學習",qcountLb:"測試題數（每次）",speakLb:"自動播放發音",seLb:"音效",shufLb:"隨機順序（預設）",
  unkLb:"只看未掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",bgLb:"背景動畫",goalLb:"每日目標",
  dataGt:"資料",progLb:"學習進度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 個",resetLb:"重置進度",reset:"重置",
  resetConfirm:"要重置全部掌握記錄嗎？",aboutGt:"關於本應用",
- about:"STEM English v68<br>為用英語學習理工科的人準備的單字卡。9 個列表，共 1,200 個詞。進度只保存在本裝置中。"},
+ about:"STEM English v69<br>為用英語學習理工科的人準備的單字卡。9 個列表，共 1,200 個詞。進度只保存在本裝置中。"},
 en:{tab:"Settings",title:"Settings",langGt:"Language",langLb:"Display language",themeLb:"Theme",light:"Light",dark:"Dark",
  fontLb:"Font size",fsS:"S",fsM:"M",fsL:"L",studyGt:"Study",qcountLb:"Questions per test",speakLb:"Auto-play pronunciation",seLb:"Sound effects",shufLb:"Shuffle (default)",
  unkLb:"Hide learned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",bgLb:"Background animation",goalLb:"Daily goal",
  dataGt:"Data",progLb:"Progress",progVal:(k,t)=>"Learned "+k+" / "+t,resetLb:"Reset progress",reset:"Reset",
  resetConfirm:"Reset all learned records?",aboutGt:"About",
- about:"STEM English v68<br>Word cards for studying science in English. 1,200 terms across 9 lists. Progress is stored only on this device."}
+ about:"STEM English v69<br>Word cards for studying science in English. 1,200 terms across 9 lists. Progress is stored only on this device."}
 };
 const LS_SET = "stem-english-settings";
 let settings = {theme:"light", font:"m", autoNext:true, anim:true, qcount:10, autoSpeak:true, se:true};
