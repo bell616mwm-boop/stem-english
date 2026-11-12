@@ -159,6 +159,7 @@
   .lv-badge.lv-s1{background:#ffedcb; color:#96660a;}
   .lv-badge.lv-s2{background:#ffd9a0; color:#8a5a06;}
   .lv-badge.lv-s3{background:#ffbe6e; color:#7a4a02;}
+  #lvBadge{z-index:30; pointer-events:none; box-shadow:0 2px 8px rgba(50,70,110,.20);}
   .ch-tag{font-size:12px; font-weight:700; letter-spacing:.08em; color:#1e5aa8;
     border:1px solid rgba(37,99,235,.45); background:rgba(59,130,246,.13); border-radius:999px; padding:4px 12px; margin-bottom:16px;
     box-shadow:0 2px 8px rgba(37,99,235,.18);}
@@ -1019,7 +1020,6 @@
         <div class="card" id="card">
           <div class="face front">
             <div class="ch-tag" id="chTag">Ch.1</div>
-            <div class="lv-badge" id="lvBadgeF"></div>
             <div class="term" id="termEn">—</div>
             <div><button class="ipa-row" id="spkBtn" type="button"><img class="spkic" data-icon="speaker" alt=""><span id="termIpa"></span></button></div>
             <div class="hint" id="tapHint"></div>
@@ -1028,7 +1028,6 @@
             <img class="face-bg" id="backBg" alt="">
             <div class="face-scrim"></div>
             <div class="back-inner">
-              <div class="lv-badge" id="lvBadgeB"></div>
               <div class="jp" id="termTr">—</div>
               <div class="note" id="termNote">—</div>
               <div class="visual on-back" id="backVisual"></div>
@@ -1037,6 +1036,7 @@
             </div>
           </div>
         </div>
+        <div class="lv-badge" id="lvBadge"></div>
         <div class="done-msg" id="doneMsg">
           <div class="big" id="doneBig"></div>
           <p id="doneSub"></p>
@@ -8151,7 +8151,7 @@ function renderCard(){
   document.querySelector(".actions").style.visibility = has? "visible":"hidden";
   document.querySelector(".navrow").style.visibility = has? "visible":"hidden";
   $("studyTitle").textContent = sCh==="daily" ? T().dailyBtn : (sCh==="all" ? l.studyAll : (typeof sCh==="string" && sCh.indexOf("deck:")===0) ? deckName(sCh.slice(5)) : (typeof sCh==="string" && sCh.indexOf("unit:")===0) ? unitName(sCh.split(":")[1], sCh.split(":")[2]) : (typeof sCh==="string" && sCh.indexOf("lv:")===0) ? (deckName(sCh.split(":")[1]) + " " + sCh.split(":")[2]) : l.chNames[Number(sCh)]);
-  if(!has){ $("studyCnt").textContent = "0 / 0"; if(!celebrated){ celebrated = true; se("finish"); spawnConfetti(); } return; }
+  if(!has){ $("studyCnt").textContent = "0 / 0"; $("lvBadge").style.display = "none"; if(!celebrated){ celebrated = true; se("finish"); spawnConfetti(); } return; }
   const cardEl = $("card"); cardEl.classList.remove("pop"); void cardEl.offsetWidth; cardEl.classList.add("pop");
   if(sPos >= session.length) sPos = 0;
   const gi = session[sPos], t = TERMS[gi];
@@ -8159,7 +8159,7 @@ function renderCard(){
   touchWord(gi);
   $("chTag").textContent = t.ch ? l.chNames[t.ch] : deckName(deckOf(gi));
   const lvNow = t.lv || "";
-  [["lvBadgeF"],["lvBadgeB"]].forEach(function(pair){ const b = $(pair[0]); b.textContent = lvNow; b.style.display = lvNow ? "block" : "none"; b.className = "lv-badge " + (lvNow ? (lvNow.indexOf("専")===0 ? "lv-s"+lvNow.slice(1) : "lv-"+lvNow.charAt(0).toLowerCase()) : ""); });
+  const lvB = $("lvBadge"); lvB.textContent = lvNow; lvB.style.display = lvNow ? "block" : "none"; lvB.className = "lv-badge " + (lvNow ? (lvNow.indexOf("専")===0 ? "lv-s"+lvNow.slice(1) : "lv-"+lvNow.charAt(0).toLowerCase()) : "");
   $("termEn").textContent = t.en;
   $("termIpa").textContent = t.ipa || "";
   const bgEl = $("backBg");
@@ -9134,31 +9134,31 @@ ja:{tab:"設定",title:"設定",langGt:"言語",langLb:"表示言語",themeLb:"�
  unkLb:"覚えた以外だけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",bgLb:"背景アニメーション",goalLb:"1日の目標",
  dataGt:"データ",progLb:"学習の進捗",progVal:(k,t)=>"覚えた "+k+" / "+t+" 語",resetLb:"進捗リセット",reset:"リセット",
  resetConfirm:"覚えた記録を全部リセットしますか？",aboutGt:"このアプリについて",
- about:"STEM English v85<br>英語で理系を学ぶ人の単語カード。12のリスト、全6,200語。進捗はこの端末の中だけに保存されます。"},
+ about:"STEM English v86<br>英語で理系を学ぶ人の単語カード。12のリスト、全6,200語。進捗はこの端末の中だけに保存されます。"},
 ko:{tab:"설정",title:"설정",langGt:"언어",langLb:"표시 언어",themeLb:"테마",light:"라이트",dark:"다크",
  fontLb:"글자 크기",fsS:"작게",fsM:"보통",fsL:"크게",studyGt:"학습",qcountLb:"테스트 출제 수 (1회)",speakLb:"발음 자동 재생",seLb:"효과음",shufLb:"셔플 (기본값)",
  unkLb:"외운 단어 제외 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",bgLb:"배경 애니메이션",goalLb:"하루 목표",
  dataGt:"데이터",progLb:"학습 진도",progVal:(k,t)=>"외움 "+k+" / "+t+"개",resetLb:"진도 초기화",reset:"초기화",
  resetConfirm:"외운 기록을 전부 초기화할까요?",aboutGt:"이 앱에 대하여",
- about:"STEM English v85<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 12개 리스트, 총 6,200개. 진도는 이 기기에만 저장됩니다."},
+ about:"STEM English v86<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 12개 리스트, 총 6,200개. 진도는 이 기기에만 저장됩니다."},
 zh:{tab:"设置",title:"设置",langGt:"语言",langLb:"显示语言",themeLb:"主题",light:"浅色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"学习",qcountLb:"测试题数（每次）",speakLb:"自动播放发音",seLb:"音效",shufLb:"随机顺序（默认）",
  unkLb:"只看未掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",bgLb:"背景动画",goalLb:"每日目标",
  dataGt:"数据",progLb:"学习进度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 个",resetLb:"重置进度",reset:"重置",
  resetConfirm:"要重置全部掌握记录吗？",aboutGt:"关于本应用",
- about:"STEM English v85<br>为用英语学习理工科的人准备的单词卡。12 个列表，共 6,200 个词。进度只保存在本设备中。"},
+ about:"STEM English v86<br>为用英语学习理工科的人准备的单词卡。12 个列表，共 6,200 个词。进度只保存在本设备中。"},
 tw:{tab:"設定",title:"設定",langGt:"語言",langLb:"顯示語言",themeLb:"主題",light:"淺色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"學習",qcountLb:"測試題數（每次）",speakLb:"自動播放發音",seLb:"音效",shufLb:"隨機順序（預設）",
  unkLb:"只看未掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",bgLb:"背景動畫",goalLb:"每日目標",
  dataGt:"資料",progLb:"學習進度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 個",resetLb:"重置進度",reset:"重置",
  resetConfirm:"要重置全部掌握記錄嗎？",aboutGt:"關於本應用",
- about:"STEM English v85<br>為用英語學習理工科的人準備的單字卡。12 個列表，共 6,200 個詞。進度只保存在本裝置中。"},
+ about:"STEM English v86<br>為用英語學習理工科的人準備的單字卡。12 個列表，共 6,200 個詞。進度只保存在本裝置中。"},
 en:{tab:"Settings",title:"Settings",langGt:"Language",langLb:"Display language",themeLb:"Theme",light:"Light",dark:"Dark",
  fontLb:"Font size",fsS:"S",fsM:"M",fsL:"L",studyGt:"Study",qcountLb:"Questions per test",speakLb:"Auto-play pronunciation",seLb:"Sound effects",shufLb:"Shuffle (default)",
  unkLb:"Hide learned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",bgLb:"Background animation",goalLb:"Daily goal",
  dataGt:"Data",progLb:"Progress",progVal:(k,t)=>"Learned "+k+" / "+t,resetLb:"Reset progress",reset:"Reset",
  resetConfirm:"Reset all learned records?",aboutGt:"About",
- about:"STEM English v85<br>Word cards for studying science in English. 6,200 terms across 12 lists. Progress is stored only on this device."}
+ about:"STEM English v86<br>Word cards for studying science in English. 6,200 terms across 12 lists. Progress is stored only on this device."}
 };
 const LS_SET = "stem-english-settings";
 let settings = {theme:"light", font:"m", autoNext:true, anim:true, qcount:10, autoSpeak:true, se:true, grpMode:"unit"};
