@@ -124,7 +124,7 @@
     padding:8px 13px; font-size:14px; cursor:pointer; box-shadow:0 4px 12px rgba(50,70,110,.12);}
   .study-head .ttl{font-family:var(--serif); font-weight:700; font-size:16.5px;}
   .study-head .cnt{margin-left:auto; color:var(--sub); font-size:13px; letter-spacing:.1em;}
-  .scene{position:relative; flex:0 0 auto; width:min(100%, 400px, calc((100dvh - 300px) * 0.7167)); aspect-ratio:550/768; margin-left:auto; margin-right:auto; margin-top:auto; margin-bottom:auto; perspective:1400px;}
+  .scene{position:relative; flex:1 1 auto; min-height:300px; width:100%; max-width:640px; margin:0 auto 10px; perspective:1400px;}
   .card{position:absolute; inset:0; margin:auto; width:100%; height:100%; max-height:560px; transform-style:preserve-3d;
     transition:transform .5s cubic-bezier(.2,.7,.3,1.05); cursor:pointer;}
   .card.flipped{transform:rotateY(180deg);}
@@ -136,7 +136,8 @@
     box-shadow:0 10px 22px rgba(50,70,110,.25), 0 2px 8px rgba(50,70,110,.15), inset 0 1px 0 rgba(255,255,255,.9);}
   .face.back{transform:rotateY(180deg); background:linear-gradient(160deg,#dfeafb,#b7cff0); border-color:rgba(30,80,160,.55);}
   /* answer-side photo background (v20): rich image under a readability scrim */
-  .face-bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+  .face-bg-blur{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:blur(20px) saturate(1.15); transform:scale(1.15);}
+  .face-bg{position:absolute; inset:0; width:100%; height:100%; object-fit:contain;}
   .face-scrim{position:absolute; inset:0;
     background:linear-gradient(180deg, rgba(240,246,254,.95), rgba(224,235,250,.88) 55%, rgba(208,226,248,.80));}
   body.dark .face-scrim{background:linear-gradient(180deg, rgba(9,16,32,.90), rgba(12,22,44,.85) 55%, rgba(9,18,38,.80));}
@@ -146,7 +147,8 @@
   .qvis{position:relative; margin-top:12px; height:138px; border-radius:18px; overflow:hidden;
     border:1.5px solid rgba(63,88,130,.4); box-shadow:0 12px 26px rgba(50,70,110,.22);
     background:linear-gradient(150deg,#dbe7f8,#aecbf2);}
-  .qvis img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+  .qvis img{position:absolute; inset:0; width:100%; height:100%; object-fit:contain;}
+  .qvis img.qvis-blur{object-fit:cover; filter:blur(16px) saturate(1.15); transform:scale(1.15);}
   .qvis-scrim{position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:center; padding:10px;
     background:linear-gradient(180deg, rgba(240,246,255,0) 40%, rgba(240,246,255,.45));}
   .qvis .vf{font-family:var(--serif); font-style:italic; font-size:16px; color:#16345e;
@@ -182,8 +184,9 @@
   @media (max-height:640px){
     .btn{padding:12px 8px;} .btn.navb{padding:9px;} .navrow{margin-top:8px;}
     .topspace{height:calc(env(safe-area-inset-top) + 16px);} .view{padding-top:calc(env(safe-area-inset-top) + 20px);}
+    .scene{min-height:210px;}
   }
-  @media (max-height:540px){ .navrow{display:none;} .scene{width:min(100%, 400px, calc((100dvh - 210px) * 0.7167));} }
+  @media (max-height:540px){ .navrow{display:none;} .scene{min-height:150px;} }
   /* wordbook & search */
   .filter-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;}
   .fchip{border:1.5px solid var(--line); background:var(--glass); color:var(--sub); border-radius:999px;
@@ -1031,6 +1034,7 @@
             <div class="hint" id="tapHint"></div>
           </div>
           <div class="face back">
+            <img class="face-bg-blur" id="backBgBlur" alt="">
             <img class="face-bg" id="backBg" alt="">
             <div class="face-scrim"></div>
             <div class="lv-badge" id="lvBadgeB"></div>
@@ -1133,6 +1137,7 @@
         </div>
         <div class="qfeedback" id="qFeedback"></div>
         <div class="qvis" id="qVisFb" style="display:none">
+          <img class="qvis-blur" id="qVisImgB" alt="">
           <img id="qVisImg" alt="">
           <div class="qvis-scrim" id="qVisFormula"></div>
         </div>
@@ -8620,9 +8625,9 @@ function renderCard(){
   [["lvBadgeF"],["lvBadgeB"]].forEach(function(pair){ const b = $(pair[0]); b.textContent = lvNow; b.style.display = lvNow ? "block" : "none"; b.className = "lv-badge " + (lvNow ? (lvNow.indexOf("専")===0 ? "lv-s"+lvNow.slice(1) : "lv-"+lvNow.charAt(0).toLowerCase()) : ""); });
   $("termEn").textContent = t.en;
   $("termIpa").textContent = t.ipa || "";
-  const bgEl = $("backBg");
+  const bgEl = $("backBg"), bgBl = $("backBgBlur");
   const vs = visSrc(gi);
-  if(vs){ bgEl.style.display = "block"; bgEl.src = vs; } else { bgEl.style.display = "none"; bgEl.removeAttribute("src"); }
+  if(vs){ bgEl.style.display = "block"; bgEl.src = vs; bgBl.style.display = "block"; bgBl.src = vs; } else { bgEl.style.display = "none"; bgEl.removeAttribute("src"); bgBl.style.display = "none"; bgBl.removeAttribute("src"); }
   $("backVisual").innerHTML = formulaHTML(gi);
   if(session.length > 1){ const pv = visSrc(session[(sPos+1) % session.length]); if(pv){ const pre = new Image(); pre.src = pv; } }
   if(settings.autoSpeak) speak(t.en);
@@ -8908,8 +8913,10 @@ function startTest(){
   renderQ();
 }
 $("btnStartTest").addEventListener("click", startTest);
-$("backBg").addEventListener("error", ()=>{ $("backBg").style.display = "none"; });
-$("qVisImg").addEventListener("error", ()=>{ $("qVisImg").style.display = "none"; });
+$("backBg").addEventListener("error", ()=>{ $("backBg").style.display = "none"; $("backBgBlur").style.display = "none"; });
+$("backBgBlur").addEventListener("error", ()=>{ $("backBgBlur").style.display = "none"; });
+$("qVisImg").addEventListener("error", ()=>{ $("qVisImg").style.display = "none"; $("qVisImgB").style.display = "none"; });
+$("qVisImgB").addEventListener("error", ()=>{ $("qVisImgB").style.display = "none"; });
 $("spkBtn").addEventListener("click", e=>{
   e.stopPropagation();
   if(session.length) speak(TERMS[session[sPos]].en);
@@ -8956,11 +8963,11 @@ function finishAnswer(ok, correctText){
   if(ok){ quiz.score++; setState(q.gi, "ok"); } else { setState(q.gi, "ng"); }
   $("qFeedback").textContent = ok ? t.correct : (t.wrong + " — " + t.ansIs(correctText));
   $("qFeedback").className = "qfeedback " + (ok ? "ok" : "ng");
-  const qim = $("qVisImg");
+  const qim = $("qVisImg"), qimB = $("qVisImgB");
   const qv = visSrc(q.gi);
   $("qVisFormula").innerHTML = formulaHTML(q.gi);
-  if(qv){ qim.style.display = "block"; qim.src = qv; $("qVisFb").style.display = "block"; }
-  else { qim.style.display = "none"; $("qVisFb").style.display = "none"; }
+  if(qv){ qim.style.display = "block"; qim.src = qv; qimB.style.display = "block"; qimB.src = qv; $("qVisFb").style.display = "block"; }
+  else { qim.style.display = "none"; qimB.style.display = "none"; $("qVisFb").style.display = "none"; }
   $("qScore").textContent = t.score(quiz.score, quiz.list.length);
   const last = quiz.pos >= quiz.list.length - 1;
   $("btnQNext").textContent = last ? t.finish : t.next;
@@ -9592,31 +9599,31 @@ ja:{tab:"設定",title:"設定",langGt:"言語",langLb:"表示言語",themeLb:"�
  unkLb:"覚えた以外だけ（初期値）",autoLb:"判定後に自動で次へ",animLb:"カードの回転アニメーション",bgLb:"背景アニメーション",goalLb:"1日の目標",
  dataGt:"データ",progLb:"学習の進捗",progVal:(k,t)=>"覚えた "+k+" / "+t+" 語",resetLb:"進捗リセット",reset:"リセット",
  resetConfirm:"覚えた記録を全部リセットしますか？",aboutGt:"このアプリについて",
- about:"STEM English v94<br>英語で理系を学ぶ人の単語カード。13のリスト、全6,316語。進捗はこの端末の中だけに保存されます。"},
+ about:"STEM English v95<br>英語で理系を学ぶ人の単語カード。13のリスト、全6,316語。進捗はこの端末の中だけに保存されます。"},
 ko:{tab:"설정",title:"설정",langGt:"언어",langLb:"표시 언어",themeLb:"테마",light:"라이트",dark:"다크",
  fontLb:"글자 크기",fsS:"작게",fsM:"보통",fsL:"크게",studyGt:"학습",qcountLb:"테스트 출제 수 (1회)",speakLb:"발음 자동 재생",seLb:"효과음",shufLb:"셔플 (기본값)",
  unkLb:"외운 단어 제외 (기본값)",autoLb:"판정 후 자동으로 다음으로",animLb:"카드 회전 애니메이션",bgLb:"배경 애니메이션",goalLb:"하루 목표",
  dataGt:"데이터",progLb:"학습 진도",progVal:(k,t)=>"외움 "+k+" / "+t+"개",resetLb:"진도 초기화",reset:"초기화",
  resetConfirm:"외운 기록을 전부 초기화할까요?",aboutGt:"이 앱에 대하여",
- about:"STEM English v94<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 13개 리스트, 총 6,316개. 진도는 이 기기에만 저장됩니다."},
+ about:"STEM English v95<br>영어로 이공계를 배우는 사람을 위한 단어 카드. 13개 리스트, 총 6,316개. 진도는 이 기기에만 저장됩니다."},
 zh:{tab:"设置",title:"设置",langGt:"语言",langLb:"显示语言",themeLb:"主题",light:"浅色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"学习",qcountLb:"测试题数（每次）",speakLb:"自动播放发音",seLb:"音效",shufLb:"随机顺序（默认）",
  unkLb:"只看未掌握的（默认）",autoLb:"判定后自动下一张",animLb:"卡片翻转动画",bgLb:"背景动画",goalLb:"每日目标",
  dataGt:"数据",progLb:"学习进度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 个",resetLb:"重置进度",reset:"重置",
  resetConfirm:"要重置全部掌握记录吗？",aboutGt:"关于本应用",
- about:"STEM English v94<br>为用英语学习理工科的人准备的单词卡。13 个列表，共 6,316 个词。进度只保存在本设备中。"},
+ about:"STEM English v95<br>为用英语学习理工科的人准备的单词卡。13 个列表，共 6,316 个词。进度只保存在本设备中。"},
 tw:{tab:"設定",title:"設定",langGt:"語言",langLb:"顯示語言",themeLb:"主題",light:"淺色",dark:"深色",
  fontLb:"文字大小",fsS:"小",fsM:"中",fsL:"大",studyGt:"學習",qcountLb:"測試題數（每次）",speakLb:"自動播放發音",seLb:"音效",shufLb:"隨機順序（預設）",
  unkLb:"只看未掌握的（預設）",autoLb:"判定後自動下一張",animLb:"卡片翻轉動畫",bgLb:"背景動畫",goalLb:"每日目標",
  dataGt:"資料",progLb:"學習進度",progVal:(k,t)=>"已掌握 "+k+" / "+t+" 個",resetLb:"重置進度",reset:"重置",
  resetConfirm:"要重置全部掌握記錄嗎？",aboutGt:"關於本應用",
- about:"STEM English v94<br>為用英語學習理工科的人準備的單字卡。13 個列表，共 6,316 個詞。進度只保存在本裝置中。"},
+ about:"STEM English v95<br>為用英語學習理工科的人準備的單字卡。13 個列表，共 6,316 個詞。進度只保存在本裝置中。"},
 en:{tab:"Settings",title:"Settings",langGt:"Language",langLb:"Display language",themeLb:"Theme",light:"Light",dark:"Dark",
  fontLb:"Font size",fsS:"S",fsM:"M",fsL:"L",studyGt:"Study",qcountLb:"Questions per test",speakLb:"Auto-play pronunciation",seLb:"Sound effects",shufLb:"Shuffle (default)",
  unkLb:"Hide learned cards (default)",autoLb:"Auto-advance after answering",animLb:"Card flip animation",bgLb:"Background animation",goalLb:"Daily goal",
  dataGt:"Data",progLb:"Progress",progVal:(k,t)=>"Learned "+k+" / "+t,resetLb:"Reset progress",reset:"Reset",
  resetConfirm:"Reset all learned records?",aboutGt:"About",
- about:"STEM English v94<br>Word cards for studying science in English. 6,316 terms across 13 lists. Progress is stored only on this device."}
+ about:"STEM English v95<br>Word cards for studying science in English. 6,316 terms across 13 lists. Progress is stored only on this device."}
 };
 const LS_SET = "stem-english-settings";
 let settings = {theme:"light", font:"m", autoNext:true, anim:true, qcount:10, autoSpeak:true, se:true, grpMode:"unit"};
