@@ -87,6 +87,17 @@ progfunc 400, digilogic 116, elements 118, substances 100. Total 6,534.
 7. **Mobile-first.** The owner uses an iPhone / iPad, essentially never a PC.
    Any UI change must work well on a phone screen first.
 
+## Local preview (Windows, owner's Zenbook)
+
+- Double-click **`preview.bat`** in the repo root (or run
+  `node preview-server.mjs`). It serves the repo at
+  **http://localhost:8000** and opens the browser automatically.
+- `preview-server.mjs` is a zero-dependency Node static server with caching
+  disabled, so edits to `index.html` appear on a plain browser reload.
+- Keep the server window open while previewing; closing it stops the server.
+- When developing with an agent (e.g. Antigravity CLI), start this server
+  first so the owner can watch changes live in the browser.
+
 ## How to ship a change
 
 1. Edit `index.html` (use a patch script under `data/` for large or repeated
