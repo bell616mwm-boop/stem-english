@@ -74,8 +74,11 @@ progfunc 400, digilogic 116, elements 118, substances 100. Total 6,534.
 2. **Every lesson opens with the must-memorize panel** (the lesson's `must`
    field: 「まず覚える公式・法則」 — the unit's essential formulas/laws),
    rendered BEFORE the lesson sections.
-3. **Concept-first explanations**: imagery, analogies, everyday examples.
-   Written so a middle-schooler with gaps in high-school basics can follow.
+3. **Clarity first** (owner's rule, 2026-11-27): plain, direct explanations
+   that are simply easy to follow come before everything else. Use an
+   analogy or everyday example ONLY where it genuinely fits the concept —
+   never force one in. Written so a middle-schooler with gaps in high-school
+   basics can follow.
    The owner missed Math III / applied tracks and has a ~4-year study gap;
    the target users are like him.
 4. **English at IELTS Band 6.0** — natural collocations, no rare vocabulary
