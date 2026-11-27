@@ -12,7 +12,8 @@ You are taking over development of this project from another AI assistant.
   1. Lessons are authored natively in all 5 languages (ja/en/ko/zh/tw) —
      never literal translations, never a Japanese fallback.
   2. Every lesson starts with its must-memorize formulas/laws panel (`must`).
-  3. Concept-first explanations with imagery and analogies; English at
+  3. Clarity first: plain, easy explanations; analogies only where they
+     genuinely fit, never forced (owner's rule, 2026-11-27). English at
      IELTS Band 6.0 level.
   4. Image generation is paused — do not create new word illustrations.
   5. Mobile-first UI (the owner uses iPhone/iPad).
